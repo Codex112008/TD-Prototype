@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://diabts3pmdc7t"]
+
+[ext_resource type="PackedScene" uid="uid://bcuufp67y4aq3" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileScene.tscn" id="1_41jrh"]
+[ext_resource type="Script" uid="uid://dda7yiaawjumm" path="res://Custom Resources/Projectiles/Bullet/BulletProjectile.cs" id="1_o2odm"]
+
+[resource]
+script = ExtResource("1_o2odm")
+fireForce = 100.0
+StatMultipliers = Dictionary[int, int]({
+0: 1,
+1: 1,
+2: 1
+})
+ProjectileScene = ExtResource("1_41jrh")
+PointCost = 1

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://yobokgplsuku"]
+
+[ext_resource type="Script" uid="uid://ckfol0wpekdnp" path="res://Custom Resources/Effects/DamageEffect/DamageEffect.cs" id="1_abyiv"]
+
+[resource]
+script = ExtResource("1_abyiv")
+StatMultipliers = Dictionary[int, int]({
+0: 1,
+1: 1,
+2: 1
+})
+PointCost = 1

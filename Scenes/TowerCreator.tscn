@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://byt35up7juchg"]
+
+[ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/TowerCreatorManager.cs" id="1_4wc6v"]
+[ext_resource type="PackedScene" uid="uid://m4rsxkv8b7ce" path="res://Scenes/TowerCreationUI/StatSelector.tscn" id="2_wf2ka"]
+[ext_resource type="PackedScene" uid="uid://bj4b6tu0ym2ev" path="res://Scenes/TowerCreationUI/ModifierSelector.tscn" id="3_g4i06"]
+
+[node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI")]
+script = ExtResource("1_4wc6v")
+_towerCreatorUI = NodePath("TowerCreatorUI")
+_statPickerScene = ExtResource("2_wf2ka")
+_modifierPickerScene = ExtResource("3_g4i06")
+
+[node name="TowerCreatorUI" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0

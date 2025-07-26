@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c53r4y5k7lptf"]
+
+[ext_resource type="Texture2D" uid="uid://dhdwunv2bp45l" path="res://Sprites/icon.svg" id="1_r4hmp"]
+
+[node name="BasicTower" type="Sprite2D"]
+texture = ExtResource("1_r4hmp")

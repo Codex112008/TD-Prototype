@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bj4b6tu0ym2ev"]
+
+[node name="StatSelector" type="HBoxContainer"]
+theme_override_constants/separation = 5
+
+[node name="Text" type="RichTextLabel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 20
+text = "Projectile"
+fit_content = true
+autowrap_mode = 0
+
+[node name="OptionButton" type="OptionButton" parent="."]
+layout_mode = 2

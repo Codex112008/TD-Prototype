@@ -18,3 +18,7 @@ config/icon="res://Sprites/icon.svg"
 [dotnet]
 
 project/assembly_name="TD-Prototype"
+
+[global_group]
+
+Enemy="Group for every enemy"
