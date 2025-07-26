@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=3 uid="uid://bg6bvm6eooseb"]
+
+[ext_resource type="Texture2D" uid="uid://dbwahmt01vgb3" path="res://Sprites/Logs_No_UI.webp" id="1_80nbo"]
+[ext_resource type="Script" uid="uid://dw6xmuqlidf4a" path="res://Scripts/EnemyManager.cs" id="1_xkndl"]
+[ext_resource type="PackedScene" uid="uid://0gxy3vpy5div" path="res://Scenes/Enemy.tscn" id="2_u44n3"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="cd" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[node name="Path" type="Node2D" parent="." node_paths=PackedStringArray("cd")]
+script = ExtResource("1_xkndl")
+enemyScene = ExtResource("2_u44n3")
+cd = NodePath("../cd")
+
+[node name="Waypoint" type="Marker2D" parent="Path"]
+position = Vector2(-548, -232)
+
+[node name="Waypoint2" type="Marker2D" parent="Path"]
+position = Vector2(-314, -232)
+
+[node name="Waypoint3" type="Marker2D" parent="Path"]
+position = Vector2(-314, 271)
+
+[node name="Waypoint4" type="Marker2D" parent="Path"]
+position = Vector2(-108, 271)
+
+[node name="Waypoint5" type="Marker2D" parent="Path"]
+position = Vector2(-108, -226)
+
+[node name="Waypoint6" type="Marker2D" parent="Path"]
+position = Vector2(82, -226)
+
+[node name="Waypoint7" type="Marker2D" parent="Path"]
+position = Vector2(82, 266)
+
+[node name="Waypoint8" type="Marker2D" parent="Path"]
+position = Vector2(305, 266)
+
+[node name="Waypoint9" type="Marker2D" parent="Path"]
+position = Vector2(305, -231)
+
+[node name="Waypoint10" type="Marker2D" parent="Path"]
+position = Vector2(431, -231)
+
+[node name="Waypoint11" type="Marker2D" parent="Path"]
+position = Vector2(431, -97)
+
+[node name="Waypoint12" type="Marker2D" parent="Path"]
+position = Vector2(-428, -97)
+
+[node name="Waypoint13" type="Marker2D" parent="Path"]
+position = Vector2(-428, 66)
+
+[node name="Waypoint14" type="Marker2D" parent="Path"]
+position = Vector2(418, 66)
+
+[node name="Waypoint15" type="Marker2D" parent="Path"]
+position = Vector2(418, 186)
+
+[node name="Waypoint16" type="Marker2D" parent="Path"]
+position = Vector2(-555, 186)
+
+[node name="LogsNoUi" type="Sprite2D" parent="."]
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("1_80nbo")
