@@ -1,12 +1,17 @@
-[gd_scene format=3 uid="uid://m4rsxkv8b7ce"]
+[gd_scene load_steps=3 format=3 uid="uid://m4rsxkv8b7ce"]
 
-[node name="StatSelector" type="HBoxContainer"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="1_4n3u0"]
+[ext_resource type="Script" uid="uid://enu4w6xhn3u" path="res://Scripts/TowerCreation/StatSelector.cs" id="2_g1k58"]
+
+[node name="StatSelector" type="HBoxContainer" node_paths=PackedStringArray("StatLabel")]
+theme = ExtResource("1_4n3u0")
 theme_override_constants/separation = 5
+script = ExtResource("2_g1k58")
+StatLabel = NodePath("Text")
 
 [node name="Text" type="RichTextLabel" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 20
 text = "Damage"
 fit_content = true
 autowrap_mode = 0
@@ -14,3 +19,9 @@ autowrap_mode = 0
 [node name="SpinBox" type="SpinBox" parent="."]
 layout_mode = 2
 rounded = true
+
+[node name="CostDisplay" type="RichTextLabel" parent="."]
+layout_mode = 2
+text = "1"
+fit_content = true
+autowrap_mode = 0

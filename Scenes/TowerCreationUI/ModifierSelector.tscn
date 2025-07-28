@@ -1,15 +1,38 @@
-[gd_scene format=3 uid="uid://bj4b6tu0ym2ev"]
+[gd_scene load_steps=4 format=3 uid="uid://d06d7n3ydut8p"]
 
-[node name="StatSelector" type="HBoxContainer"]
-theme_override_constants/separation = 5
+[ext_resource type="Script" uid="uid://croqqcst581a" path="res://Scripts/TowerCreation/ModifierSelector.cs" id="1_5ushg"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="1_t4dkk"]
 
-[node name="Text" type="RichTextLabel" parent="."]
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yi5pi"]
+size = Vector2(28, 28)
+
+[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("_selectedModifierButton", "ModifierList")]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_t4dkk")
+script = ExtResource("1_5ushg")
+_selectedModifierButton = NodePath("HBoxContainer/TextureButton")
+ModifierList = NodePath("ModifierList")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 20
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
 text = "Projectile"
 fit_content = true
+scroll_active = false
 autowrap_mode = 0
 
-[node name="OptionButton" type="OptionButton" parent="."]
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer"]
 layout_mode = 2
+texture_normal = SubResource("PlaceholderTexture2D_yi5pi")
+
+[node name="ModifierList" type="ItemList" parent="."]
+layout_mode = 2
+allow_reselect = true
+auto_width = true
+auto_height = true
+
+[connection signal="pressed" from="HBoxContainer/TextureButton" to="." method="OnButtonPressed"]
+[connection signal="item_selected" from="ModifierList" to="." method="OnItemSelected"]

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://c53r4y5k7lptf"]
+
+[ext_resource type="Texture2D" uid="uid://dhdwunv2bp45l" path="res://Sprites/icon.svg" id="1_ikeo3"]
+[ext_resource type="Script" uid="uid://476fij86s3r3" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_8n507"]
+
+[node name="BasicTower" type="Sprite2D"]
+texture = ExtResource("1_ikeo3")
+script = ExtResource("2_8n507")

@@ -1,21 +1,31 @@
-[gd_scene load_steps=4 format=3 uid="uid://byt35up7juchg"]
+[gd_scene load_steps=6 format=3 uid="uid://byt35up7juchg"]
 
-[ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/TowerCreatorManager.cs" id="1_4wc6v"]
+[ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/TowerCreation/TowerCreatorManager.cs" id="1_4wc6v"]
+[ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.tscn" id="2_snh4w"]
 [ext_resource type="PackedScene" uid="uid://m4rsxkv8b7ce" path="res://Scenes/TowerCreationUI/StatSelector.tscn" id="2_wf2ka"]
-[ext_resource type="PackedScene" uid="uid://bj4b6tu0ym2ev" path="res://Scenes/TowerCreationUI/ModifierSelector.tscn" id="3_g4i06"]
+[ext_resource type="PackedScene" uid="uid://d06d7n3ydut8p" path="res://Scenes/TowerCreationUI/ModifierSelector.tscn" id="3_g4i06"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="4_g4i06"]
 
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI")]
 script = ExtResource("1_4wc6v")
+towerTypeScene = ExtResource("2_snh4w")
 _towerCreatorUI = NodePath("TowerCreatorUI")
 _statPickerScene = ExtResource("2_wf2ka")
 _modifierPickerScene = ExtResource("3_g4i06")
 
-[node name="TowerCreatorUI" type="VBoxContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Button" type="Button" parent="TowerCreatorUI"]
+[node name="TowerCreatorUI" type="VBoxContainer" parent="."]
+offset_left = -426.0
+offset_top = -294.0
+offset_right = -255.0
+offset_bottom = -121.0
+
+[node name="SaveButton" type="Button" parent="TowerCreatorUI"]
 layout_mode = 2
+theme = ExtResource("4_g4i06")
 text = "Save"
 
-[connection signal="pressed" from="TowerCreatorUI/Button" to="." method="SaveTowerResource"]
+[node name="TowerPreview" type="Node2D" parent="."]
+
+[connection signal="pressed" from="TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]

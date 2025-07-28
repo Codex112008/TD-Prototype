@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 [GlobalClass]
-public partial class Tower : Resource
+public abstract partial class Tower : Node2D
 {
     private Projectile _projectile;
     private bool _createdProjectileInstance = false;
@@ -33,18 +33,37 @@ public partial class Tower : Resource
         Projectile.Effects = effects;
     }
 
-    public bool IsPointAllocationValid()
+    public bool HasValidPointAllocation()
     {
-        int totalPointsAllocated = Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
-        if (totalPointsAllocated <= GetMaximumPointsFromCost())
+        if (GetCurrentTotalPointsAllocated() <= GetMaximumPointsFromCost())
             return true;
         else
             return false;
     }
 
+    protected int GetCurrentTotalPointsAllocated()
+    {
+        return Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
+    }
+
     protected virtual int GetPointCostFromStats()
     {
-        return TowerStats[Stat.Damage] + (TowerStats[Stat.Range] / 10) + (TowerStats[Stat.FireRate] * 2);
+        return GetPointCostFromDamage() + GetPointCostFromRange() + GetPointCostFromFireRate();
+    }
+
+    protected virtual int GetPointCostFromDamage()
+    {
+        return TowerStats[Stat.Damage];
+    }
+
+    protected virtual int GetPointCostFromRange()
+    {
+        return TowerStats[Stat.Range] / 10;
+    }
+
+    protected virtual int GetPointCostFromFireRate()
+    {
+        return TowerStats[Stat.FireRate] * 2;
     }
 
     protected virtual int GetMaximumPointsFromCost()
@@ -65,6 +84,13 @@ public partial class Tower : Resource
         }
         return finalTowerStats;
     }
+
+    public string InheritedClassName()
+    {
+        return GetType().Name;
+    }
+
+    protected abstract void Fire();
 }
 
 public enum Stat
