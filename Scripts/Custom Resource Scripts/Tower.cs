@@ -25,15 +25,15 @@ public partial class Tower : Resource
         }
     }
     [Export] protected int Cost;
-    [Export] protected Dictionary<Stat, int> TowerStats;
+    [Export] public Dictionary<Stat, int> TowerStats;
 
     // Following functions used in tower creation
-    protected void SetEffects(Array<Effect> effects)
+    public void SetEffects(Array<Effect> effects)
     {
         Projectile.Effects = effects;
     }
 
-    protected bool IsPointAllocationValid()
+    public bool IsPointAllocationValid()
     {
         int totalPointsAllocated = Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
         if (totalPointsAllocated <= GetMaximumPointsFromCost())
@@ -44,7 +44,7 @@ public partial class Tower : Resource
 
     protected virtual int GetPointCostFromStats()
     {
-        return TowerStats[Stat.Damage] + (TowerStats[Stat.Range] / 10) + (TowerStats[Stat.ShotsPerSecond] * 2);
+        return TowerStats[Stat.Damage] + (TowerStats[Stat.Range] / 10) + (TowerStats[Stat.FireRate] * 2);
     }
 
     protected virtual int GetMaximumPointsFromCost()
@@ -71,5 +71,5 @@ public enum Stat
 {
     Damage,
     Range,
-    ShotsPerSecond,
+    FireRate,
 }

@@ -13,3 +13,9 @@ _modifierPickerScene = ExtResource("3_g4i06")
 [node name="TowerCreatorUI" type="VBoxContainer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="TowerCreatorUI"]
+layout_mode = 2
+text = "Save"
+
+[connection signal="pressed" from="TowerCreatorUI/Button" to="." method="SaveTowerResource"]
