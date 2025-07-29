@@ -1,40 +1,55 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Text.RegularExpressions;
 
 public partial class TowerCreatorManager : Node2D
 {
+	public static TowerCreatorManager instance;
+	public override void _EnterTree()
+	{
+		if (instance != null)
+		{
+			GD.PrintErr("More than one BuildManager in scene!");
+			return;
+		}
+		instance = this;
+	}
+
 	[Export] private PackedScene towerTypeScene;
 	[Export] private VBoxContainer _towerCreatorUI;
+	[Export] private Node2D _towerPreviewArea;
 	[Export] private PackedScene _statPickerScene;
 	[Export] private PackedScene _modifierPickerScene;
 	[Export] private int towerLevel = 0;
-	private Dictionary<Stat, float> _selectedStats;
+	private Dictionary<TowerStat, float> _selectedStats;
 	private Projectile _selectedProjectile;
-	private Array<Effect> _selectedEffects;
+	private Array<TowerEffect> _selectedEffects;
 	private Tower towerToCreatePreview;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		towerToCreatePreview = towerTypeScene.Instantiate<Tower>();
+		_towerPreviewArea.AddChild(towerToCreatePreview);
+
 		// TODO: move towertocreate when i make the preview area to the preview place thing idk
 
-		HBoxContainer costPicker = InstantiateStatSelector("Cost");
-		SpinBox costPickerSpinBox = costPicker.GetChild<SpinBox>(1); // The second child of the scene SHOULD be a spinbox
-		costPickerSpinBox.Step = 50;
-		costPickerSpinBox.MaxValue = 1000;
-
-		for (int i = 0; i < Enum.GetNames(typeof(Stat)).Length; i++)
+		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
 		{
-			Stat stat = (Stat)i;
+			TowerStat stat = (TowerStat)i;
 
-			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(Stat), stat));
-			// Special things if shotspersecond cuz i wanat it using the /s
-			if (stat == Stat.FireRate)
+			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
+			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
+
+			if (stat == TowerStat.FireRate)
 			{
-				SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1); // The second child of the scene SHOULD be a spinbox
 				statPickerSpinBox.Suffix = "/s";
+			}
+			else if (stat == TowerStat.Cost)
+			{
+				statPickerSpinBox.Step = 50;
+				statPickerSpinBox.MaxValue = 1000;
 			}
 		}
 
@@ -53,52 +68,62 @@ public partial class TowerCreatorManager : Node2D
 	{
 	}
 
-	private Tower GenerateTowerFromSelection()
+	public void UpdateTowerPreview(double _ = 0)
 	{
 		// TODO: Test this line i hope for the love of god this works
-		Tower wipTower = (Tower)Activator.CreateInstance(Type.GetType(towerToCreatePreview.GetType().Name));
+		//Tower wipTower = (Tower)Activator.CreateInstance(Type.GetType(towerToCreatePreview.GetType().Name));
 
-		Array<Effect> effects = new Array<Effect>();
+		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
 		{
 			Node pickerNodeType = _towerCreatorUI.GetChild(i);
-			if (pickerNodeType is HBoxContainer statPicker)
+			if (pickerNodeType is StatSelector statPicker)
 			{
-				Stat stat = (Stat)Enum.Parse(typeof(Stat), statPicker.GetChild<RichTextLabel>(0).Text);
-				wipTower.TowerStats[stat] = Mathf.RoundToInt(statPicker.GetChild<SpinBox>(1).Value);
+				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statPicker.StatLabel.Text));
+				towerToCreatePreview.TowerStats[stat] = Mathf.RoundToInt(statPicker.StatSpinBox.Value);
+				if (stat != TowerStat.Cost)
+					statPicker.CostLabel.Text = "Cost: " + towerToCreatePreview.GetPointCostForStat(stat);
+				else
+					statPicker.CostLabel.Text = "Max Points: " + towerToCreatePreview.GetPointCostForStat(stat);
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
-				bool isProjectile = pickerNodeType.GetParent().GetChild<RichTextLabel>(0).Text.Contains("Projectile");
-
+				bool isProjectile = modifierPicker.ModifierLabel.Text.Contains("Projectile");
 				if (isProjectile)
-					wipTower.Projectile = ResourceLoader.Load<Projectile>(modifierPicker.PathToSelectedModifierResource);
+				{
+					towerToCreatePreview.Projectile = ResourceLoader.Load<Projectile>(modifierPicker.PathToSelectedModifierResource);
+				}
 				else
-					effects.Add(ResourceLoader.Load<Effect>(modifierPicker.PathToSelectedModifierResource));
+				{
+					effects.Add(ResourceLoader.Load<TowerEffect>(modifierPicker.PathToSelectedModifierResource));
+				}
+
+				modifierPicker.CostLabel.Text = "Cost: " + ResourceLoader.Load<TowerComponent>(modifierPicker.PathToSelectedModifierResource).PointCost;
 			}
 		}
-		wipTower.SetEffects(effects);
-
-		if (wipTower.HasValidPointAllocation())
-		{
-			GD.Print("Successfully created tower!");
-			return wipTower;
-		}
-		else
-		{
-			GD.Print("Unsuccessfully created tower!");
-			return null;
-		}
+		towerToCreatePreview.SetEffects(effects);
+		GD.Print(towerToCreatePreview.Projectile.Effects);
 	}
 
 	public void SaveTowerResource()
 	{
+		if (towerToCreatePreview.HasValidPointAllocation())
+		{
+			GD.Print("Successfully created tower!");
+		}
+		else
+		{
+			GD.Print("Ur tower to op :skull:");
+			return;
+		}
+
 		PackedScene towerToSave = new();
-		Error packResult = towerToSave.Pack(GenerateTowerFromSelection());
+		Error packResult = towerToSave.Pack(towerToCreatePreview);
+		GD.Print(towerToSave);
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{
-			Error saveResult = ResourceSaver.Save(towerToSave, "res://SavedTowers/");
+			Error saveResult = ResourceSaver.Save(towerToSave, "res://SavedTowers/newtower.tscn");
 			GD.Print(saveResult);
 		}
 		else
@@ -120,9 +145,26 @@ public partial class TowerCreatorManager : Node2D
 	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
 	{
 		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
-		statPicker.StatLabel.Text = statSelectorLabelName;
+		statPicker.StatLabel.Text = SplitPascalCase(statSelectorLabelName);
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;
+	}
+
+	// TODO: maybe move this to some util class
+	private static readonly Regex sPascalCase = new("(?<!^)([A-Z])");
+	public static string SplitPascalCase(string input)
+	{
+		// Inserts a space before each uppercase letter that is not the first character.
+		// The pattern ensures that a space is inserted only if the uppercase letter
+		// is preceded by a lowercase letter or another uppercase letter that is
+		// part of an acronym (e.g., "GPSData" becomes "GPS Data").
+		// IDFK how this works
+		return sPascalCase.Replace(input, " $1").Trim();
+	}
+
+	public static string RemoveWhitespaces(string input)
+	{
+		return input.Replace(" ", "");
 	}
 }

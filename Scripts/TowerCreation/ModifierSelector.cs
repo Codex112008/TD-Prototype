@@ -5,6 +5,7 @@ using System;
 public partial class ModifierSelector : VBoxContainer
 {
 	[Export] public RichTextLabel ModifierLabel;
+	[Export] public RichTextLabel CostLabel;
 	[Export] private TextureButton _selectedModifierButton;
 	[Export] public ItemList ModifierList;
 	public string PathToSelectedModifierResource;
@@ -13,6 +14,8 @@ public partial class ModifierSelector : VBoxContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		ModifierList.Select(0);
+		UpdatePathToSelectedModifierResource();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,15 +32,11 @@ public partial class ModifierSelector : VBoxContainer
 	{
 		ModifierList.Visible = !ModifierList.Visible;
 
-		bool isProjectile = PathToModifiers.Contains("Projectile");
-		string subfolder = "Effects";
-		if (isProjectile)
-			subfolder = "Projectiles";
-
-		string selectedModifier = ModifierList.GetItemText(index);
-		PathToSelectedModifierResource = "res://Custom Resources/" + subfolder + "/" + selectedModifier + "/";
+		UpdatePathToSelectedModifierResource();
 
 		// TODO: Change _selectedModifierButton's texture to icon
+
+		TowerCreatorManager.instance.UpdateTowerPreview();
 	}
 
 	public void UpdateModifierSelector()
@@ -61,5 +60,16 @@ public partial class ModifierSelector : VBoxContainer
 		}
 
 		return [.. folders];
+	}
+
+	private void UpdatePathToSelectedModifierResource()
+	{
+		bool isProjectile = PathToModifiers.Contains("Projectile");
+		string subfolder = "Effects";
+		if (isProjectile)
+			subfolder = "Projectiles";
+
+		string selectedModifier = ModifierList.GetItemText(ModifierList.GetSelectedItems()[0]);
+		PathToSelectedModifierResource = "res://Custom Resources/" + subfolder + "/" + selectedModifier + "/" + selectedModifier + subfolder[..^1] + "Resource.tres/";
 	}
 }

@@ -6,7 +6,7 @@ public partial class BulletProjectile : Projectile
 {
     [Export] public float fireForce;
 
-    public override void InstantiateProjectile(Dictionary<Stat, float> finalStats, Marker2D firePoint)
+    public override void InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint)
     {
         BulletProjectileBehaviour bullet = ProjectileScene.Instantiate<BulletProjectileBehaviour>();
         bullet.GlobalPosition = firePoint.GlobalPosition;

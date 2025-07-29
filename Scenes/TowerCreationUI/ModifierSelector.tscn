@@ -6,12 +6,13 @@
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yi5pi"]
 size = Vector2(28, 28)
 
-[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("ModifierLabel", "_selectedModifierButton", "ModifierList")]
+[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("ModifierLabel", "CostLabel", "_selectedModifierButton", "ModifierList")]
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_t4dkk")
 script = ExtResource("1_5ushg")
 ModifierLabel = NodePath("HBoxContainer/RichTextLabel")
+CostLabel = NodePath("HBoxContainer/CostLabel")
 _selectedModifierButton = NodePath("HBoxContainer/TextureButton")
 ModifierList = NodePath("ModifierList")
 
@@ -28,6 +29,12 @@ autowrap_mode = 0
 [node name="TextureButton" type="TextureButton" parent="HBoxContainer"]
 layout_mode = 2
 texture_normal = SubResource("PlaceholderTexture2D_yi5pi")
+
+[node name="CostLabel" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+text = "1"
+fit_content = true
+autowrap_mode = 0
 
 [node name="ModifierList" type="ItemList" parent="."]
 layout_mode = 2

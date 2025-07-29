@@ -4,7 +4,7 @@ using System;
 
 public partial class BulletProjectileBehaviour : CharacterBody2D
 {
-	public Dictionary<Stat, float> Stats; // Has every stat but mostly damage being used
+	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public BulletProjectile BulletData;
 
 	// Called when the node enters the scene tree for the first time.
@@ -23,7 +23,7 @@ public partial class BulletProjectileBehaviour : CharacterBody2D
 			Node hitNode = (Node)GetSlideCollision(i).GetCollider();
 			if (hitNode.IsInGroup("Enemy"))
 			{
-				foreach (Effect effect in BulletData.Effects)
+				foreach (TowerEffect effect in BulletData.Effects)
 					effect.ApplyEffect(Stats, (Enemy)hitNode);
 				QueueFree();
 				break;

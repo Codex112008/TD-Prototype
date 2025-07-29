@@ -6,3 +6,9 @@
 [node name="BasicTower" type="Sprite2D"]
 texture = ExtResource("1_ikeo3")
 script = ExtResource("2_8n507")
+TowerStats = Dictionary[int, int]({
+0: 0,
+1: 0,
+2: 0,
+3: 0
+})

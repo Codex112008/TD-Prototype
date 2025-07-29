@@ -6,10 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://d06d7n3ydut8p" path="res://Scenes/TowerCreationUI/ModifierSelector.tscn" id="3_g4i06"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="4_g4i06"]
 
-[node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI")]
+[node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI", "_towerPreviewArea")]
 script = ExtResource("1_4wc6v")
 towerTypeScene = ExtResource("2_snh4w")
 _towerCreatorUI = NodePath("UI/TowerCreatorUI")
+_towerPreviewArea = NodePath("TowerPreview")
 _statPickerScene = ExtResource("2_wf2ka")
 _modifierPickerScene = ExtResource("3_g4i06")
 

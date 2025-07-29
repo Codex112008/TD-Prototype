@@ -24,13 +24,13 @@ public abstract partial class Tower : Node2D
                 _projectile = value;
         }
     }
-    [Export] protected int Cost;
-    [Export] public Dictionary<Stat, int> TowerStats;
+    [Export] public Dictionary<TowerStat, int> TowerStats;
 
     // Following functions used in tower creation
-    public void SetEffects(Array<Effect> effects)
+    public void SetEffects(Array<TowerEffect> effects)
     {
-        Projectile.Effects = effects;
+        if (Projectile != null)
+            Projectile.Effects = effects;
     }
 
     public bool HasValidPointAllocation()
@@ -51,35 +51,48 @@ public abstract partial class Tower : Node2D
         return GetPointCostFromDamage() + GetPointCostFromRange() + GetPointCostFromFireRate();
     }
 
+    public int GetPointCostForStat(TowerStat stat)
+    {
+        return stat switch
+        {
+            TowerStat.Cost => GetMaximumPointsFromCost(),
+            TowerStat.Damage => GetPointCostFromDamage(),
+            TowerStat.Range => GetPointCostFromRange(),
+            TowerStat.FireRate => GetPointCostFromFireRate(),
+            _ => throw new ArgumentOutOfRangeException($"Unhandled stat type: {stat}"),
+        };
+
+    }
+
     protected virtual int GetPointCostFromDamage()
     {
-        return TowerStats[Stat.Damage];
+        return TowerStats[TowerStat.Damage];
     }
 
     protected virtual int GetPointCostFromRange()
     {
-        return TowerStats[Stat.Range] / 10;
+        return TowerStats[TowerStat.Range] / 10;
     }
 
     protected virtual int GetPointCostFromFireRate()
     {
-        return TowerStats[Stat.FireRate] * 2;
+        return TowerStats[TowerStat.FireRate] * 2;
     }
 
     protected virtual int GetMaximumPointsFromCost()
     {
-        return Cost / 50;
+        return TowerStats[TowerStat.Cost] / 50;
     }
 
     // Calculates the stats of the tower after multipliers from effect and projectile
-    public Dictionary<Stat, float> GetFinalTowerStats()
+    public Dictionary<TowerStat, float> GetFinalTowerStats()
     {
-        Dictionary<Stat, float> finalTowerStats = [];
-        foreach ((Stat stat, int value) in TowerStats)
+        Dictionary<TowerStat, float> finalTowerStats = [];
+        foreach ((TowerStat stat, int value) in TowerStats)
         {
             finalTowerStats[stat] = value;
             finalTowerStats[stat] *= Projectile.StatMultipliers[stat];
-            foreach (Effect effect in Projectile.Effects)
+            foreach (TowerEffect effect in Projectile.Effects)
                 finalTowerStats[stat] *= effect.StatMultipliers[stat];
         }
         return finalTowerStats;
@@ -88,8 +101,9 @@ public abstract partial class Tower : Node2D
     protected abstract void Fire();
 }
 
-public enum Stat
+public enum TowerStat
 {
+    Cost,
     Damage,
     Range,
     FireRate,
