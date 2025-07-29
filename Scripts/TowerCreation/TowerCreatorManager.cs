@@ -56,7 +56,7 @@ public partial class TowerCreatorManager : Node2D
 	private Tower GenerateTowerFromSelection()
 	{
 		// TODO: Test this line i hope for the love of god this works
-		Tower wipTower = (Tower)Activator.CreateInstance(Type.GetType(towerToCreatePreview.InheritedClassName()));
+		Tower wipTower = (Tower)Activator.CreateInstance(Type.GetType(towerToCreatePreview.GetType().Name));
 
 		Array<Effect> effects = new Array<Effect>();
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)

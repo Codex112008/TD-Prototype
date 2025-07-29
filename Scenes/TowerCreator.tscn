@@ -9,23 +9,29 @@
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI")]
 script = ExtResource("1_4wc6v")
 towerTypeScene = ExtResource("2_snh4w")
-_towerCreatorUI = NodePath("TowerCreatorUI")
+_towerCreatorUI = NodePath("UI/TowerCreatorUI")
 _statPickerScene = ExtResource("2_wf2ka")
 _modifierPickerScene = ExtResource("3_g4i06")
 
+[node name="TowerPreview" type="Node2D" parent="."]
+
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="TowerCreatorUI" type="VBoxContainer" parent="."]
-offset_left = -426.0
-offset_top = -294.0
-offset_right = -255.0
-offset_bottom = -121.0
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="SaveButton" type="Button" parent="TowerCreatorUI"]
+[node name="TowerCreatorUI" type="VBoxContainer" parent="UI"]
+layout_direction = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = 63.0
+grow_vertical = 2
+theme = ExtResource("4_g4i06")
+alignment = 1
+
+[node name="SaveButton" type="Button" parent="UI/TowerCreatorUI"]
 layout_mode = 2
 theme = ExtResource("4_g4i06")
 text = "Save"
 
-[node name="TowerPreview" type="Node2D" parent="."]
-
-[connection signal="pressed" from="TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
+[connection signal="pressed" from="UI/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]

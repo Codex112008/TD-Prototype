@@ -6,11 +6,12 @@
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yi5pi"]
 size = Vector2(28, 28)
 
-[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("_selectedModifierButton", "ModifierList")]
+[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("ModifierLabel", "_selectedModifierButton", "ModifierList")]
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_t4dkk")
 script = ExtResource("1_5ushg")
+ModifierLabel = NodePath("HBoxContainer/RichTextLabel")
 _selectedModifierButton = NodePath("HBoxContainer/TextureButton")
 ModifierList = NodePath("ModifierList")
 

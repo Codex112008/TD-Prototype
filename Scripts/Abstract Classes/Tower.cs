@@ -85,11 +85,6 @@ public abstract partial class Tower : Node2D
         return finalTowerStats;
     }
 
-    public string InheritedClassName()
-    {
-        return GetType().Name;
-    }
-
     protected abstract void Fire();
 }
 
