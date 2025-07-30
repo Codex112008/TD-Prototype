@@ -1,0 +1,24 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://5s71ihm700n0"]
+
+[ext_resource type="Texture2D" uid="uid://c8d38tjs6fgqh" path="res://Sprites/towerDefense_tilesheet.png" id="1_gsoxk"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rw2tj"]
+texture = ExtResource("1_gsoxk")
+texture_region_size = Vector2i(64, 64)
+1:1/0 = 0
+1:1/0/custom_data_0 = true
+1:1/0/custom_data_1 = 10
+16:7/0 = 0
+16:7/0/custom_data_1 = 1
+16:9/0 = 0
+16:9/0/custom_data_1 = 1
+4:2/0 = 0
+4:2/0/custom_data_1 = 1
+
+[resource]
+tile_size = Vector2i(64, 64)
+custom_data_layer_0/name = "Buildable"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "MovementCost"
+custom_data_layer_1/type = 2
+sources/9 = SubResource("TileSetAtlasSource_rw2tj")

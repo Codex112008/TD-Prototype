@@ -24,7 +24,9 @@ public abstract partial class Tower : Node2D
                 _projectile = value;
         }
     }
-    [Export] public Dictionary<TowerStat, int> TowerStats;
+    [Export] public Dictionary<TowerStat, int> BaseTowerStats;
+
+    public bool IsBuildingPreview = false;
 
     // Following functions used in tower creation
     public void SetEffects(Array<TowerEffect> effects)
@@ -66,29 +68,29 @@ public abstract partial class Tower : Node2D
 
     protected virtual int GetPointCostFromDamage()
     {
-        return TowerStats[TowerStat.Damage];
+        return BaseTowerStats[TowerStat.Damage];
     }
 
     protected virtual int GetPointCostFromRange()
     {
-        return TowerStats[TowerStat.Range] / 10;
+        return BaseTowerStats[TowerStat.Range] / 10;
     }
 
     protected virtual int GetPointCostFromFireRate()
     {
-        return TowerStats[TowerStat.FireRate] * 2;
+        return BaseTowerStats[TowerStat.FireRate] * 2;
     }
 
     protected virtual int GetMaximumPointsFromCost()
     {
-        return TowerStats[TowerStat.Cost] / 50;
+        return BaseTowerStats[TowerStat.Cost] / 50;
     }
 
     // Calculates the stats of the tower after multipliers from effect and projectile
     public Dictionary<TowerStat, float> GetFinalTowerStats()
     {
         Dictionary<TowerStat, float> finalTowerStats = [];
-        foreach ((TowerStat stat, int value) in TowerStats)
+        foreach ((TowerStat stat, int value) in BaseTowerStats)
         {
             finalTowerStats[stat] = value;
             finalTowerStats[stat] *= Projectile.StatMultipliers[stat];

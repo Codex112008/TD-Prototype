@@ -11,9 +11,12 @@ config_version=5
 [application]
 
 config/name="TD-Prototype"
-run/main_scene="uid://bg6bvm6eooseb"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://Sprites/icon.svg"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [dotnet]
 

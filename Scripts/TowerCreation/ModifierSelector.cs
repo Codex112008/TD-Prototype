@@ -36,7 +36,7 @@ public partial class ModifierSelector : VBoxContainer
 
 		// TODO: Change _selectedModifierButton's texture to icon
 
-		TowerCreatorManager.instance.UpdateTowerPreview();
+		TowerCreatorController.instance.UpdateTowerPreview();
 	}
 
 	public void UpdateModifierSelector()
