@@ -14,6 +14,13 @@ public abstract partial class Tower : Node2D
         get => _projectile;
         set
         {
+            // Always duplicate when using in tower creator
+            if (value != null)
+            {
+                _projectile = (Projectile)value.Duplicate();
+                return;
+            }
+
             // Always duplicate when setting a new projectile to not modify original projectile resource
             if (value != null && !_createdProjectileInstance)
             {
@@ -24,7 +31,7 @@ public abstract partial class Tower : Node2D
                 _projectile = value;
         }
     }
-    [Export] public Dictionary<TowerStat, int> BaseTowerStats;
+    [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
 
     public bool IsBuildingPreview = false;
 
@@ -43,7 +50,7 @@ public abstract partial class Tower : Node2D
             return false;
     }
 
-    protected int GetCurrentTotalPointsAllocated()
+    public int GetCurrentTotalPointsAllocated()
     {
         return Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
     }
@@ -68,22 +75,22 @@ public abstract partial class Tower : Node2D
 
     protected virtual int GetPointCostFromDamage()
     {
-        return BaseTowerStats[TowerStat.Damage];
+        return BaseTowerStats[TowerStat.Damage] * 50;
     }
 
     protected virtual int GetPointCostFromRange()
     {
-        return BaseTowerStats[TowerStat.Range] / 10;
+        return BaseTowerStats[TowerStat.Range] * 5;
     }
 
     protected virtual int GetPointCostFromFireRate()
     {
-        return BaseTowerStats[TowerStat.FireRate] * 2;
+        return BaseTowerStats[TowerStat.FireRate] * 100;
     }
 
-    protected virtual int GetMaximumPointsFromCost()
+    public virtual int GetMaximumPointsFromCost()
     {
-        return BaseTowerStats[TowerStat.Cost] / 50;
+        return BaseTowerStats[TowerStat.Cost];
     }
 
     // Calculates the stats of the tower after multipliers from effect and projectile

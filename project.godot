@@ -25,3 +25,8 @@ project/assembly_name="TD-Prototype"
 [global_group]
 
 Enemy="Group for every enemy"
+
+[layer_names]
+
+2d_physics/layer_1="Enemies"
+2d_physics/layer_2="Tower Bullets"

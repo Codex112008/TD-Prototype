@@ -16,10 +16,9 @@ public partial class PathfindingManager : Node
 		instance = this;
 	}
 
-	[Export] private TileMapLayer _levelTileMap;
+	[Export] public TileMapLayer LevelTileMap;
 
 	private AStarGrid2D _aStarGrid = new();
-	private Array<Vector2I> _pathArray = [];
 
 	private const string MOVEMENT_COST = "MovementCost";
 
@@ -36,8 +35,8 @@ public partial class PathfindingManager : Node
 
 	private void SetUpAStarGrid()
 	{
-		_aStarGrid.Region = _levelTileMap.GetUsedRect();
-		_aStarGrid.CellSize = _levelTileMap.TileSet.TileSize;
+		_aStarGrid.Region = LevelTileMap.GetUsedRect();
+		_aStarGrid.CellSize = LevelTileMap.TileSet.TileSize;
 		_aStarGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.OnlyIfNoObstacles; // Maybe change this to smth else if dont like
 
 		_aStarGrid.Update();
@@ -47,10 +46,9 @@ public partial class PathfindingManager : Node
 
 	private void UpdateTerrainMovementValues()
 	{
-		_pathArray.Clear();
-		foreach (Vector2I cellPos in _levelTileMap.GetUsedCells())
+		foreach (Vector2I cellPos in LevelTileMap.GetUsedCells())
 		{
-			int tileMovementCost = (int)_levelTileMap.GetCellTileData(cellPos).GetCustomData(MOVEMENT_COST);
+			int tileMovementCost = (int)LevelTileMap.GetCellTileData(cellPos).GetCustomData(MOVEMENT_COST);
 			if (tileMovementCost < 10)
 			{
 				_aStarGrid.SetPointWeightScale(cellPos, tileMovementCost);
@@ -62,18 +60,25 @@ public partial class PathfindingManager : Node
 		}
 	}
 
-	public Array<Vector2I> GetValidPath(Vector2I startPos, Vector2I endPos)
+	public Array<Vector2> GetValidPath(Vector2I startPos, Vector2I endPos)
 	{
-		_pathArray.Clear();
+		Array<Vector2> pathArray = [];
+		
+		RandomNumberGenerator rand = new();
+		float offsetMargin = _aStarGrid.CellSize.X - 20f;
+		Vector2 offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
 
 		foreach (Vector2I point in _aStarGrid.GetPointPath(startPos, endPos).Select(v => (Vector2I)v))
 		{
-			Vector2I currentPoint = point;
-			currentPoint += (Vector2I)(_aStarGrid.CellSize / 2);
+			Vector2 currentPoint = point;
+			currentPoint += (Vector2I)(_aStarGrid.CellSize / 2) + offset;
 
-            _pathArray.Add(currentPoint);
+			pathArray.Add(currentPoint);
 		}
 
-		return _pathArray;
+		pathArray[0] -= offset;
+		pathArray[^1] -= offset;
+
+		return pathArray;
 	}
 }

@@ -8,7 +8,7 @@ public partial class ModifierSelector : VBoxContainer
 	[Export] public RichTextLabel CostLabel;
 	[Export] private TextureButton _selectedModifierButton;
 	[Export] public ItemList ModifierList;
-	public string PathToSelectedModifierResource;
+	[Export] public string PathToSelectedModifierResource;
 	public string PathToModifiers;
 
 	// Called when the node enters the scene tree for the first time.
@@ -70,6 +70,6 @@ public partial class ModifierSelector : VBoxContainer
 			subfolder = "Projectiles";
 
 		string selectedModifier = ModifierList.GetItemText(ModifierList.GetSelectedItems()[0]);
-		PathToSelectedModifierResource = "res://Custom Resources/" + subfolder + "/" + selectedModifier + "/" + selectedModifier + subfolder[..^1] + "Resource.tres/";
+		PathToSelectedModifierResource = "res://Custom Resources/" + subfolder + "/" + selectedModifier + "/" + selectedModifier + subfolder[..^1] + "Resource.tres";
 	}
 }

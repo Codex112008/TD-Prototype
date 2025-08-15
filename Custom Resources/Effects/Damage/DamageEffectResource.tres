@@ -4,4 +4,10 @@
 
 [resource]
 script = ExtResource("1_abyiv")
-PointCost = 1
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 1.0,
+2: 1.0,
+3: 1.0
+})
+PointCost = 25

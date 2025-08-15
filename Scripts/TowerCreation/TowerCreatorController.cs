@@ -10,30 +10,35 @@ public partial class TowerCreatorController : Node2D
 	{
 		if (instance != null)
 		{
-			GD.PrintErr("More than one BuildManager in scene!");
+			GD.PrintErr("More than one TowerCreator in scene!");
 			return;
 		}
 		instance = this;
 	}
-
-	[Export] private PackedScene towerTypeScene;
+	
+	[Export] private Dictionary<TowerStat, int> _defaultStats;
+	[Export] private PackedScene _towerTypeScene;
 	[Export] private VBoxContainer _towerCreatorUI;
-	[Export] private Node2D _towerPreviewArea;
+	[Export] private TileMapLayer _towerPreviewArea;
 	[Export] private PackedScene _statPickerScene;
 	[Export] private PackedScene _modifierPickerScene;
-	[Export] private int towerLevel = 0;
+	[Export] private int _towerLevel = 0;
 	private Dictionary<TowerStat, float> _selectedStats;
 	private Projectile _selectedProjectile;
 	private Array<TowerEffect> _selectedEffects;
-	private Tower towerToCreatePreview;
+	private TextEdit _towerNameInput;
+	private RichTextLabel _totalTowerCostLabel;
+	private Tower _towerToCreatePreview;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		towerToCreatePreview = towerTypeScene.Instantiate<Tower>();
-		_towerPreviewArea.AddChild(towerToCreatePreview);
+		_towerNameInput = _towerCreatorUI.GetChild<TextEdit>(1);
+		_towerNameInput.Text = SplitIntoPascalCase(_towerTypeScene.ResourcePath[(_towerTypeScene.ResourcePath.LastIndexOf('/') + 1).._towerTypeScene.ResourcePath.LastIndexOf(".tscn")]);
 
-		// TODO: move towertocreate when i make the preview area to the preview place thing idk
+		_towerToCreatePreview = _towerTypeScene.Instantiate<Tower>();
+		_towerToCreatePreview.GlobalPosition = _towerPreviewArea.MapToLocal(new Vector2I(9, 4)) - _towerPreviewArea.TileSet.TileSize / 2;
+		_towerPreviewArea.AddChild(_towerToCreatePreview);
 
 		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
 		{
@@ -41,6 +46,7 @@ public partial class TowerCreatorController : Node2D
 
 			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
 			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
+			statPickerSpinBox.Value = _defaultStats[stat];
 
 			if (stat == TowerStat.FireRate)
 			{
@@ -55,12 +61,23 @@ public partial class TowerCreatorController : Node2D
 
 		InstantiateModifierSelector("Projectile", "res://Custom Resources/Projectiles/");
 
-		for (int i = 0; i < towerLevel + 1; i++)
+		for (int i = 0; i < _towerLevel + 1; i++)
 		{
 			InstantiateModifierSelector("Effect " + (i + 1), "res://Custom Resources/Effects/");
 		}
 
+		_totalTowerCostLabel = new RichTextLabel
+		{
+			Theme = _towerCreatorUI.Theme,
+			FitContent = true,
+			AutowrapMode = TextServer.AutowrapMode.Off,
+			CustomMinimumSize = Vector2.Down * 36
+		};
+		_towerCreatorUI.AddChild(_totalTowerCostLabel);
+
 		_towerCreatorUI.MoveChild(_towerCreatorUI.GetChild(0), -1); // Moves the save button to the last index, so appears last in container
+
+		UpdateTowerPreview();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -72,7 +89,6 @@ public partial class TowerCreatorController : Node2D
 	{
 		// TODO: Test this line i hope for the love of god this works
 		//Tower wipTower = (Tower)Activator.CreateInstance(Type.GetType(towerToCreatePreview.GetType().Name));
-
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
 		{
@@ -80,34 +96,40 @@ public partial class TowerCreatorController : Node2D
 			if (pickerNodeType is StatSelector statPicker)
 			{
 				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statPicker.StatLabel.Text));
-				towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statPicker.StatSpinBox.Value);
+				_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statPicker.StatSpinBox.Value);
 				if (stat != TowerStat.Cost)
-					statPicker.CostLabel.Text = "Cost: " + towerToCreatePreview.GetPointCostForStat(stat);
+				{
+					int statCost = _towerToCreatePreview.GetPointCostForStat(stat);
+					statPicker.CostLabel.Text = "Cost: " + statCost;
+				}
 				else
-					statPicker.CostLabel.Text = "Max Points: " + towerToCreatePreview.GetPointCostForStat(stat);
+				{
+					int max = _towerToCreatePreview.GetPointCostForStat(stat);
+					statPicker.CostLabel.Text = "Max Points: " + max;
+				}
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
-				bool isProjectile = modifierPicker.ModifierLabel.Text.Contains("Projectile");
-				if (isProjectile)
-				{
-					towerToCreatePreview.Projectile = ResourceLoader.Load<Projectile>(modifierPicker.PathToSelectedModifierResource);
-				}
-				else
-				{
-					effects.Add(ResourceLoader.Load<TowerEffect>(modifierPicker.PathToSelectedModifierResource));
-				}
+				TowerComponent towerComponent = ResourceLoader.Load<TowerComponent>(modifierPicker.PathToSelectedModifierResource);
 
-				modifierPicker.CostLabel.Text = "Cost: " + ResourceLoader.Load<TowerComponent>(modifierPicker.PathToSelectedModifierResource).PointCost;
+				if (towerComponent is Projectile projectile)
+					_towerToCreatePreview.Projectile = projectile;
+				else if (towerComponent is TowerEffect effect)
+					effects.Add(effect);
+
+				modifierPicker.CostLabel.Text = "Cost: " + towerComponent.PointCost;
 			}
 		}
-		towerToCreatePreview.SetEffects(effects);
-		GD.Print(towerToCreatePreview.Projectile.Effects);
+		_towerToCreatePreview.SetEffects(effects);
+
+		_totalTowerCostLabel.Text = "Point Usage: " + _towerToCreatePreview.GetCurrentTotalPointsAllocated() + "/" + _towerToCreatePreview.GetMaximumPointsFromCost();
+		if (_towerToCreatePreview.GetCurrentTotalPointsAllocated() > _towerToCreatePreview.GetMaximumPointsFromCost())
+			_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (_towerToCreatePreview.GetCurrentTotalPointsAllocated() - _towerToCreatePreview.GetMaximumPointsFromCost()) + " points";
 	}
 
 	public void SaveTowerResource()
 	{
-		if (towerToCreatePreview.HasValidPointAllocation())
+		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
 			GD.Print("Successfully created tower!");
 		}
@@ -118,12 +140,11 @@ public partial class TowerCreatorController : Node2D
 		}
 
 		PackedScene towerToSave = new();
-		Error packResult = towerToSave.Pack(towerToCreatePreview);
-		GD.Print(towerToSave);
+		Error packResult = towerToSave.Pack(_towerToCreatePreview);
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{
-			Error saveResult = ResourceSaver.Save(towerToSave, "res://SavedTowers/newtower.tscn");
+			Error saveResult = ResourceSaver.Save(towerToSave, "res://SavedTowers/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 			GD.Print(saveResult);
 		}
 		else
@@ -145,7 +166,7 @@ public partial class TowerCreatorController : Node2D
 	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
 	{
 		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
-		statPicker.StatLabel.Text = SplitPascalCase(statSelectorLabelName);
+		statPicker.StatLabel.Text = SplitIntoPascalCase(statSelectorLabelName);
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;
@@ -153,7 +174,7 @@ public partial class TowerCreatorController : Node2D
 
 	// TODO: maybe move this to some util class
 	private static readonly Regex sPascalCase = new("(?<!^)([A-Z])");
-	public static string SplitPascalCase(string input)
+	public static string SplitIntoPascalCase(string input)
 	{
 		// Inserts a space before each uppercase letter that is not the first character.
 		// The pattern ensures that a space is inserted only if the uppercase letter
