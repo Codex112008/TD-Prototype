@@ -106,19 +106,3 @@ public partial class Enemy : CharacterBody2D
 		}
 	}
 }
-
-public enum EnemyStat
-{
-	MaxHealth,
-	Speed,
-	Damage,
-	Defence
-}
-
-public enum EnemyEffectTrigger
-{
-    OnSpawn,
-    OnDeath,
-    OnDamage,
-    OnTimer
-}

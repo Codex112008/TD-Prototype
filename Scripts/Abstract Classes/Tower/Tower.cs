@@ -150,11 +150,3 @@ public abstract partial class Tower : Node2D
 
     protected abstract void Fire();
 }
-
-public enum TowerStat
-{
-    Cost,
-    Damage,
-    Range,
-    FireRate,
-}

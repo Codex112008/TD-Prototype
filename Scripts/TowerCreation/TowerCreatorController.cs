@@ -15,6 +15,8 @@ public partial class TowerCreatorController : Node2D
 		}
 		instance = this;
 	}
+
+	[Export] private string _savedTowerFilePath = "res://RuntimeData/SavedTowers/";
 	[Export] private PackedScene _baseTowerScene;
 	[Export] private VBoxContainer _towerCreatorUI;
 	[Export] private TileMapLayer _towerPreviewArea;
@@ -156,7 +158,7 @@ public partial class TowerCreatorController : Node2D
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{
-			Error saveResult = ResourceSaver.Save(towerToSaveScene, "res://SavedTowers/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+			Error saveResult = ResourceSaver.Save(towerToSaveScene, _savedTowerFilePath + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 			GD.Print(saveResult);
 		}
 		else
@@ -170,7 +172,7 @@ public partial class TowerCreatorController : Node2D
 		ModifierSelector modifierSelector = _modifierPickerScene.Instantiate<ModifierSelector>();
 
 		modifierSelector.PathToModifiers = pathToModifiers;
-		
+
 		if (number != -1)
 			modifierSelectorLabelName += " " + (number + 1);
 		modifierSelector.ModifierLabel.Text = modifierSelectorLabelName;
