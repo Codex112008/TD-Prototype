@@ -158,8 +158,19 @@ public partial class TowerCreatorController : Node2D
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{
-			Error saveResult = ResourceSaver.Save(towerToSaveScene, _savedTowerFilePath + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
-			GD.Print(saveResult);
+			DirAccess dirAccess = DirAccess.Open(_savedTowerFilePath);
+			if (dirAccess != null)
+			{
+				if (!dirAccess.DirExists(RemoveWhitespaces(_towerNameInput.Text)))
+				{
+					dirAccess.MakeDir(RemoveWhitespaces(_towerNameInput.Text));
+				}
+
+				dirAccess.ChangeDir(dirAccess.GetCurrentDir() + "/" + _towerNameInput.Text);
+
+				Error saveResult = ResourceSaver.Save(towerToSaveScene, _savedTowerFilePath + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+				GD.Print(saveResult);
+			}
 		}
 		else
 			GD.Print("Smth went wrong xd");
