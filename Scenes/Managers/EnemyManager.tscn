@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddy77x3qvehc1"]
 
-[ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scenes/TowerCreation/EnemyManager.cs" id="1_1ax1c"]
+[ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers/EnemyManager.cs" id="1_1ax1c"]
 [ext_resource type="PackedScene" uid="uid://cb1h4451jbyr0" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.tscn" id="2_iwexs"]
 
 [node name="EnemyManager" type="Node" node_paths=PackedStringArray("_waveTimer", "_spawnTimer")]

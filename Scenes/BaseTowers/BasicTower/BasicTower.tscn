@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://c53r4y5k7lptf"]
+[gd_scene load_steps=6 format=3 uid="uid://c53r4y5k7lptf"]
 
 [ext_resource type="Texture2D" uid="uid://dxo8fp0d7jnom" path="res://Sprites/kenney_tower-defense-top-down/PNG/Default size/towerDefense_tile249.png" id="1_golgd"]
 [ext_resource type="Texture2D" uid="uid://dd8bre0o4tbb7" path="res://Sprites/kenney_tower-defense-top-down/PNG/Default size/towerDefense_tile180.png" id="1_wqlmg"]
 [ext_resource type="Script" uid="uid://476fij86s3r3" path="res://Scenes/BaseTowers/BasicTower/BasicTower.cs" id="2_8n507"]
+[ext_resource type="Texture2D" uid="uid://dk6ep76ai5qt" path="res://Sprites/range_overlay.png" id="3_gv3ac"]
+[ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="4_vekyq"]
 
 [node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint")]
 texture = ExtResource("1_wqlmg")
@@ -10,12 +12,14 @@ centered = false
 script = ExtResource("2_8n507")
 _firePoint = NodePath("PivotPoint/FirePoint")
 _pivotPoint = NodePath("PivotPoint")
-_rotateSpeed = 100.0
+_rotateSpeed = 5.0
+_rangeOverlayTexture = ExtResource("3_gv3ac")
+Projectile = ExtResource("4_vekyq")
 BaseTowerStats = Dictionary[int, int]({
-0: 0,
-1: 0,
-2: 0,
-3: 0
+0: 300,
+1: 2,
+2: 25,
+3: 2
 })
 
 [node name="PivotPoint" type="Marker2D" parent="."]
@@ -27,3 +31,6 @@ texture = ExtResource("1_golgd")
 
 [node name="FirePoint" type="Marker2D" parent="PivotPoint"]
 position = Vector2(0, -28)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(32, 32)

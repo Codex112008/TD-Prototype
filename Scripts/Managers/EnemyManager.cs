@@ -2,8 +2,20 @@ using Godot;
 using Godot.Collections;
 using System;
 
+[GlobalClass]
 public partial class EnemyManager : Node
 {
+	public static EnemyManager instance;
+	public override void _EnterTree()
+	{
+		if (instance != null)
+		{
+			GD.PrintErr("More than one EnemyManager in scene!");
+			return;
+		}
+		instance = this;
+	}
+
 	[Export] private Marker2D _spawnPoint;
 	[Export] private Marker2D _enemyTarget;
 	[Export] private PackedScene _enemyScene;

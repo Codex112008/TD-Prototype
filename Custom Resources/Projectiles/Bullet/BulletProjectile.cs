@@ -10,8 +10,9 @@ public partial class BulletProjectile : Projectile
     {
         BulletProjectileBehaviour bullet = ProjectileScene.Instantiate<BulletProjectileBehaviour>();
         bullet.GlobalPosition = firePoint.GlobalPosition;
-        bullet.Rotation = firePoint.GlobalRotation;
+        bullet.Rotation = firePoint.GlobalRotation - Mathf.Pi / 2f;
         bullet.Stats = finalStats;
         bullet.BulletData = this;
+        firePoint.GetTree().Root.AddChild(bullet);
     }
 }

@@ -15,9 +15,7 @@ public partial class TowerCreatorController : Node2D
 		}
 		instance = this;
 	}
-	
-	[Export] private Dictionary<TowerStat, int> _defaultStats;
-	[Export] private PackedScene _towerTypeScene;
+	[Export] private PackedScene _baseTowerScene;
 	[Export] private VBoxContainer _towerCreatorUI;
 	[Export] private TileMapLayer _towerPreviewArea;
 	[Export] private PackedScene _statPickerScene;
@@ -34,10 +32,11 @@ public partial class TowerCreatorController : Node2D
 	public override void _Ready()
 	{
 		_towerNameInput = _towerCreatorUI.GetChild<TextEdit>(1);
-		_towerNameInput.Text = SplitIntoPascalCase(_towerTypeScene.ResourcePath[(_towerTypeScene.ResourcePath.LastIndexOf('/') + 1).._towerTypeScene.ResourcePath.LastIndexOf(".tscn")]);
+		_towerNameInput.Text = SplitIntoPascalCase(_baseTowerScene.ResourcePath[(_baseTowerScene.ResourcePath.LastIndexOf('/') + 1).._baseTowerScene.ResourcePath.LastIndexOf(".tscn")]);
 
-		_towerToCreatePreview = _towerTypeScene.Instantiate<Tower>();
-		_towerToCreatePreview.GlobalPosition = _towerPreviewArea.MapToLocal(new Vector2I(9, 4)) - _towerPreviewArea.TileSet.TileSize / 2;
+		_towerToCreatePreview = _baseTowerScene.Instantiate<Tower>();
+		_towerToCreatePreview.GlobalPosition = new Vector2I(9, 4) * 64;
+		_towerToCreatePreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerToCreatePreview);
 
 		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
@@ -46,24 +45,30 @@ public partial class TowerCreatorController : Node2D
 
 			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
 			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
-			statPickerSpinBox.Value = _defaultStats[stat];
+			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
 
-			if (stat == TowerStat.FireRate)
+			switch (stat)
 			{
-				statPickerSpinBox.Suffix = "/s";
+				case TowerStat.Cost:
+					statPickerSpinBox.Step = 50;
+					statPickerSpinBox.MaxValue = 1000;
+					break;
+				case TowerStat.Range:
+					statPickerSpinBox.Step = 5;
+					break;
+				case TowerStat.FireRate:
+					statPickerSpinBox.Suffix = "/s";
+					break;
 			}
-			else if (stat == TowerStat.Cost)
-			{
-				statPickerSpinBox.Step = 50;
-				statPickerSpinBox.MaxValue = 1000;
-			}
+
+			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
 		}
 
 		InstantiateModifierSelector("Projectile", "res://Custom Resources/Projectiles/");
 
 		for (int i = 0; i < _towerLevel + 1; i++)
 		{
-			InstantiateModifierSelector("Effect " + (i + 1), "res://Custom Resources/Effects/");
+			InstantiateModifierSelector("Effect", "res://Custom Resources/Effects/", i);
 		}
 
 		_totalTowerCostLabel = new RichTextLabel
@@ -122,13 +127,20 @@ public partial class TowerCreatorController : Node2D
 		}
 		_towerToCreatePreview.SetEffects(effects);
 
-		_totalTowerCostLabel.Text = "Point Usage: " + _towerToCreatePreview.GetCurrentTotalPointsAllocated() + "/" + _towerToCreatePreview.GetMaximumPointsFromCost();
-		if (_towerToCreatePreview.GetCurrentTotalPointsAllocated() > _towerToCreatePreview.GetMaximumPointsFromCost())
-			_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (_towerToCreatePreview.GetCurrentTotalPointsAllocated() - _towerToCreatePreview.GetMaximumPointsFromCost()) + " points";
+		if (_totalTowerCostLabel != null)
+		{
+			_totalTowerCostLabel.Text = "Point Usage: " + _towerToCreatePreview.GetCurrentTotalPointsAllocated() + "/" + _towerToCreatePreview.GetMaximumPointsFromCost();
+			if (_towerToCreatePreview.GetCurrentTotalPointsAllocated() > _towerToCreatePreview.GetMaximumPointsFromCost())
+				_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (_towerToCreatePreview.GetCurrentTotalPointsAllocated() - _towerToCreatePreview.GetMaximumPointsFromCost()) + " points";
+		}
 	}
 
 	public void SaveTowerResource()
 	{
+		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();
+		towerToSave.RangeAlwaysVisible = false;
+		towerToSave.Position = Vector2.Zero;
+
 		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
 			GD.Print("Successfully created tower!");
@@ -139,28 +151,62 @@ public partial class TowerCreatorController : Node2D
 			return;
 		}
 
-		PackedScene towerToSave = new();
-		Error packResult = towerToSave.Pack(_towerToCreatePreview);
+		PackedScene towerToSaveScene = new();
+		Error packResult = towerToSaveScene.Pack(towerToSave);
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{
-			Error saveResult = ResourceSaver.Save(towerToSave, "res://SavedTowers/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+			Error saveResult = ResourceSaver.Save(towerToSaveScene, "res://SavedTowers/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 			GD.Print(saveResult);
 		}
 		else
 			GD.Print("Smth went wrong xd");
+
+		towerToSave.Free();
 	}
 
-	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, string pathToModifiers)
+	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, string pathToModifiers, int number = -1)
 	{
-		ModifierSelector modifierPicker = _modifierPickerScene.Instantiate<ModifierSelector>();
-		modifierPicker.PathToModifiers = pathToModifiers;
-		modifierPicker.ModifierLabel.Text = modifierSelectorLabelName;
-		modifierPicker.UpdateModifierSelector();
+		ModifierSelector modifierSelector = _modifierPickerScene.Instantiate<ModifierSelector>();
 
-		_towerCreatorUI.AddChild(modifierPicker);
+		modifierSelector.PathToModifiers = pathToModifiers;
+		
+		if (number != -1)
+			modifierSelectorLabelName += " " + (number + 1);
+		modifierSelector.ModifierLabel.Text = modifierSelectorLabelName;
 
-		return modifierPicker;
+		modifierSelector.UpdateModifierSelector();
+
+		if (modifierSelectorLabelName.Contains("Projectile") && _towerToCreatePreview.Projectile != null)
+		{
+			SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.ResourceName);
+		}
+		else if (modifierSelectorLabelName.Contains("Effect") && _towerToCreatePreview.Projectile.Effects.Count > number)
+		{
+			SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.Effects[number].ResourceName);
+		}
+		else
+		{
+			modifierSelector.ModifierList.Select(0);
+			modifierSelector.UpdatePathToSelectedModifierResource(0);
+		}
+
+		_towerCreatorUI.AddChild(modifierSelector);
+
+		return modifierSelector;
+	}
+
+	private void SelectModifierIndexFromName(ModifierSelector modifierSelector, string modifierName)
+	{
+		for (int i = 0; i < modifierSelector.ModifierList.ItemCount; i++)
+		{
+			if (RemoveWhitespaces(modifierSelector.ModifierList.GetItemText(i)) == RemoveWhitespaces(modifierName))
+			{
+				modifierSelector.ModifierList.Select(i);
+				modifierSelector.UpdatePathToSelectedModifierResource(i);
+				break;
+			}
+		}
 	}
 
 	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
@@ -187,5 +233,19 @@ public partial class TowerCreatorController : Node2D
 	public static string RemoveWhitespaces(string input)
 	{
 		return input.Replace(" ", "");
+	}
+
+	public static Array<string> GetFolderNames(string path)
+	{
+		// Get all directories at the specified path
+		string[] folders = DirAccess.GetDirectoriesAt(path);
+
+		if (folders == null)
+		{
+			GD.PushError($"Failed to access directory: {path}");
+			return [];
+		}
+
+		return [.. folders];
 	}
 }

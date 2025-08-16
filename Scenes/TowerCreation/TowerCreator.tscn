@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://byt35up7juchg"]
+[gd_scene load_steps=11 format=4 uid="uid://byt35up7juchg"]
 
 [ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/TowerCreation/TowerCreatorController.cs" id="1_iqnq1"]
 [ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Scenes/BaseTowers/BasicTower/BasicTower.tscn" id="2_pcf17"]
@@ -8,16 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="5_gom0i"]
 [ext_resource type="TileSet" uid="uid://5s71ihm700n0" path="res://TileSets/PrototypeTileSet.tres" id="5_pcf17"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="6_qpodo"]
+[ext_resource type="Texture2D" uid="uid://b0ecnmaulif1i" path="res://Sprites/kenney_tower-defense-top-down/PNG/Default size/towerDefense_tile015.png" id="8_gom0i"]
+[ext_resource type="Script" uid="uid://4vlw08mhx3rg" path="res://Scripts/TileHighlight.cs" id="9_bdbue"]
 
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI", "_towerPreviewArea")]
 script = ExtResource("1_iqnq1")
-_defaultStats = Dictionary[int, int]({
-0: 300,
-1: 1,
-2: 20,
-3: 1
-})
-_towerTypeScene = ExtResource("2_pcf17")
+_baseTowerScene = ExtResource("2_pcf17")
 _towerCreatorUI = NodePath("UI/TowerCreatorUI")
 _towerPreviewArea = NodePath("TowerPreview")
 _statPickerScene = ExtResource("3_qpodo")
@@ -41,6 +37,11 @@ position = Vector2(350, 160)
 
 [node name="Enemy Goal" type="Marker2D" parent="TowerPreview"]
 position = Vector2(997, 478)
+
+[node name="TileHighlight" type="Sprite2D" parent="TowerPreview"]
+texture = ExtResource("8_gom0i")
+centered = false
+script = ExtResource("9_bdbue")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(578, 323)

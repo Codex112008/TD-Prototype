@@ -3,6 +3,7 @@ using Godot.Collections;
 using System;
 using System.ComponentModel.Design;
 
+[GlobalClass]
 public partial class BuildingManager : Node2D
 {
 	public static BuildingManager instance;
@@ -94,7 +95,7 @@ public partial class BuildingManager : Node2D
 			if (TowersToBuild[index] != _selectedTower)
 			{
 				_selectedTower = TowersToBuild[index];
-				
+
 				_towerPreview = _selectedTower.Instantiate<Tower>();
 				_towerPreview.IsBuildingPreview = true;
 				_towerParent.AddChild(_towerPreview);

@@ -12,6 +12,8 @@ public partial class BasicTower : Tower
 
     public override void _Ready()
     {
+        base._Ready();
+
         _fireTimer = new Timer
         {
             OneShot = true,
@@ -21,6 +23,8 @@ public partial class BasicTower : Tower
 
     public override void _Process(double delta)
     {
+        base._Process(delta);
+
         if (Projectile != null && Projectile.Effects.Count > 0 && !IsBuildingPreview)
         {
             if (_fireTimer.WaitTime != 1f / GetFinalTowerStats()[TowerStat.FireRate])
@@ -31,14 +35,16 @@ public partial class BasicTower : Tower
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0)
             {
-                if (_target == null)
+                Enemy firstEnemy = FindFirstEnemy();
+                if (_target != firstEnemy)
                 {
-                    _target = FindClosestEnemy();
+                    _target = firstEnemy;
                 }
-                else
+
+                if (_target != null)
                 {
-                    Vector2 dir = GlobalPosition.DirectionTo(_target.GlobalPosition + _target.Velocity);
-                    _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, dir.Angle(), _rotateSpeed * (float)delta);
+                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / 1000));
+                    _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, dir.Angle() + Mathf.Pi / 2f, _rotateSpeed * (float)delta);
 
                     if (_fireTimer.TimeLeft <= 0)
                     {
@@ -50,24 +56,22 @@ public partial class BasicTower : Tower
         }
     }
 
-    private Enemy FindClosestEnemy()
+    private Enemy FindFirstEnemy()
     {
-        Enemy closestEnemy = null;
-        float distanceToClosestEnemy = float.PositiveInfinity;
+        Enemy firstEnemy = null;
         foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
         {
             if (node is Enemy enemy)
             {
-                float distanceToEnemy = GlobalPosition.DistanceTo(enemy.GlobalPosition);
-                if ((closestEnemy == null || distanceToEnemy < distanceToClosestEnemy) && distanceToEnemy <= GetFinalTowerStats()[TowerStat.Range] * GetRangeInTiles())
+                float distanceToEnemy = GetCenteredGlobalPosition().DistanceTo(enemy.GlobalPosition);
+                if ((firstEnemy == null || enemy.PathArray.Count < firstEnemy.PathArray.Count) && distanceToEnemy <= GetRangeInTiles())
                 {
-                    closestEnemy = enemy;
-                    distanceToClosestEnemy = GlobalPosition.DistanceTo(closestEnemy.GlobalPosition);
+                    firstEnemy = enemy;
                 }
             }
         }
 
-        return closestEnemy;
+        return firstEnemy;
     }
 
     protected override void Fire()

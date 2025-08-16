@@ -3,6 +3,7 @@ using Godot.Collections;
 using System;
 using System.Linq;
 
+[GlobalClass]
 public partial class PathfindingManager : Node
 {
 	public static PathfindingManager instance;
@@ -63,7 +64,7 @@ public partial class PathfindingManager : Node
 	public Array<Vector2> GetValidPath(Vector2I startPos, Vector2I endPos)
 	{
 		Array<Vector2> pathArray = [];
-		
+
 		RandomNumberGenerator rand = new();
 		float offsetMargin = _aStarGrid.CellSize.X - 20f;
 		Vector2 offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));

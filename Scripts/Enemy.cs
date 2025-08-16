@@ -10,11 +10,11 @@ public partial class Enemy : CharacterBody2D
 	[Export] public float deceleration = 10f;
 
 	public Vector2 targetPos;
+	public Array<Vector2> PathArray = [];
 
 	private Sprite2D _sprite;
 	private float _currentHealth;
 	private Dictionary<EnemyStat, int> _currentEnemyStats;
-	private Array<Vector2> _pathArray = [];
 
 	public override void _Ready()
 	{
@@ -41,21 +41,21 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		_pathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / 64), (Vector2I)(targetPos / 64));
+		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / 64), (Vector2I)(targetPos / 64));
 	}
 
 	public override void _Process(double delta)
 	{
-		if (_pathArray.Count > 0)
+		if (PathArray.Count > 0)
 		{
-			Vector2 dir = GlobalPosition.DirectionTo(_pathArray[0]);
+			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
 
 			Velocity = Velocity.Lerp(dir.Normalized() * _currentEnemyStats[EnemyStat.Speed], acceleration * (float)delta);
 			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), acceleration * (float)delta);
 
-			if (GlobalPosition.DistanceTo(_pathArray[0]) <= 10)
+			if (GlobalPosition.DistanceTo(PathArray[0]) <= 10)
 			{
-				_pathArray.RemoveAt(0);
+				PathArray.RemoveAt(0);
 			}
 		}
 		else

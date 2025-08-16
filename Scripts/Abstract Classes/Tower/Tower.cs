@@ -6,6 +6,7 @@ using System.Linq;
 [GlobalClass]
 public abstract partial class Tower : Node2D
 {
+    [Export] private Texture2D _rangeOverlayTexture;
     private Projectile _projectile;
     private bool _createdProjectileInstance = false;
     [Export]
@@ -34,6 +35,36 @@ public abstract partial class Tower : Node2D
     [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
 
     public bool IsBuildingPreview = false;
+    public bool RangeAlwaysVisible = false;
+
+    private Sprite2D _rangeOverlay;
+
+    public override void _Ready()
+    {
+        _rangeOverlay = new Sprite2D
+        {
+            Texture = _rangeOverlayTexture,
+            Visible = false,
+            Position = PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 2
+        };
+        AddChild(_rangeOverlay);
+    }
+
+    public override void _Process(double delta)
+    {
+        Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / 64) * 64;
+        if (mousePos == (Vector2I)GlobalPosition || RangeAlwaysVisible)
+        {
+            if (_rangeOverlay.Visible != true)
+                _rangeOverlay.Visible = true;
+            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 620f) * 2, 7.5f * (float)delta);
+        }
+        else
+        {
+            if (_rangeOverlay.Visible != false)
+                _rangeOverlay.Visible = false;
+        }
+    }
 
     // Following functions used in tower creation
     public void SetEffects(Array<TowerEffect> effects)
@@ -75,17 +106,17 @@ public abstract partial class Tower : Node2D
 
     protected virtual int GetPointCostFromDamage()
     {
-        return BaseTowerStats[TowerStat.Damage] * 50;
+        return BaseTowerStats[TowerStat.Damage] * 25;
     }
 
     protected virtual int GetPointCostFromRange()
     {
-        return BaseTowerStats[TowerStat.Range] * 5;
+        return BaseTowerStats[TowerStat.Range] * 2;
     }
 
     protected virtual int GetPointCostFromFireRate()
     {
-        return BaseTowerStats[TowerStat.FireRate] * 100;
+        return BaseTowerStats[TowerStat.FireRate] * 75;
     }
 
     public virtual int GetMaximumPointsFromCost()
@@ -107,8 +138,14 @@ public abstract partial class Tower : Node2D
         return finalTowerStats;
     }
 
-    protected float GetRangeInTiles(){
-        return PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 10;
+    protected float GetRangeInTiles()
+    {
+        return GetFinalTowerStats()[TowerStat.Range] * PathfindingManager.instance.LevelTileMap.TileSet.TileSize.X / 10;
+    }
+
+    protected Vector2 GetCenteredGlobalPosition()
+    {
+        return GlobalPosition + PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 2;
     }
 
     protected abstract void Fire();

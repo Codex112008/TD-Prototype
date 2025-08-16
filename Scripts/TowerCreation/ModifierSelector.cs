@@ -14,8 +14,7 @@ public partial class ModifierSelector : VBoxContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		ModifierList.Select(0);
-		UpdatePathToSelectedModifierResource();
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,7 +31,7 @@ public partial class ModifierSelector : VBoxContainer
 	{
 		ModifierList.Visible = !ModifierList.Visible;
 
-		UpdatePathToSelectedModifierResource();
+		UpdatePathToSelectedModifierResource(index);
 
 		// TODO: Change _selectedModifierButton's texture to icon
 
@@ -41,35 +40,21 @@ public partial class ModifierSelector : VBoxContainer
 
 	public void UpdateModifierSelector()
 	{
-		foreach (string modifierName in GetFolderNames(PathToModifiers))
+		foreach (string modifierName in TowerCreatorController.GetFolderNames(PathToModifiers))
 		{
-			ModifierList.AddItem(modifierName);
+			ModifierList.AddItem(TowerCreatorController.SplitIntoPascalCase(modifierName));
 			// TODO: Also grab a sprite from each folder and set as icon in the future
 		}
 	}
 
-	private Array<string> GetFolderNames(string path)
-	{
-		// Get all directories at the specified path
-		string[] folders = DirAccess.GetDirectoriesAt(path);
-
-		if (folders == null)
-		{
-			GD.PushError($"Failed to access directory: {path}");
-			return [];
-		}
-
-		return [.. folders];
-	}
-
-	private void UpdatePathToSelectedModifierResource()
+	public void UpdatePathToSelectedModifierResource(int index)
 	{
 		bool isProjectile = PathToModifiers.Contains("Projectile");
 		string subfolder = "Effects";
 		if (isProjectile)
 			subfolder = "Projectiles";
 
-		string selectedModifier = ModifierList.GetItemText(ModifierList.GetSelectedItems()[0]);
+		string selectedModifier = TowerCreatorController.RemoveWhitespaces(ModifierList.GetItemText(index));
 		PathToSelectedModifierResource = "res://Custom Resources/" + subfolder + "/" + selectedModifier + "/" + selectedModifier + subfolder[..^1] + "Resource.tres";
 	}
 }

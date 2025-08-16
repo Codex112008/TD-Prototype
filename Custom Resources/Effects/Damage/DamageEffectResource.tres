@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ckfol0wpekdnp" path="res://Custom Resources/Effects/Damage/DamageEffect.cs" id="1_abyiv"]
 
 [resource]
+resource_name = "Damage"
 script = ExtResource("1_abyiv")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
