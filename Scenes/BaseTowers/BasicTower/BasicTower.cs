@@ -26,6 +26,7 @@ public partial class BasicTower : Tower
             if (_fireTimer.WaitTime != 1f / GetFinalTowerStats()[TowerStat.FireRate])
             {
                 _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
+                _fireTimer.Start();
             }
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0)
@@ -52,13 +53,16 @@ public partial class BasicTower : Tower
     private Enemy FindClosestEnemy()
     {
         Enemy closestEnemy = null;
+        float distanceToClosestEnemy = float.PositiveInfinity;
         foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
         {
             if (node is Enemy enemy)
             {
-                if ((closestEnemy == null || GlobalPosition.DistanceTo(enemy.GlobalPosition) < GlobalPosition.DistanceTo(closestEnemy.GlobalPosition)) && GlobalPosition.DistanceTo(enemy.GlobalPosition) <= GetFinalTowerStats()[TowerStat.Range])
+                float distanceToEnemy = GlobalPosition.DistanceTo(enemy.GlobalPosition);
+                if ((closestEnemy == null || distanceToEnemy < distanceToClosestEnemy) && distanceToEnemy <= GetFinalTowerStats()[TowerStat.Range] * GetRangeInTiles())
                 {
                     closestEnemy = enemy;
+                    distanceToClosestEnemy = GlobalPosition.DistanceTo(closestEnemy.GlobalPosition);
                 }
             }
         }

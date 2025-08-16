@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://dxo8fp0d7jnom" path="res://Sprites/kenney_tower-defense-top-down/PNG/Default size/towerDefense_tile249.png" id="4_8c3ih"]
 
 [node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint")]
-position = Vector2(576, 256)
 texture = ExtResource("1_ppt3k")
 centered = false
 script = ExtResource("2_2cihl")

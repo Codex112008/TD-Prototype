@@ -107,6 +107,10 @@ public abstract partial class Tower : Node2D
         return finalTowerStats;
     }
 
+    protected float GetRangeInTiles(){
+        return PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 10;
+    }
+
     protected abstract void Fire();
 }
 
