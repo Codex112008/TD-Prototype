@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 [GlobalClass]
-public abstract partial class Tower : Node2D
+public abstract partial class Tower : Sprite2D
 {
     [Export] private Texture2D _rangeOverlayTexture;
     private Projectile _projectile;
@@ -33,6 +33,7 @@ public abstract partial class Tower : Node2D
         }
     }
     [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
+    [Export] public Array<Sprite2D> SpritesForIcon = [];
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
@@ -41,6 +42,8 @@ public abstract partial class Tower : Node2D
 
     public override void _Ready()
     {
+        SpritesForIcon.Insert(0, this);
+
         _rangeOverlay = new Sprite2D
         {
             Texture = _rangeOverlayTexture,

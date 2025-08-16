@@ -23,7 +23,7 @@ StatMultipliers = Dictionary[int, float]({
 })
 PointCost = 25
 
-[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint")]
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon")]
 texture = ExtResource("1_p5kat")
 centered = false
 script = ExtResource("2_1hj8o")
@@ -38,6 +38,7 @@ BaseTowerStats = Dictionary[int, int]({
 2: 25,
 3: 2
 })
+SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 
 [node name="PivotPoint" type="Marker2D" parent="."]
 position = Vector2(32, 32)

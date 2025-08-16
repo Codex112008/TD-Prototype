@@ -1,7 +1,6 @@
 using Godot;
 using Godot.Collections;
 using System;
-using System.ComponentModel.Design;
 
 [GlobalClass]
 public partial class BuildingManager : Node2D
@@ -27,13 +26,7 @@ public partial class BuildingManager : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		for (int i = 0; i < TowersToBuild.Count; i++)
-		{
-			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
-			towerSelectionButton.Pressed += () => SetSelectedTower(i - 1);
-			// Change button sprite to tower sprite
-			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
-		}
+		GenerateTowerSelectionButtons();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,10 +51,7 @@ public partial class BuildingManager : Node2D
 				{
 					cellTileData.SetCustomData("Buildable", false);
 
-					_selectedTower = null;
-
-					_towerPreview.IsBuildingPreview = false;
-					_towerPreview = null;
+					BuildTower();
 				}
 			}
 		}
@@ -85,7 +75,10 @@ public partial class BuildingManager : Node2D
 
 	private void BuildTower()
 	{
+		_selectedTower = null;
 
+		_towerPreview.IsBuildingPreview = false;
+		_towerPreview = null;
 	}
 
 	public void SetSelectedTower(int index = -1)
@@ -104,6 +97,26 @@ public partial class BuildingManager : Node2D
 		else
 		{
 			_selectedTower = null;
+		}
+	}
+
+	public void GenerateTowerSelectionButtons()
+	{
+		foreach (Node child in TowerSelectionButtonContainer.GetChildren())
+			child.QueueFree();
+		
+		for (int i = 0; i < TowersToBuild.Count; i++)
+		{
+			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
+			towerSelectionButton.Pressed += () => SetSelectedTower(i - 1);
+
+			// Change button textures to saved tower icon
+			DirAccess dirAccess = DirAccess.Open(TowersToBuild[i].ResourcePath[..TowersToBuild[i].ResourcePath.LastIndexOf('/')]);
+			Texture2D towerIcon = GD.Load<Texture2D>(System.Array.Find(dirAccess.GetFiles(), fileName => fileName.Contains("Icon")));
+			towerSelectionButton.TextureNormal = towerIcon;
+			towerSelectionButton.TexturePressed = towerIcon;
+			
+			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
 		}
 	}
 }

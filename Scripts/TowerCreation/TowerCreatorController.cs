@@ -1,7 +1,9 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using static Godot.Image;
 
 public partial class TowerCreatorController : Node2D
 {
@@ -33,14 +35,19 @@ public partial class TowerCreatorController : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
 		_towerNameInput = _towerCreatorUI.GetChild<TextEdit>(1);
 		_towerNameInput.Text = SplitIntoPascalCase(_baseTowerScene.ResourcePath[(_baseTowerScene.ResourcePath.LastIndexOf('/') + 1).._baseTowerScene.ResourcePath.LastIndexOf(".tscn")]);
+		if (_towerLevel > 0) // Cant change name if its an upgraded tower
+			_towerNameInput.Editable = false;
 
+		// Creates a preview of the tower being created
 		_towerToCreatePreview = _baseTowerScene.Instantiate<Tower>();
 		_towerToCreatePreview.GlobalPosition = new Vector2I(9, 4) * 64;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerToCreatePreview);
 
+		// Creates all the stat pickers
 		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
 		{
 			TowerStat stat = (TowerStat)i;
@@ -66,13 +73,12 @@ public partial class TowerCreatorController : Node2D
 			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
 		}
 
+		// Creates the Modifier Selectors
 		InstantiateModifierSelector("Projectile", "res://Custom Resources/Projectiles/");
-
 		for (int i = 0; i < _towerLevel + 1; i++)
-		{
 			InstantiateModifierSelector("Effect", "res://Custom Resources/Effects/", i);
-		}
 
+		// Creates the label showing the total and used cost
 		_totalTowerCostLabel = new RichTextLabel
 		{
 			Theme = _towerCreatorUI.Theme,
@@ -94,16 +100,17 @@ public partial class TowerCreatorController : Node2D
 
 	public void UpdateTowerPreview(double _ = 0)
 	{
-		// TODO: Test this line i hope for the love of god this works
-		//Tower wipTower = (Tower)Activator.CreateInstance(Type.GetType(towerToCreatePreview.GetType().Name));
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
 		{
 			Node pickerNodeType = _towerCreatorUI.GetChild(i);
 			if (pickerNodeType is StatSelector statPicker)
 			{
+				// Updates stat picker text and sets it on the preview
 				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statPicker.StatLabel.Text));
+
 				_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statPicker.StatSpinBox.Value);
+
 				if (stat != TowerStat.Cost)
 				{
 					int statCost = _towerToCreatePreview.GetPointCostForStat(stat);
@@ -117,6 +124,7 @@ public partial class TowerCreatorController : Node2D
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
+				// Updates modifier selector text and sets it on the preview
 				TowerComponent towerComponent = ResourceLoader.Load<TowerComponent>(modifierPicker.PathToSelectedModifierResource);
 
 				if (towerComponent is Projectile projectile)
@@ -129,6 +137,7 @@ public partial class TowerCreatorController : Node2D
 		}
 		_towerToCreatePreview.SetEffects(effects);
 
+		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)
 		{
 			_totalTowerCostLabel.Text = "Point Usage: " + _towerToCreatePreview.GetCurrentTotalPointsAllocated() + "/" + _towerToCreatePreview.GetMaximumPointsFromCost();
@@ -139,10 +148,12 @@ public partial class TowerCreatorController : Node2D
 
 	public void SaveTowerResource()
 	{
+		// Duplicates the tower preview to save temporaily so can change variables without changing the preview
 		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();
 		towerToSave.RangeAlwaysVisible = false;
 		towerToSave.Position = Vector2.Zero;
 
+		// Only allow tower creation if valid point allocation
 		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
 			GD.Print("Successfully created tower!");
@@ -153,6 +164,7 @@ public partial class TowerCreatorController : Node2D
 			return;
 		}
 
+		// Packs duplicated tower scene into a PackedScene to save
 		PackedScene towerToSaveScene = new();
 		Error packResult = towerToSaveScene.Pack(towerToSave);
 
@@ -161,13 +173,19 @@ public partial class TowerCreatorController : Node2D
 			DirAccess dirAccess = DirAccess.Open(_savedTowerFilePath);
 			if (dirAccess != null)
 			{
+				// Checks if a folder for this tower exists and makes one if not
 				if (!dirAccess.DirExists(RemoveWhitespaces(_towerNameInput.Text)))
-				{
 					dirAccess.MakeDir(RemoveWhitespaces(_towerNameInput.Text));
-				}
 				dirAccess.ChangeDir(RemoveWhitespaces(_towerNameInput.Text));
 
-				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/"+ RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+				// Saves tower to the correct folder
+				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+
+				// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
+				//Array<Sprite2D> towerSprites = [.. towerToSave.GetChildren(true).Where(child => child is Sprite2D).Cast<Sprite2D>()];
+				//towerSprites.Insert(0, towerToSave);
+				Image towerAsImage = CreateImageFromSprites(towerToSave);
+				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
 			}
 		}
 		else
@@ -182,7 +200,7 @@ public partial class TowerCreatorController : Node2D
 
 		modifierSelector.PathToModifiers = pathToModifiers;
 
-		if (number != -1)
+		if (number != -1) // If an effect then add number to label
 			modifierSelectorLabelName += " " + (number + 1);
 		modifierSelector.ModifierLabel.Text = modifierSelectorLabelName;
 
@@ -190,11 +208,11 @@ public partial class TowerCreatorController : Node2D
 
 		if (modifierSelectorLabelName.Contains("Projectile") && _towerToCreatePreview.Projectile != null)
 		{
-			SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.ResourceName);
+            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.ResourceName);
 		}
 		else if (modifierSelectorLabelName.Contains("Effect") && _towerToCreatePreview.Projectile.Effects.Count > number)
 		{
-			SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.Effects[number].ResourceName);
+            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.Effects[number].ResourceName);
 		}
 		else
 		{
@@ -207,7 +225,17 @@ public partial class TowerCreatorController : Node2D
 		return modifierSelector;
 	}
 
-	private void SelectModifierIndexFromName(ModifierSelector modifierSelector, string modifierName)
+	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
+	{
+		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
+		statPicker.StatLabel.Text = SplitIntoPascalCase(statSelectorLabelName);
+		_towerCreatorUI.AddChild(statPicker);
+
+		return statPicker;
+	}
+
+	// Gets index of modifier from the modifier selector given the modifier's name
+	private static void SelectModifierIndexFromName(ModifierSelector modifierSelector, string modifierName)
 	{
 		for (int i = 0; i < modifierSelector.ModifierList.ItemCount; i++)
 		{
@@ -218,15 +246,6 @@ public partial class TowerCreatorController : Node2D
 				break;
 			}
 		}
-	}
-
-	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
-	{
-		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
-		statPicker.StatLabel.Text = SplitIntoPascalCase(statSelectorLabelName);
-		_towerCreatorUI.AddChild(statPicker);
-
-		return statPicker;
 	}
 
 	// TODO: maybe move this to some util class
@@ -258,5 +277,47 @@ public partial class TowerCreatorController : Node2D
 		}
 
 		return [.. folders];
+	}
+
+	// Credits to random guy from the internet that had GDScript that I converted to C#
+	public static Image CreateImageFromSprites(Tower towerToSave)
+	{
+		Array<Sprite2D> sprites = towerToSave.SpritesForIcon;
+		if (sprites.Count > 1)
+		{
+			Format format = sprites[0].Texture.GetImage().GetFormat();
+			Rect2 boundingBox = GetSpriteRect(sprites[0], towerToSave);
+			for (int i = 1; i < sprites.Count; i++)
+				boundingBox = boundingBox.Merge(GetSpriteRect(sprites[i], towerToSave));
+
+			if (sprites.All(sprite => sprite.Texture.GetImage().GetFormat() == format) && boundingBox.Size.X > 0 && boundingBox.Size.Y > 0)
+			{
+				Image image = CreateEmpty((int)boundingBox.Size.X, (int)boundingBox.Size.Y, false, format);
+
+				foreach (Sprite2D sprite in sprites)
+				{
+					Image spriteImage = sprite.Texture.GetImage();
+					image.BlendRect(spriteImage, new Rect2I(Vector2I.Zero, spriteImage.GetSize()), (Vector2I)(GetSpriteRect(sprite, towerToSave).Position - boundingBox.Position));
+				}
+
+				return image;
+			}
+			else
+				return null;
+		}
+		else if (sprites.Count == 1)
+			return sprites[0].Texture.GetImage();
+		else
+			return null;
+	}
+
+	public static Rect2 GetSpriteRect(Sprite2D sprite, Tower towerToSave)
+	{
+		Rect2 rect = new(towerToSave.ToLocal(sprite.GlobalPosition) + sprite.Offset, sprite.GetRect().Size);
+
+		if (sprite.Centered)
+			rect.Position -= rect.Size / 2f;
+
+		return rect;
 	}
 }
