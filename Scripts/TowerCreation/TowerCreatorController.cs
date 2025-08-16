@@ -165,11 +165,9 @@ public partial class TowerCreatorController : Node2D
 				{
 					dirAccess.MakeDir(RemoveWhitespaces(_towerNameInput.Text));
 				}
+				dirAccess.ChangeDir(RemoveWhitespaces(_towerNameInput.Text));
 
-				dirAccess.ChangeDir(dirAccess.GetCurrentDir() + "/" + _towerNameInput.Text);
-
-				Error saveResult = ResourceSaver.Save(towerToSaveScene, _savedTowerFilePath + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
-				GD.Print(saveResult);
+				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/"+ RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 			}
 		}
 		else
