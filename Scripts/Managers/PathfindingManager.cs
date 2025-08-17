@@ -19,6 +19,8 @@ public partial class PathfindingManager : Node
 
 	[Export] public TileMapLayer LevelTileMap;
 
+	public int TileSize;
+
 	private AStarGrid2D _aStarGrid = new();
 
 	private const string MOVEMENT_COST = "MovementCost";
@@ -26,6 +28,8 @@ public partial class PathfindingManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		TileSize = LevelTileMap.TileSet.TileSize.X;
+
 		SetUpAStarGrid();
 	}
 

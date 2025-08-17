@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dbwahmt01vgb3"
-path="res://.godot/imported/Logs_No_UI.webp-b5416231fe5f56aa44b6fd7a48846e43.ctex"
+uid="uid://uintoojg71dp"
+path="res://.godot/imported/DebugTowerIcon.png-bc38a20f0ffbda2af5be73f57dce6a79.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Logs_No_UI.webp"
-dest_files=["res://.godot/imported/Logs_No_UI.webp-b5416231fe5f56aa44b6fd7a48846e43.ctex"]
+source_file="res://RuntimeData/SavedTowers/DebugTower/DebugTowerIcon.png"
+dest_files=["res://.godot/imported/DebugTowerIcon.png-bc38a20f0ffbda2af5be73f57dce6a79.ctex"]
 
 [params]
 

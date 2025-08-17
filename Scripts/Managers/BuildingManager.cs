@@ -19,7 +19,7 @@ public partial class BuildingManager : Node2D
 	[Export] public Array<PackedScene> TowersToBuild = [];
 	[Export] public PackedScene TowerSelectionButtonScene;
 	[Export] public HBoxContainer TowerSelectionButtonContainer;
-	[Export] private Node2D _towerParent;
+	[Export] private Node _towerParent;
 	private PackedScene _selectedTower = null;
 	private Tower _towerPreview = null;
 
@@ -69,7 +69,7 @@ public partial class BuildingManager : Node2D
 
 	public void MakePreviewFollowMouse()
 	{
-		Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / 64) * 64;
+		Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
 		_towerPreview.Position = mousePos;
 	}
 

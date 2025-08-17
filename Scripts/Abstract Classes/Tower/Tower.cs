@@ -34,6 +34,7 @@ public abstract partial class Tower : Sprite2D
     }
     [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
     [Export] public Array<Sprite2D> SpritesForIcon = [];
+    [Export] public Array<Sprite2D> SpritesToColor = [];
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
@@ -48,7 +49,8 @@ public abstract partial class Tower : Sprite2D
         {
             Texture = _rangeOverlayTexture,
             Visible = false,
-            Position = PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 2
+            Position = PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 2,
+            ZIndex = -1
         };
         AddChild(_rangeOverlay);
     }

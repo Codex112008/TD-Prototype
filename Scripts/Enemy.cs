@@ -9,6 +9,8 @@ public partial class Enemy : CharacterBody2D
 	[Export] public float acceleration = 5f;
 	[Export] public float deceleration = 10f;
 
+	[Export] private PackedScene _damageNumberScene;
+
 	public Vector2 targetPos;
 	public Array<Vector2> PathArray = [];
 
@@ -67,13 +69,15 @@ public partial class Enemy : CharacterBody2D
 	}
 
 	// Returns Damage Dealt
-	public virtual float TakeDamage(float amount, bool defenceBreak = false)
+	public virtual float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
 	{
 		float damageDealt = amount;
-		if (!defenceBreak && BaseEnemyStats.TryGetValue(EnemyStat.Defence, out int value))
-			damageDealt *= Mathf.Pow(0.975f, value);
+		if (!defenceBreak)
+			damageDealt = DamageAfterArmorPierce(damageDealt);
 
 		_currentHealth -= damageDealt;
+
+		InstantiateDamageNumber(damageDealt, damageType);
 
 		TriggerEffects(EnemyEffectTrigger.OnDamage);
 
@@ -104,5 +108,22 @@ public partial class Enemy : CharacterBody2D
 				}
 			}
 		}
+	}
+
+	protected void InstantiateDamageNumber(float damageDealt, DamageType damageType)
+	{
+		DamageNumber damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
+		damageNumber.DamageValue = Mathf.Round(damageDealt * 100) / 100;
+		damageNumber.DamageTypeDealt = damageType;
+		damageNumber.GlobalPosition = GlobalPosition;
+		EnemyManager.instance.EnemyParent.AddChild(damageNumber);
+	}
+
+	protected float DamageAfterArmorPierce(float originalDamage)
+	{
+		if (BaseEnemyStats.TryGetValue(EnemyStat.Defence, out int defence))
+			return originalDamage * Mathf.Pow(0.975f, defence);
+		else
+			return originalDamage;
 	}
 }

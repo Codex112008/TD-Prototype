@@ -12,7 +12,7 @@ public partial class StatSelector : HBoxContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		StatSpinBox.ValueChanged += TowerCreatorController.instance.UpdateTowerPreview;
+		StatSpinBox.Connect(Godot.Range.SignalName.ValueChanged, Callable.From((int value) => TowerCreatorController.instance.UpdateTowerPreview()));
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

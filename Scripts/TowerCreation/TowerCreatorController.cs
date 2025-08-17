@@ -30,6 +30,7 @@ public partial class TowerCreatorController : Node2D
 	private Array<TowerEffect> _selectedEffects;
 	private TextEdit _towerNameInput;
 	private RichTextLabel _totalTowerCostLabel;
+	private TowerColorPickerButton _towerColorPickerButton;
 	private Tower _towerToCreatePreview;
 
 	// Called when the node enters the scene tree for the first time.
@@ -43,9 +44,15 @@ public partial class TowerCreatorController : Node2D
 
 		// Creates a preview of the tower being created
 		_towerToCreatePreview = _baseTowerScene.Instantiate<Tower>();
-		_towerToCreatePreview.GlobalPosition = new Vector2I(9, 4) * 64;
+		_towerToCreatePreview.GlobalPosition = new Vector2I(9, 4) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerToCreatePreview);
+
+		_towerColorPickerButton = _towerCreatorUI.GetChild<TowerColorPickerButton>(2);
+		if (_towerToCreatePreview.SpritesToColor.Count > 0)
+			_towerColorPickerButton.Color = _towerToCreatePreview.SpritesToColor[0].SelfModulate;
+		else
+			_towerColorPickerButton.QueueFree();
 
 		// Creates all the stat pickers
 		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
@@ -98,7 +105,7 @@ public partial class TowerCreatorController : Node2D
 	{
 	}
 
-	public void UpdateTowerPreview(double _ = 0)
+	public void UpdateTowerPreview()
 	{
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
@@ -136,6 +143,14 @@ public partial class TowerCreatorController : Node2D
 			}
 		}
 		_towerToCreatePreview.SetEffects(effects);
+
+		if (_towerColorPickerButton != null)
+		{
+			foreach (Sprite2D sprite in _towerToCreatePreview.SpritesToColor)
+			{
+				sprite.SelfModulate = _towerColorPickerButton.Color;
+			}
+		}
 
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)

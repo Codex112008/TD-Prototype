@@ -22,6 +22,7 @@ public partial class EnemyManager : Node
 	//[Export] private Array<int> _waves;
 	[Export] private Timer _waveTimer;
 	[Export] private Timer _spawnTimer;
+	[Export] public Node EnemyParent;
 
 	private int _currentWave = -1;
 	private int _enemiesToSpawn;
@@ -51,7 +52,7 @@ public partial class EnemyManager : Node
 			enemy.GlobalPosition = (Vector2I)(_spawnPoint.Position / 64) * 64 + _levelTileMap.TileSet.TileSize / 2;
 			enemy.targetPos = (Vector2I)(_enemyTarget.Position / 64) * 64 + _levelTileMap.TileSet.TileSize / 2;
 
-			AddChild(enemy);
+			EnemyParent.AddChild(enemy);
 
 			_spawnTimer.Start();
 		}

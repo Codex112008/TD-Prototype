@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dk6ep76ai5qt"
-path="res://.godot/imported/range_overlay.png-ee52d35b6f785f4f6c3afc47b6f06c65.ctex"
+uid="uid://bay0du8q7ynd"
+path="res://.godot/imported/Bullet.png-d83bde8c319d7cee01b4f066549ecfd8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/range_overlay.png"
-dest_files=["res://.godot/imported/range_overlay.png-ee52d35b6f785f4f6c3afc47b6f06c65.ctex"]
+source_file="res://Sprites/Projectiles/Bullet/Bullet.png"
+dest_files=["res://.godot/imported/Bullet.png-d83bde8c319d7cee01b4f066549ecfd8.ctex"]
 
 [params]
 

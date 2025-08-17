@@ -13,6 +13,16 @@ public partial class BulletProjectile : Projectile
         bullet.Rotation = firePoint.GlobalRotation - Mathf.Pi / 2f;
         bullet.Stats = finalStats;
         bullet.BulletData = this;
+
+        // Colors sprites under bullet instance
+        Array<DamageType> damageTypes = [];
+        foreach (TowerEffect effect in Effects) 
+            damageTypes.Add(effect.damageType);
+        foreach (Node node in bullet.GetChildren()) {
+            if (node is Sprite2D sprite)
+                sprite.SelfModulate = DamageTypeColor.GetMultipleDamageTypeColor(damageTypes);
+        }
+
         firePoint.GetTree().Root.AddChild(bullet);
     }
 }
