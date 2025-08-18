@@ -3,9 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cravik72gvjng" path="res://Sprites/Tilemap/Tilemap.png" id="1_bsqis"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bsqis"]
-resource_name = "MainTilemap"
 texture = ExtResource("1_bsqis")
-texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
 0:0/0/terrain_set = 0
 0:0/0/terrains_peering_bit/right_side = 0
@@ -53,11 +51,13 @@ texture_region_size = Vector2i(64, 64)
 0:3/0/terrains_peering_bit/right_side = 0
 0:3/0/custom_data_1 = 1
 1:3/0 = 0
+1:3/0/terrain_set = 0
 1:3/0/custom_data_0 = true
 1:3/0/custom_data_1 = 10
+2:3/0 = 0
+2:3/0/custom_data_1 = 10
 
 [resource]
-tile_size = Vector2i(64, 64)
 terrain_set_0/mode = 2
 terrain_set_0/terrain_0/name = "Path"
 terrain_set_0/terrain_0/color = Color(0.662737, 0.200738, 0.126233, 1)
@@ -65,4 +65,4 @@ custom_data_layer_0/name = "Buildable"
 custom_data_layer_0/type = 1
 custom_data_layer_1/name = "MovementCost"
 custom_data_layer_1/type = 2
-sources/0 = SubResource("TileSetAtlasSource_bsqis")
+sources/1 = SubResource("TileSetAtlasSource_bsqis")

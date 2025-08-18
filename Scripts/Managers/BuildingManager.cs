@@ -111,8 +111,7 @@ public partial class BuildingManager : Node2D
 			towerSelectionButton.Pressed += () => SetSelectedTower(i - 1);
 
 			// Change button textures to saved tower icon
-			DirAccess dirAccess = DirAccess.Open(TowersToBuild[i].ResourcePath[..TowersToBuild[i].ResourcePath.LastIndexOf('/')]);
-			Texture2D towerIcon = GD.Load<Texture2D>(System.Array.Find(dirAccess.GetFiles(), fileName => fileName.Contains("Icon")));
+			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(TowersToBuild[i].ResourcePath[..(TowersToBuild[i].ResourcePath.LastIndexOf('.') - 1)] + "Icon"));
 			towerSelectionButton.TextureNormal = towerIcon;
 			towerSelectionButton.TexturePressed = towerIcon;
 			

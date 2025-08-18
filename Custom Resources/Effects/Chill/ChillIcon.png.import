@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg3m0oms0gtm"
-path="res://.godot/imported/Bullet.png-d83bde8c319d7cee01b4f066549ecfd8.ctex"
+uid="uid://btrowvim40dsq"
+path="res://.godot/imported/ChillIcon.png-cbeb2af337149067bd2a440bb3534993.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Projectiles/Bullet/Bullet.png"
-dest_files=["res://.godot/imported/Bullet.png-d83bde8c319d7cee01b4f066549ecfd8.ctex"]
+source_file="res://Custom Resources/Effects/Chill/ChillIcon.png"
+dest_files=["res://.godot/imported/ChillIcon.png-cbeb2af337149067bd2a440bb3534993.ctex"]
 
 [params]
 

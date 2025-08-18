@@ -8,8 +8,7 @@ public partial class DamageNumber : Node2D
 	public float DamageValue = 0;
 	public DamageType DamageTypeDealt = DamageType.Physical;
 
-	private Tween tween;
-	private Color transparentColor;
+	private Tween _tween;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -17,24 +16,23 @@ public partial class DamageNumber : Node2D
 		_numberLabel.Position -= _numberLabel.Size / 2;
 		_numberLabel.Text = DamageValue.ToString();
 
-		Color color = DamageTypeColor.GetDamageTypeColor(DamageTypeDealt);
+		Color color = DamageTypeData.GetDamageTypeColor(DamageTypeDealt);
 		_numberLabel.Set("theme_override_colors/default_color", color);
-		transparentColor = new Color(color.R, color.G, color.B, 0);
 
-		tween ??= CreateTween();
-		tween.TweenMethod(
-            Callable.From((float progress) =>
-            {
+		_tween ??= CreateTween();
+		_tween.TweenMethod(
+			Callable.From((float progress) =>
+			{
 				float curveProgress = _positionCurve.Sample(progress);
-				Position = Position.Lerp(Position + Vector2.Down * 10, curveProgress);
+				Position = Position.Lerp(Position + Vector2.Down * 2.5f, curveProgress);
 			}),
 			0.0, 1.0, 1.5f
 		);
-		tween.SetParallel();
-		if (Scale != Vector2.One)
-			tween.TweenProperty(this, "scale", Vector2.One, 1f);
-		tween.TweenProperty(this, "modulate", Colors.Transparent, 0.5f).SetDelay(0.25f);
-		tween.TweenCallback(Callable.From(QueueFree)).SetDelay(1f);
+		_tween.SetParallel();
+		if (Scale != Vector2.One * 0.25f)
+			_tween.TweenProperty(this, "scale", Vector2.One * 0.25f, 1f);
+		_tween.TweenProperty(this, "modulate", Colors.Transparent, 0.25f).SetDelay(0.1f);
+		_tween.TweenCallback(Callable.From(QueueFree)).SetDelay(0.5f);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

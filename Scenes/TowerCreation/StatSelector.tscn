@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://enu4w6xhn3u" path="res://Scripts/TowerCreation/StatSelector.cs" id="2_g1k58"]
 
 [node name="StatSelector" type="HBoxContainer" node_paths=PackedStringArray("StatLabel", "CostLabel", "StatSpinBox")]
+size_flags_horizontal = 0
 theme = ExtResource("1_4n3u0")
 theme_override_constants/separation = 5
 script = ExtResource("2_g1k58")

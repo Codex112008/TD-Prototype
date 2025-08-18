@@ -34,6 +34,8 @@ public partial class ModifierSelector : VBoxContainer
 		UpdatePathToSelectedModifierResource(index);
 
 		// TODO: Change _selectedModifierButton's texture to icon
+		_selectedModifierButton.TextureNormal = ModifierList.GetItemIcon(index);
+		_selectedModifierButton.TexturePressed = ModifierList.GetItemIcon(index);
 
 		TowerCreatorController.instance.UpdateTowerPreview();
 	}
@@ -42,8 +44,7 @@ public partial class ModifierSelector : VBoxContainer
 	{
 		foreach (string modifierName in TowerCreatorController.GetFolderNames(PathToModifiers))
 		{
-			ModifierList.AddItem(TowerCreatorController.SplitIntoPascalCase(modifierName));
-			// TODO: Also grab a sprite from each folder and set as icon in the future
+			ModifierList.AddItem(TowerCreatorController.SplitIntoPascalCase(modifierName), ImageTexture.CreateFromImage(Image.LoadFromFile(PathToModifiers + modifierName + "/" + modifierName + "Icon.png")));
 		}
 	}
 

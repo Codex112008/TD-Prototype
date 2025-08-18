@@ -44,7 +44,7 @@ public partial class TowerCreatorController : Node2D
 
 		// Creates a preview of the tower being created
 		_towerToCreatePreview = _baseTowerScene.Instantiate<Tower>();
-		_towerToCreatePreview.GlobalPosition = new Vector2I(9, 4) * PathfindingManager.instance.TileSize;
+		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerToCreatePreview);
 

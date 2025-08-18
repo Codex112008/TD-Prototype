@@ -1,6 +1,6 @@
 using Godot;
 using Godot.Collections;
-using System;
+using System.Linq;
 
 public partial class BulletProjectile : Projectile
 {
@@ -10,18 +10,11 @@ public partial class BulletProjectile : Projectile
     {
         BulletProjectileBehaviour bullet = ProjectileScene.Instantiate<BulletProjectileBehaviour>();
         bullet.GlobalPosition = firePoint.GlobalPosition;
-        bullet.Rotation = firePoint.GlobalRotation - Mathf.Pi / 2f;
+        bullet.Rotation = firePoint.GlobalRotation;
         bullet.Stats = finalStats;
         bullet.BulletData = this;
 
-        // Colors sprites under bullet instance
-        Array<DamageType> damageTypes = [];
-        foreach (TowerEffect effect in Effects) 
-            damageTypes.Add(effect.damageType);
-        foreach (Node node in bullet.GetChildren()) {
-            if (node is Sprite2D sprite)
-                sprite.SelfModulate = DamageTypeColor.GetMultipleDamageTypeColor(damageTypes);
-        }
+        bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.damageType)]);
 
         firePoint.GetTree().Root.AddChild(bullet);
     }

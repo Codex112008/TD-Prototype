@@ -26,12 +26,12 @@ public partial class EnemyManager : Node
 
 	private int _currentWave = -1;
 	private int _enemiesToSpawn;
-	private TileMapLayer _levelTileMap;
+	private int _tileSize;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_levelTileMap = PathfindingManager.instance.LevelTileMap;
+		_tileSize = PathfindingManager.instance.TileSize;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -49,8 +49,8 @@ public partial class EnemyManager : Node
 			Enemy enemy = _enemyScene.Instantiate<Enemy>();
 			_enemiesToSpawn--;
 
-			enemy.GlobalPosition = (Vector2I)(_spawnPoint.Position / 64) * 64 + _levelTileMap.TileSet.TileSize / 2;
-			enemy.targetPos = (Vector2I)(_enemyTarget.Position / 64) * 64 + _levelTileMap.TileSet.TileSize / 2;
+			enemy.GlobalPosition = (Vector2I)(_spawnPoint.Position / _tileSize) * _tileSize + Vector2I.One * _tileSize / 2;
+			enemy.targetPos = (Vector2I)(_enemyTarget.Position / _tileSize) * _tileSize + Vector2I.One * _tileSize / 2;
 
 			EnemyParent.AddChild(enemy);
 

@@ -3,14 +3,16 @@ using Godot.Collections;
 
 public enum DamageType
 {
-	Physical
+	Physical,
+	Chill
 }
 
-public static class DamageTypeColor
+public static class DamageTypeData
 {
 	public static readonly Dictionary<DamageType, Color> _damageTypeColors = new()
 	{
-		{DamageType.Physical, new Color("#dadada")}
+		{DamageType.Physical, new Color("#dadada")},
+		{DamageType.Chill, new Color("#6ddcff")}
 	};
 
 	public static Color GetDamageTypeColor(DamageType damageType)

@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxeutwyglujug"]
+
+[ext_resource type="Script" uid="uid://7qmkfe3vhrg6" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileBehaviour.cs" id="1_2n4fd"]
+
+[node name="SniperProjectileScene" type="RayCast2D" node_paths=PackedStringArray("_raycasts")]
+target_position = Vector2(0, -500)
+script = ExtResource("1_2n4fd")
+_raycasts = [NodePath("RayCast2D"), NodePath("RayCast2D2")]
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 0, 0)
+width = 1.5
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(2, 0)
+target_position = Vector2(0, -500)
+
+[node name="RayCast2D2" type="RayCast2D" parent="."]
+position = Vector2(-2, 0)
+target_position = Vector2(0, -500)

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -13,13 +15,19 @@ public partial class Enemy : CharacterBody2D
 
 	public Vector2 targetPos;
 	public Array<Vector2> PathArray = [];
+	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
 
+	private Vector2 _offset;
 	private Sprite2D _sprite;
 	private float _currentHealth;
 	private Dictionary<EnemyStat, int> _currentEnemyStats;
 
 	public override void _Ready()
 	{
+		// Initialises status efects dictionary
+		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
+			_currentStatusEffects.Add(status, 0);
+
 		_sprite = GetChild<Sprite2D>(0);
 
 		_currentHealth = BaseEnemyStats[EnemyStat.MaxHealth];
@@ -43,7 +51,11 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / 64), (Vector2I)(targetPos / 64));
+		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(targetPos / PathfindingManager.instance.TileSize));
+		RandomNumberGenerator rand = new();
+		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
+		_offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
+		rand.Dispose();
 	}
 
 	public override void _Process(double delta)
@@ -52,7 +64,7 @@ public partial class Enemy : CharacterBody2D
 		{
 			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
 
-			Velocity = Velocity.Lerp(dir.Normalized() * _currentEnemyStats[EnemyStat.Speed], acceleration * (float)delta);
+			Velocity = Velocity.Lerp(dir.Normalized() * CalculateSpeed(), acceleration * (float)delta);
 			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), acceleration * (float)delta);
 
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= 10)
@@ -89,11 +101,26 @@ public partial class Enemy : CharacterBody2D
 		return damageDealt;
 	}
 
+	public void ModifyStatusEffectStacks(StatusEffect status, int amount)
+	{
+		_currentStatusEffects[status] += amount;
+	}
+
 	protected virtual void Die()
 	{
 		TriggerEffects(EnemyEffectTrigger.OnDeath);
 
 		QueueFree();
+	}
+
+	protected virtual float CalculateSpeed()
+	{
+		float realSpeed = _currentEnemyStats[EnemyStat.Speed];
+
+		if (_currentStatusEffects[StatusEffect.Chill] > 0)
+			realSpeed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3, 2) + 0.35f;
+
+		return realSpeed;
 	}
 
 	protected void TriggerEffects(EnemyEffectTrigger triggerEvent)

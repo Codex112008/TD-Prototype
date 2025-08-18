@@ -42,7 +42,7 @@ public partial class PathfindingManager : Node
 	{
 		_aStarGrid.Region = LevelTileMap.GetUsedRect();
 		_aStarGrid.CellSize = LevelTileMap.TileSet.TileSize;
-		_aStarGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.OnlyIfNoObstacles; // Maybe change this to smth else if dont like
+		_aStarGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never; // Maybe change this to smth else if dont like
 
 		_aStarGrid.Update();
 
@@ -69,20 +69,13 @@ public partial class PathfindingManager : Node
 	{
 		Array<Vector2> pathArray = [];
 
-		RandomNumberGenerator rand = new();
-		float offsetMargin = _aStarGrid.CellSize.X - 20f;
-		Vector2 offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
-
 		foreach (Vector2I point in _aStarGrid.GetPointPath(startPos, endPos).Select(v => (Vector2I)v))
 		{
 			Vector2 currentPoint = point;
-			currentPoint += (Vector2I)(_aStarGrid.CellSize / 2) + offset;
+			currentPoint += (Vector2I)(_aStarGrid.CellSize / 2);
 
 			pathArray.Add(currentPoint);
 		}
-
-		pathArray[0] -= offset;
-		pathArray[^1] -= offset;
 
 		return pathArray;
 	}

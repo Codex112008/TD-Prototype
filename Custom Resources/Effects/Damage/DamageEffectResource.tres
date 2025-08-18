@@ -5,6 +5,7 @@
 [resource]
 resource_name = "Damage"
 script = ExtResource("1_abyiv")
+damageType = 0
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 1.0,

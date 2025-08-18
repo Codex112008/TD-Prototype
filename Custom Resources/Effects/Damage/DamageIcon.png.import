@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg3m0oms0gtm"
-path="res://.godot/imported/Bullet.png-d83bde8c319d7cee01b4f066549ecfd8.ctex"
+uid="uid://m5tavfsnps4q"
+path="res://.godot/imported/DamageIcon.png-70a341b6eac6762f9d4249211ebc8c34.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Projectiles/Bullet/Bullet.png"
-dest_files=["res://.godot/imported/Bullet.png-d83bde8c319d7cee01b4f066549ecfd8.ctex"]
+source_file="res://Custom Resources/Effects/Damage/DamageIcon.png"
+dest_files=["res://.godot/imported/DamageIcon.png-70a341b6eac6762f9d4249211ebc8c34.ctex"]
 
 [params]
 
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

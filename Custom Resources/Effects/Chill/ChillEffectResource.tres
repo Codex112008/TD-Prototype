@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dunae7lk31h0u"]
+
+[ext_resource type="Script" uid="uid://duews34vce4nn" path="res://Custom Resources/Effects/Chill/ChillEffect.cs" id="1_3p4qi"]
+
+[resource]
+script = ExtResource("1_3p4qi")
+damageType = 1
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 0.1,
+2: 1.0,
+3: 1.0
+})
+PointCost = 25
