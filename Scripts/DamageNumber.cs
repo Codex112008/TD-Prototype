@@ -31,7 +31,8 @@ public partial class DamageNumber : Node2D
 			0.0, 1.0, 1.5f
 		);
 		tween.SetParallel();
-		tween.TweenProperty(this, "scale", Vector2.One, 1f);
+		if (Scale != Vector2.One)
+			tween.TweenProperty(this, "scale", Vector2.One, 1f);
 		tween.TweenProperty(this, "modulate", Colors.Transparent, 0.5f).SetDelay(0.25f);
 		tween.TweenCallback(Callable.From(QueueFree)).SetDelay(1f);
 	}
