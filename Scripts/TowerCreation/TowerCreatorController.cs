@@ -28,7 +28,7 @@ public partial class TowerCreatorController : Node2D
 	private Dictionary<TowerStat, float> _selectedStats;
 	private Projectile _selectedProjectile;
 	private Array<TowerEffect> _selectedEffects;
-	private TextEdit _towerNameInput;
+	private LineEdit _towerNameInput;
 	private RichTextLabel _totalTowerCostLabel;
 	private TowerColorPickerButton _towerColorPickerButton;
 	private Tower _towerToCreatePreview;
@@ -37,7 +37,7 @@ public partial class TowerCreatorController : Node2D
 	public override void _Ready()
 	{
 		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
-		_towerNameInput = _towerCreatorUI.GetChild<TextEdit>(1);
+		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
 		_towerNameInput.Text = SplitIntoPascalCase(_baseTowerScene.ResourcePath[(_baseTowerScene.ResourcePath.LastIndexOf('/') + 1).._baseTowerScene.ResourcePath.LastIndexOf(".tscn")]);
 		if (_towerLevel > 0) // Cant change name if its an upgraded tower
 			_towerNameInput.Editable = false;
@@ -74,6 +74,7 @@ public partial class TowerCreatorController : Node2D
 					break;
 				case TowerStat.FireRate:
 					statPickerSpinBox.Suffix = "/s";
+					statPickerSpinBox.CustomMinimumSize = new(90f, 0f);
 					break;
 			}
 

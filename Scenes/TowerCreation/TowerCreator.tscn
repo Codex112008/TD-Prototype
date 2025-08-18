@@ -15,7 +15,7 @@
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI", "_towerPreviewArea")]
 script = ExtResource("1_iqnq1")
 _baseTowerScene = ExtResource("2_pcf17")
-_towerCreatorUI = NodePath("UI/TowerCreatorUI")
+_towerCreatorUI = NodePath("UI/TowerCreatorUIPanel/TowerCreatorUI")
 _towerPreviewArea = NodePath("TowerPreview")
 _statPickerScene = ExtResource("3_qpodo")
 _modifierPickerScene = ExtResource("4_4tq1g")
@@ -50,28 +50,40 @@ process_callback = 0
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="TowerCreatorUI" type="VBoxContainer" parent="UI"]
+[node name="TowerCreatorUIPanel" type="PanelContainer" parent="UI"]
+custom_minimum_size = Vector2(365, 0)
 layout_direction = 1
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_left = 10.0
-offset_right = 63.0
+offset_right = 78.0
 grow_vertical = 2
+
+[node name="TowerCreatorUI" type="VBoxContainer" parent="UI/TowerCreatorUIPanel"]
+layout_direction = 1
+layout_mode = 2
 theme = ExtResource("5_bk7jn")
 alignment = 1
 
-[node name="SaveButton" type="Button" parent="UI/TowerCreatorUI"]
+[node name="SaveButton" type="Button" parent="UI/TowerCreatorUIPanel/TowerCreatorUI"]
 layout_mode = 2
 theme = ExtResource("5_bk7jn")
 text = "Save"
 
-[node name="NameInput" type="TextEdit" parent="UI/TowerCreatorUI"]
+[node name="NameInput" type="LineEdit" parent="UI/TowerCreatorUIPanel/TowerCreatorUI"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme = ExtResource("5_bk7jn")
 placeholder_text = "Enter Tower Name..."
+max_length = 24
+context_menu_enabled = false
+emoji_menu_enabled = false
+virtual_keyboard_enabled = false
+clear_button_enabled = true
+select_all_on_focus = true
+caret_blink = true
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="UI/TowerCreatorUI"]
+[node name="ColorPickerButton" type="ColorPickerButton" parent="UI/TowerCreatorUIPanel/TowerCreatorUI"]
 layout_mode = 2
 text = "Color"
 alignment = 0
@@ -79,5 +91,5 @@ color = Color(1, 1, 1, 1)
 edit_alpha = false
 script = ExtResource("11_bdbue")
 
-[connection signal="pressed" from="UI/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
-[connection signal="picker_created" from="UI/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]
+[connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
+[connection signal="picker_created" from="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]

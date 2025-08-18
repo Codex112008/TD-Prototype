@@ -65,10 +65,6 @@ public partial class Enemy : CharacterBody2D
 		}
 
 		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(targetPos / PathfindingManager.instance.TileSize));
-		RandomNumberGenerator rand = new();
-		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
-		_offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
-		rand.Dispose();
 	}
 
 	public override void _Process(double delta)
@@ -80,7 +76,7 @@ public partial class Enemy : CharacterBody2D
 			Velocity = Velocity.Lerp(dir.Normalized() * CalculateSpeed(), acceleration * (float)delta);
 			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), acceleration * (float)delta);
 
-			if (GlobalPosition.DistanceTo(PathArray[0]) <= 10)
+			if (GlobalPosition.DistanceTo(PathArray[0]) <= _currentEnemyStats[EnemyStat.Speed] / 5f)
 			{
 				PathArray.RemoveAt(0);
 			}

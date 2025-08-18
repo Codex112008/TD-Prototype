@@ -1,0 +1,58 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_nn3fd"]
+[ext_resource type="Script" path="res://Scenes/BaseTowers/BasicTower/BasicTower.cs" id="2_47pou"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_qnj4t"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="4_slc8u"]
+[ext_resource type="Resource" path="res://Custom Resources/Effects/Chill/ChillEffectResource.tres" id="5_yhc8g"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileIcon.png" id="6_4htg8"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileScene.tscn" id="7_1g3pg"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/BulletProjectile.cs" id="8_c40h1"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="9_socx3"]
+
+[sub_resource type="Resource" id="Resource_8yoa4"]
+resource_name = "Bullet"
+script = ExtResource("8_c40h1")
+fireForce = 250.0
+ProjectileScene = ExtResource("7_1g3pg")
+Effects = Array[ExtResource("4_slc8u")]([ExtResource("5_yhc8g")])
+Tooltip = "Shoot a bullet
+Nothing Special"
+Icon = ExtResource("6_4htg8")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 1.0,
+2: 1.0,
+3: 1.0
+})
+PointCost = 25
+
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor")]
+z_index = 1
+texture = ExtResource("1_nn3fd")
+centered = false
+script = ExtResource("2_47pou")
+_firePoint = NodePath("PivotPoint/FirePoint")
+_pivotPoint = NodePath("PivotPoint")
+_rotateSpeed = 10.0
+_rangeOverlayTexture = ExtResource("3_qnj4t")
+Projectile = SubResource("Resource_8yoa4")
+BaseTowerStats = Dictionary[int, int]({
+0: 400,
+1: 0,
+2: 25,
+3: 4
+})
+SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
+SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+
+[node name="PivotPoint" type="Marker2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
+self_modulate = Color(0.511719, 0.828339, 1, 1)
+position = Vector2(0, -2)
+texture = ExtResource("9_socx3")
+
+[node name="FirePoint" type="Marker2D" parent="PivotPoint"]
+position = Vector2(0, -6)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ci77xir3j3ggx"
-path="res://.godot/imported/RangeOverlay.png-01d0dc3915c75be74d6e364903186c7b.ctex"
+uid="uid://ygrgyxqbyq2f"
+path="res://.godot/imported/FrostTowerIcon.png-0d175a5a1cf0070fdeeab59cc57d972a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png"
-dest_files=["res://.godot/imported/RangeOverlay.png-01d0dc3915c75be74d6e364903186c7b.ctex"]
+source_file="res://RuntimeData/SavedTowers/FrostTower/FrostTowerIcon.png"
+dest_files=["res://.godot/imported/FrostTowerIcon.png-0d175a5a1cf0070fdeeab59cc57d972a.ctex"]
 
 [params]
 
