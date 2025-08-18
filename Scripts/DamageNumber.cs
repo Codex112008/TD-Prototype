@@ -14,7 +14,7 @@ public partial class DamageNumber : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_numberLabel.PivotOffset = _numberLabel.Size / 2;
+		_numberLabel.Position -= _numberLabel.Size / 2;
 		_numberLabel.Text = DamageValue.ToString();
 
 		Color color = DamageTypeColor.GetDamageTypeColor(DamageTypeDealt);
@@ -32,8 +32,8 @@ public partial class DamageNumber : Node2D
 		);
 		tween.SetParallel();
 		tween.TweenProperty(this, "scale", Vector2.One, 1f);
-		tween.TweenProperty(this, "modulate", Colors.Transparent, 0.5f);
-		tween.TweenCallback(Callable.From(QueueFree)).SetDelay(0.6f);
+		tween.TweenProperty(this, "modulate", Colors.Transparent, 0.5f).SetDelay(0.25f);
+		tween.TweenCallback(Callable.From(QueueFree)).SetDelay(1f);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

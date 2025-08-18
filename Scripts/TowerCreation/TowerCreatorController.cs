@@ -167,6 +167,13 @@ public partial class TowerCreatorController : Node2D
 		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();
 		towerToSave.RangeAlwaysVisible = false;
 		towerToSave.Position = Vector2.Zero;
+		foreach (Node node in towerToSave.GetChildren())
+		{
+			if (node is Node2D node2D)
+			{
+				node2D.Rotation = 0;
+			}
+		}
 
 		// Only allow tower creation if valid point allocation
 		if (_towerToCreatePreview.HasValidPointAllocation())
@@ -312,6 +319,17 @@ public partial class TowerCreatorController : Node2D
 				foreach (Sprite2D sprite in sprites)
 				{
 					Image spriteImage = sprite.Texture.GetImage();
+					if (sprite.SelfModulate != Colors.White)
+					{
+						for (int i = 0; i < spriteImage.GetWidth(); i++)
+						{
+							for (int j = 0; j < spriteImage.GetHeight(); j++)
+							{
+								spriteImage.SetPixel(i, j, spriteImage.GetPixel(i, j) * sprite.SelfModulate);
+							}
+						}
+					}
+
 					image.BlendRect(spriteImage, new Rect2I(Vector2I.Zero, spriteImage.GetSize()), (Vector2I)(GetSpriteRect(sprite, towerToSave).Position - boundingBox.Position));
 				}
 
