@@ -7,7 +7,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv5qi"]
 radius = 4.12311
 
-[node name="BasicEnemy" type="CharacterBody2D" groups=["Enemy"]]
+[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("_chillCount") groups=["Enemy"]]
 collision_mask = 0
 script = ExtResource("1_11u8t")
 BaseEnemyStats = Dictionary[int, int]({
@@ -18,6 +18,7 @@ BaseEnemyStats = Dictionary[int, int]({
 })
 acceleration = 9.0
 _damageNumberScene = ExtResource("2_tbx3a")
+_chillCount = NodePath("RichTextLabel")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.25, 0.25)
@@ -25,3 +26,10 @@ texture = ExtResource("2_11u8t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_sv5qi")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_right = 1.0
+scale = Vector2(0.25, 0.25)
+text = "1"
+fit_content = true
+autowrap_mode = 0

@@ -16,6 +16,7 @@ public partial class Enemy : CharacterBody2D
 	public Vector2 targetPos;
 	public Array<Vector2> PathArray = [];
 	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
+	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
 
 	private Vector2 _offset;
 	private Sprite2D _sprite;
@@ -26,7 +27,19 @@ public partial class Enemy : CharacterBody2D
 	{
 		// Initialises status efects dictionary
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
+		{
 			_currentStatusEffects.Add(status, 0);
+
+			Timer timer = new()
+			{
+				WaitTime = StatusEffectsData.GetStatusEffectDuration(status),
+				Autostart = true,
+				OneShot = true
+			};
+			timer.Connect(Timer.SignalName.Timeout, Callable.From(() => ModifyStatusEffectStacks(status, -1)));
+			_currentStatusEffectTimers.Add(status, timer);
+			AddChild(timer);
+        }
 
 		_sprite = GetChild<Sprite2D>(0);
 
@@ -46,7 +59,7 @@ public partial class Enemy : CharacterBody2D
 					timer.WaitTime = effect.EffectInterval;
 					timer.Timeout += effect.ApplyEffect;
 
-					timer.Start();
+					AddChild(timer);
 				}
 			}
 		}
@@ -104,6 +117,8 @@ public partial class Enemy : CharacterBody2D
 	public void ModifyStatusEffectStacks(StatusEffect status, int amount)
 	{
 		_currentStatusEffects[status] += amount;
+		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status], 0);
+		_currentStatusEffectTimers[status].Start();
 	}
 
 	protected virtual void Die()
