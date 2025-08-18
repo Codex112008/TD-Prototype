@@ -230,11 +230,11 @@ public partial class TowerCreatorController : Node2D
 
 		if (modifierSelectorLabelName.Contains("Projectile") && _towerToCreatePreview.Projectile != null)
 		{
-            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.ResourceName);
+            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.GetType().Name[..^10]);
 		}
 		else if (modifierSelectorLabelName.Contains("Effect") && _towerToCreatePreview.Projectile.Effects.Count > number)
 		{
-            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.Effects[number].ResourceName);
+            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.Effects[number].GetType().Name[..^6]);
 		}
 		else
 		{

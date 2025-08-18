@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6gwb45e55rl4"
-path="res://.godot/imported/SniperIcon.png-8c30a6e0d629b1ff9a2711fe766605a9.ctex"
+uid="uid://bnsoaen6emvx"
+path="res://.godot/imported/BulletProjectileIcon.png-aef0a340d0c468e1f858c17fc618094e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Custom Resources/Projectiles/Sniper/SniperIcon.png"
-dest_files=["res://.godot/imported/SniperIcon.png-8c30a6e0d629b1ff9a2711fe766605a9.ctex"]
+source_file="res://Custom Resources/Projectiles/Bullet/BulletProjectileIcon.png"
+dest_files=["res://.godot/imported/BulletProjectileIcon.png-aef0a340d0c468e1f858c17fc618094e.ctex"]
 
 [params]
 

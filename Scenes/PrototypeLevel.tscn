@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="1_bx147"]
 [ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/TowerSelectionButton.tscn" id="2_vgiph"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="3_u1k0j"]
-[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="4_dy5id"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="4_dy5id"]
 [ext_resource type="TileSet" uid="uid://5s71ihm700n0" path="res://TileSets/PrototypeTileSet.tres" id="5_1bllb"]
 [ext_resource type="Texture2D" uid="uid://b0ecnmaulif1i" path="res://Sprites/kenney_tower-defense-top-down/PNG/Default size/towerDefense_tile015.png" id="6_kmaga"]
 [ext_resource type="Script" uid="uid://4vlw08mhx3rg" path="res://Scripts/TileHighlight.cs" id="7_ke66r"]

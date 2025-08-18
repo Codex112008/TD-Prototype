@@ -1,10 +1,16 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dunae7lk31h0u"]
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://dunae7lk31h0u"]
 
 [ext_resource type="Script" uid="uid://duews34vce4nn" path="res://Custom Resources/Effects/Chill/ChillEffect.cs" id="1_3p4qi"]
+[ext_resource type="Texture2D" uid="uid://btrowvim40dsq" path="res://Custom Resources/Effects/Chill/ChillEffectIcon.png" id="1_cxfo2"]
 
 [resource]
+resource_name = "Chill"
 script = ExtResource("1_3p4qi")
 damageType = 1
+Tooltip = "Slows Enemies Down
+Diminishing Returns
+Damage 0.1x"
+Icon = ExtResource("1_cxfo2")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 0.1,

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bplgfrlcgxtnn"]
 
-[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="1_wgk1c"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_wgk1c"]
 [ext_resource type="Script" uid="uid://dgs1a7k0dxufn" path="res://Scripts/DamageNumber.cs" id="2_ym0hm"]
 
 [sub_resource type="Curve" id="Curve_ym0hm"]

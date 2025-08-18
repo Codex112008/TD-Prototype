@@ -44,18 +44,26 @@ public partial class ModifierSelector : VBoxContainer
 	{
 		foreach (string modifierName in TowerCreatorController.GetFolderNames(PathToModifiers))
 		{
-			ModifierList.AddItem(TowerCreatorController.SplitIntoPascalCase(modifierName), ImageTexture.CreateFromImage(Image.LoadFromFile(PathToModifiers + modifierName + "/" + modifierName + "Icon.png")));
+			string componentResourcePath = PathToModifiers + modifierName + "/" + modifierName;
+			if (PathToModifiers.Contains("Projectile"))
+				componentResourcePath += "ProjectileResource.tres";
+			else
+				componentResourcePath += "EffectResource.tres";
+
+			TowerComponent component = GD.Load<TowerComponent>(componentResourcePath);
+			int index = ModifierList.AddItem(TowerCreatorController.SplitIntoPascalCase(modifierName), component.Icon);
+			ModifierList.SetItemTooltip(index, component.Tooltip);
+			ModifierList.SetItemTooltipEnabled(index, true);
 		}
 	}
 
 	public void UpdatePathToSelectedModifierResource(int index)
 	{
 		bool isProjectile = PathToModifiers.Contains("Projectile");
-		string subfolder = "Effects";
-		if (isProjectile)
-			subfolder = "Projectiles";
-
 		string selectedModifier = TowerCreatorController.RemoveWhitespaces(ModifierList.GetItemText(index));
-		PathToSelectedModifierResource = "res://Custom Resources/" + subfolder + "/" + selectedModifier + "/" + selectedModifier + subfolder[..^1] + "Resource.tres";
+		if (isProjectile)
+			PathToSelectedModifierResource = "res://Custom Resources/Projectiles/" + selectedModifier + "/" + selectedModifier + "ProjectileResource.tres";
+		else
+			PathToSelectedModifierResource = "res://Custom Resources/Effects/" + selectedModifier + "/" + selectedModifier + "EffectResource.tres"; ;
 	}
 }

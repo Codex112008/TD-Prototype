@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Scenes/BaseTowers/BasicTower/BasicTower.tscn" id="2_pcf17"]
 [ext_resource type="PackedScene" uid="uid://m4rsxkv8b7ce" path="res://Scenes/TowerCreation/StatSelector.tscn" id="3_qpodo"]
 [ext_resource type="PackedScene" uid="uid://d06d7n3ydut8p" path="res://Scenes/TowerCreation/ModifierSelector.tscn" id="4_4tq1g"]
-[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="5_bk7jn"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="5_bk7jn"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="5_gom0i"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="6_qpodo"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="7_gom0i"]

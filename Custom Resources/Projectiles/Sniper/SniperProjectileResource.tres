@@ -1,14 +1,20 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://ds31paw0q7ffx"]
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://ds31paw0q7ffx"]
 
-[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_wf4xd"]
-[ext_resource type="Script" uid="uid://c83flq2q3u2yx" path="res://Custom Resources/Projectiles/Sniper/SniperProjectile.cs" id="2_indt2"]
-[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/Effects/Damage/DamageEffectResource.tres" id="2_so6v2"]
-[ext_resource type="PackedScene" uid="uid://dxeutwyglujug" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileScene.tscn" id="3_si67n"]
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_6jukb"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/Effects/Damage/DamageEffectResource.tres" id="2_ywoa0"]
+[ext_resource type="Texture2D" uid="uid://b6gwb45e55rl4" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileIcon.png" id="3_fn4ev"]
+[ext_resource type="PackedScene" uid="uid://dxeutwyglujug" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileScene.tscn" id="4_r8uir"]
+[ext_resource type="Script" uid="uid://c83flq2q3u2yx" path="res://Custom Resources/Projectiles/Sniper/SniperProjectile.cs" id="5_t7ucb"]
 
 [resource]
-script = ExtResource("2_indt2")
-ProjectileScene = ExtResource("3_si67n")
-Effects = Array[ExtResource("1_wf4xd")]([ExtResource("2_so6v2")])
+resource_name = "Sniper"
+script = ExtResource("5_t7ucb")
+ProjectileScene = ExtResource("4_r8uir")
+Effects = Array[ExtResource("1_6jukb")]([ExtResource("2_ywoa0")])
+Tooltip = "Damage 5x
+Range 2.5x
+Fire Rate 0.25x"
+Icon = ExtResource("3_fn4ev")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 5.0,

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://m4rsxkv8b7ce"]
 
-[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://TowerCreatorUITheme.tres" id="1_4n3u0"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_4n3u0"]
 [ext_resource type="Script" uid="uid://enu4w6xhn3u" path="res://Scripts/TowerCreation/StatSelector.cs" id="2_g1k58"]
 
 [node name="StatSelector" type="HBoxContainer" node_paths=PackedStringArray("StatLabel", "CostLabel", "StatSpinBox")]

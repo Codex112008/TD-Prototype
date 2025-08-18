@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m5tavfsnps4q"
-path="res://.godot/imported/DamageIcon.png-70a341b6eac6762f9d4249211ebc8c34.ctex"
+uid="uid://b6gwb45e55rl4"
+path="res://.godot/imported/SniperProjectileIcon.png-4b82077123fbd134f746f47ee1893b2c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Custom Resources/Effects/Damage/DamageIcon.png"
-dest_files=["res://.godot/imported/DamageIcon.png-70a341b6eac6762f9d4249211ebc8c34.ctex"]
+source_file="res://Custom Resources/Projectiles/Sniper/SniperProjectileIcon.png"
+dest_files=["res://.godot/imported/SniperProjectileIcon.png-4b82077123fbd134f746f47ee1893b2c.ctex"]
 
 [params]
 
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1
