@@ -1,12 +1,6 @@
 using Godot;
 using Godot.Collections;
 
-public enum DamageType
-{
-	Physical,
-	Chill
-}
-
 public static class DamageTypeData
 {
 	public static readonly Dictionary<DamageType, Color> _damageTypeColors = new()

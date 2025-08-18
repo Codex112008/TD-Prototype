@@ -83,7 +83,5 @@ color = Color(1, 1, 1, 1)
 edit_alpha = false
 script = ExtResource("11_bdbue")
 
-[node name="Timer" type="Timer" parent="."]
-
 [connection signal="pressed" from="UI/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
 [connection signal="picker_created" from="UI/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]
