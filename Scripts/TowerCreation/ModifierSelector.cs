@@ -42,7 +42,7 @@ public partial class ModifierSelector : VBoxContainer
 
 	public void UpdateModifierSelector()
 	{
-		foreach (string modifierName in TowerCreatorController.GetFolderNames(PathToModifiers))
+		foreach (string modifierName in GameManager.GetFolderNames(PathToModifiers))
 		{
 			string componentResourcePath = PathToModifiers + modifierName + "/" + modifierName;
 			if (PathToModifiers.Contains("Projectile"))

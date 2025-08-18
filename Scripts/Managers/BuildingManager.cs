@@ -16,16 +16,23 @@ public partial class BuildingManager : Node2D
 		instance = this;
 	}
 
-	[Export] public Array<PackedScene> TowersToBuild = [];
+	[Export] private string _pathToSavedTowers = "res://RuntimeData/SavedTowers/";
 	[Export] public PackedScene TowerSelectionButtonScene;
 	[Export] public HBoxContainer TowerSelectionButtonContainer;
 	[Export] private Node _towerParent;
 	private PackedScene _selectedTower = null;
 	private Tower _towerPreview = null;
+	private Array<PackedScene> _towersToBuild = [];
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Array<string> savedTowers = GameManager.GetFolderNames(_pathToSavedTowers);
+		for (int i = 0; i < savedTowers.Count; i++)
+		{
+			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
+		}
+
 		GenerateTowerSelectionButtons();
 	}
 
@@ -44,12 +51,11 @@ public partial class BuildingManager : Node2D
 		{
 			if (eventMouseButton.ButtonIndex == MouseButton.Left && eventMouseButton.Pressed == true)
 			{
-				Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / 64);
-				TileData cellTileData = PathfindingManager.instance.LevelTileMap.GetCellTileData(mousePos);
+				Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize);
 
-				if ((bool)cellTileData.GetCustomData("Buildable") == true && IsInstanceValid(_towerPreview))
+				if (PathfindingManager.instance.TilemapBuildableData[mousePos] == true && IsInstanceValid(_towerPreview))
 				{
-					cellTileData.SetCustomData("Buildable", false);
+					PathfindingManager.instance.TilemapBuildableData[mousePos] = false;
 
 					BuildTower();
 				}
@@ -85,9 +91,10 @@ public partial class BuildingManager : Node2D
 	{
 		if (index != -1)
 		{
-			if (TowersToBuild[index] != _selectedTower)
+			GD.Print(index);
+			if (_towersToBuild[index] != _selectedTower)
 			{
-				_selectedTower = TowersToBuild[index];
+				_selectedTower = _towersToBuild[index];
 
 				_towerPreview = _selectedTower.Instantiate<Tower>();
 				_towerPreview.IsBuildingPreview = true;
@@ -105,13 +112,14 @@ public partial class BuildingManager : Node2D
 		foreach (Node child in TowerSelectionButtonContainer.GetChildren())
 			child.QueueFree();
 		
-		for (int i = 0; i < TowersToBuild.Count; i++)
+		for (int i = 0; i < _towersToBuild.Count; i++)
 		{
-			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
-			towerSelectionButton.Pressed += () => SetSelectedTower(i - 1);
+            TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
+			int index = i;
+            towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
 
 			// Change button textures to saved tower icon
-			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(TowersToBuild[i].ResourcePath[..(TowersToBuild[i].ResourcePath.LastIndexOf('.') - 1)] + "Icon"));
+			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(_towersToBuild[i].ResourcePath[.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png"));
 			towerSelectionButton.TextureNormal = towerIcon;
 			towerSelectionButton.TexturePressed = towerIcon;
 			

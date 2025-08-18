@@ -17,18 +17,22 @@ public partial class PathfindingManager : Node
 		instance = this;
 	}
 
-	[Export] public TileMapLayer LevelTileMap;
+	[Export] public TileMapLayer LevelTilemap;
 
 	public int TileSize;
+	public Dictionary<Vector2I, bool> TilemapBuildableData = [];
+	//public Dictionary<Vector2I, int> TilemapMovementCostData = [];
 
 	private AStarGrid2D _aStarGrid = new();
-
-	private const string MOVEMENT_COST = "MovementCost";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		TileSize = LevelTileMap.TileSet.TileSize.X;
+		TileSize = LevelTilemap.TileSet.TileSize.X;
+		foreach (Vector2I tilePos in LevelTilemap.GetUsedCells())
+		{
+			TilemapBuildableData[tilePos] = (bool)LevelTilemap.GetCellTileData(tilePos).GetCustomData("Buildable");
+		}
 
 		SetUpAStarGrid();
 	}
@@ -40,8 +44,8 @@ public partial class PathfindingManager : Node
 
 	private void SetUpAStarGrid()
 	{
-		_aStarGrid.Region = LevelTileMap.GetUsedRect();
-		_aStarGrid.CellSize = LevelTileMap.TileSet.TileSize;
+		_aStarGrid.Region = LevelTilemap.GetUsedRect();
+		_aStarGrid.CellSize = LevelTilemap.TileSet.TileSize;
 		_aStarGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never; // Maybe change this to smth else if dont like
 
 		_aStarGrid.Update();
@@ -51,9 +55,9 @@ public partial class PathfindingManager : Node
 
 	private void UpdateTerrainMovementValues()
 	{
-		foreach (Vector2I cellPos in LevelTileMap.GetUsedCells())
+		foreach (Vector2I cellPos in LevelTilemap.GetUsedCells())
 		{
-			int tileMovementCost = (int)LevelTileMap.GetCellTileData(cellPos).GetCustomData(MOVEMENT_COST);
+			int tileMovementCost = (int)LevelTilemap.GetCellTileData(cellPos).GetCustomData("MovementCost");
 			if (tileMovementCost < 10)
 			{
 				_aStarGrid.SetPointWeightScale(cellPos, tileMovementCost);

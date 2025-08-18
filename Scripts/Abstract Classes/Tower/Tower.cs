@@ -49,25 +49,27 @@ public abstract partial class Tower : Sprite2D
         {
             Texture = _rangeOverlayTexture,
             Visible = false,
-            Position = PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 2,
-            ZIndex = -1
+            Position = PathfindingManager.instance.LevelTilemap.TileSet.TileSize / 2,
+            ZIndex = -1,
+            SelfModulate = new Color(1f, 1f, 1f, 0.47f)
         };
         AddChild(_rangeOverlay);
     }
 
     public override void _Process(double delta)
     {
-        Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / 64) * 64;
-        if (mousePos == (Vector2I)GlobalPosition || RangeAlwaysVisible)
+        Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
+        if (mousePos == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview)
         {
             if (_rangeOverlay.Visible != true)
                 _rangeOverlay.Visible = true;
-            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 620f) * 2, 7.5f * (float)delta);
+            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 64f) * 2f, 10f * (float)delta);
         }
         else
         {
-            if (_rangeOverlay.Visible != false)
+            if (_rangeOverlay.Scale == Vector2.Zero && _rangeOverlay.Visible != false)
                 _rangeOverlay.Visible = false;
+            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
         }
     }
 
@@ -145,12 +147,12 @@ public abstract partial class Tower : Sprite2D
 
     protected float GetRangeInTiles()
     {
-        return GetFinalTowerStats()[TowerStat.Range] * PathfindingManager.instance.LevelTileMap.TileSet.TileSize.X / 10;
+        return GetFinalTowerStats()[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10;
     }
 
     protected Vector2 GetCenteredGlobalPosition()
     {
-        return GlobalPosition + PathfindingManager.instance.LevelTileMap.TileSet.TileSize / 2;
+        return GlobalPosition + PathfindingManager.instance.LevelTilemap.TileSet.TileSize / 2;
     }
 
     protected abstract void Fire();

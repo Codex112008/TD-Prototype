@@ -2,11 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_vekyq"]
 [ext_resource type="Script" uid="uid://476fij86s3r3" path="res://Scenes/BaseTowers/BasicTower/BasicTower.cs" id="2_8n507"]
-[ext_resource type="Texture2D" uid="uid://dk6ep76ai5qt" path="res://Sprites/Towers/MiscTowerAssets/range_overlay.png" id="3_gv3ac"]
+[ext_resource type="Texture2D" uid="uid://bo2p77eppcq3i" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_vekyq"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="4_vekyq"]
 [ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="5_sgnhf"]
 
-[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon")]
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor")]
 z_index = 1
 texture = ExtResource("1_vekyq")
 centered = false
@@ -14,7 +14,7 @@ script = ExtResource("2_8n507")
 _firePoint = NodePath("PivotPoint/FirePoint")
 _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 10.0
-_rangeOverlayTexture = ExtResource("3_gv3ac")
+_rangeOverlayTexture = ExtResource("3_vekyq")
 Projectile = ExtResource("4_vekyq")
 BaseTowerStats = Dictionary[int, int]({
 0: 300,
@@ -23,6 +23,7 @@ BaseTowerStats = Dictionary[int, int]({
 3: 2
 })
 SpritesForIcon = [NodePath("PivotPoint/TowerHead")]
+SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 
 [node name="PivotPoint" type="Marker2D" parent="."]
 position = Vector2(8, 8)

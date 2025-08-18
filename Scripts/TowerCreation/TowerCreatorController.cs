@@ -287,20 +287,6 @@ public partial class TowerCreatorController : Node2D
 		return input.Replace(" ", "");
 	}
 
-	public static Array<string> GetFolderNames(string path)
-	{
-		// Get all directories at the specified path
-		string[] folders = DirAccess.GetDirectoriesAt(path);
-
-		if (folders == null)
-		{
-			GD.PushError($"Failed to access directory: {path}");
-			return [];
-		}
-
-		return [.. folders];
-	}
-
 	// Credits to random guy from the internet that had GDScript that I converted to C#
 	public static Image CreateImageFromSprites(Tower towerToSave)
 	{

@@ -1,3 +1,5 @@
 [gd_scene format=3 uid="uid://cwwsgm0a5fyur"]
 
 [node name="TowerSelectionButton" type="TextureButton"]
+custom_minimum_size = Vector2(64, 0)
+stretch_mode = 5

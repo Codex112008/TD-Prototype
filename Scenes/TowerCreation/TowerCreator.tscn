@@ -4,12 +4,12 @@
 [ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Scenes/BaseTowers/BasicTower/BasicTower.tscn" id="2_pcf17"]
 [ext_resource type="PackedScene" uid="uid://m4rsxkv8b7ce" path="res://Scenes/TowerCreation/StatSelector.tscn" id="3_qpodo"]
 [ext_resource type="PackedScene" uid="uid://d06d7n3ydut8p" path="res://Scenes/TowerCreation/ModifierSelector.tscn" id="4_4tq1g"]
+[ext_resource type="Script" uid="uid://d1tqor7cpb7rg" path="res://Scripts/Managers/GameManager.cs" id="5_bdbue"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="5_bk7jn"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="5_gom0i"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="6_qpodo"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="7_gom0i"]
-[ext_resource type="Texture2D" uid="uid://o8p203wgrhwe" path="res://Sprites/Tilemap/TileHighlight.png" id="8_gom0i"]
-[ext_resource type="Script" uid="uid://4vlw08mhx3rg" path="res://Scripts/TileHighlight.cs" id="9_bdbue"]
+[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/TileHighlight.tscn" id="8_gom0i"]
 [ext_resource type="Script" uid="uid://bvunvv3p5u3e3" path="res://Scripts/TowerCreation/TowerColorPickerButton.cs" id="11_bdbue"]
 
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI", "_towerPreviewArea")]
@@ -21,9 +21,10 @@ _statPickerScene = ExtResource("3_qpodo")
 _modifierPickerScene = ExtResource("4_4tq1g")
 
 [node name="Managers" type="Node" parent="."]
+script = ExtResource("5_bdbue")
 
-[node name="PathfindingManager" parent="Managers" node_paths=PackedStringArray("LevelTileMap") instance=ExtResource("5_gom0i")]
-LevelTileMap = NodePath("../../TowerPreview")
+[node name="PathfindingManager" parent="Managers" node_paths=PackedStringArray("LevelTilemap") instance=ExtResource("5_gom0i")]
+LevelTilemap = NodePath("../../TowerPreview")
 
 [node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("_spawnPoint", "_enemyTarget", "EnemyParent") instance=ExtResource("6_qpodo")]
 _spawnPoint = NodePath("../../TowerPreview/Enemy Spawn")
@@ -40,12 +41,7 @@ position = Vector2(120, 57)
 [node name="Enemy Goal" type="Marker2D" parent="TowerPreview"]
 position = Vector2(280, 136)
 
-[node name="TileHighlight" type="Sprite2D" parent="TowerPreview"]
-modulate = Color(1, 1, 1, 0.588235)
-z_index = 2
-texture = ExtResource("8_gom0i")
-centered = false
-script = ExtResource("9_bdbue")
+[node name="TileHighlight" parent="TowerPreview" instance=ExtResource("8_gom0i")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(160, 94)

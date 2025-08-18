@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn8ls5syaloyf"]
+
+[ext_resource type="Texture2D" uid="uid://o8p203wgrhwe" path="res://Sprites/Tilemap/TileHighlight.png" id="1_1vorx"]
+[ext_resource type="Script" uid="uid://4vlw08mhx3rg" path="res://Scripts/TileHighlight.cs" id="2_2rp7d"]
+
+[node name="TileHighlight" type="Sprite2D"]
+modulate = Color(1, 1, 1, 0.588235)
+z_index = 2
+texture = ExtResource("1_1vorx")
+centered = false
+script = ExtResource("2_2rp7d")
