@@ -63,7 +63,7 @@ public abstract partial class Tower : Sprite2D
         {
             if (_rangeOverlay.Visible != true)
                 _rangeOverlay.Visible = true;
-            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 128f) * 2f, 10f * (float)delta);
+            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 128f) * 2f, 12.5f * (float)delta);
         }
         else
         {

@@ -41,7 +41,7 @@ public partial class BuildingManager : Node2D
 	{
 		if (_selectedTower != null && IsInstanceValid(_towerPreview))
 		{
-			MakePreviewFollowMouse();
+			MakePreviewFollowMouse((float)delta);
 		}
 	}
 
@@ -73,10 +73,10 @@ public partial class BuildingManager : Node2D
 		}
 	}
 
-	public void MakePreviewFollowMouse()
+	public void MakePreviewFollowMouse(float delta)
 	{
 		Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
-		_towerPreview.Position = mousePos;
+		_towerPreview.Position = _towerPreview.Position.Lerp(mousePos, 30f * delta);
 	}
 
 	private void BuildTower()

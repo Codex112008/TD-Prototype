@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cb1h4451jbyr0"]
 
-[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy.cs" id="1_11u8t"]
+[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_11u8t"]
 [ext_resource type="Texture2D" uid="uid://drnruosqn0sm4" path="res://Sprites/kenney_tower-defense-top-down/PNG/Default size/towerDefense_tile246.png" id="2_11u8t"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/DamageNumber.tscn" id="2_tbx3a"]
 

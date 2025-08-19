@@ -7,12 +7,12 @@ public partial class TileHighlight : Sprite2D
 	public override void _Process(double delta)
 	{
 		Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize);
-		Position = Position.Lerp(mousePos * PathfindingManager.instance.TileSize, 30 * (float)delta);
+		Position = Position.Lerp(mousePos * PathfindingManager.instance.TileSize, 30f * (float)delta);
 
 		TileData targetTile = PathfindingManager.instance.LevelTilemap.GetCellTileData(mousePos);
-		if (targetTile == null || (PathfindingManager.instance.TilemapBuildableData[mousePos] == false && (int)targetTile.GetCustomData("MovementCost") > 9))
-			SelfModulate = SelfModulate.Lerp(Colors.Transparent, 20 * (float)delta);
+		if (targetTile == null || (PathfindingManager.instance.TilemapBuildableData[mousePos] == false && (int)targetTile.GetCustomData("MovementCost") > 10))
+			SelfModulate = SelfModulate.Lerp(Colors.Transparent, 20f * (float)delta);
 		else
-			SelfModulate = SelfModulate.Lerp(Colors.White, 20 * (float)delta);
+			SelfModulate = SelfModulate.Lerp(Colors.White, 20f * (float)delta);
 	}
 }
