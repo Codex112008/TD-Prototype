@@ -87,6 +87,9 @@ public partial class Enemy : CharacterBody2D
 		}
 
 		MoveAndSlide();
+
+		if (PathArray.Count == 0)
+			QueueFree();
 	}
 
 	// Returns Damage Dealt

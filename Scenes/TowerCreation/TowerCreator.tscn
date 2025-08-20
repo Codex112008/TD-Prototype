@@ -30,7 +30,7 @@ LevelTilemap = NodePath("../../TowerPreview")
 [node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("_spawnPoint", "_enemyTarget", "EnemyParent") instance=ExtResource("6_qpodo")]
 _spawnPoint = NodePath("../../TowerPreview/Enemy Spawn")
 _enemyTarget = NodePath("../../TowerPreview/Enemy Goal")
-EnemyParent = NodePath(".")
+EnemyParent = NodePath("../../Enemies")
 EnemiesToSpawnData = [ExtResource("8_uiouo")]
 
 [node name="TowerPreview" type="TileMapLayer" parent="."]
@@ -92,6 +92,8 @@ alignment = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 script = ExtResource("11_bdbue")
+
+[node name="Enemies" type="Node2D" parent="."]
 
 [connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
 [connection signal="picker_created" from="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]
