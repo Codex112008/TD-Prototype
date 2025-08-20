@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1f08iqpyab5n"
-path="res://.godot/imported/FrostTowerIcon.png-0d175a5a1cf0070fdeeab59cc57d972a.ctex"
+uid="uid://buy2sc8pcjfcx"
+path="res://.godot/imported/New Piskel.png-a1fae72dc62a1ea52e4aacf5f32efb0f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/FrostTower/FrostTowerIcon.png"
-dest_files=["res://.godot/imported/FrostTowerIcon.png-0d175a5a1cf0070fdeeab59cc57d972a.ctex"]
+source_file="res://Sprites/New Piskel.png"
+dest_files=["res://.godot/imported/New Piskel.png-a1fae72dc62a1ea52e4aacf5f32efb0f.ctex"]
 
 [params]
 

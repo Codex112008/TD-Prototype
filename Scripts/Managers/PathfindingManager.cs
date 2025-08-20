@@ -73,22 +73,14 @@ public partial class PathfindingManager : Node
 	{
 		Array<Vector2> pathArray = [];
 
-		RandomNumberGenerator rand = new();
-		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
-		Vector2 offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
-		rand.Dispose();
-
 		foreach (Vector2I point in _aStarGrid.GetPointPath(startPos, endPos).Select(v => (Vector2I)v))
 		{
 			Vector2 currentPoint = point;
-			currentPoint += (Vector2I)(_aStarGrid.CellSize / 2) + offset;
+			currentPoint += (Vector2I)(_aStarGrid.CellSize / 2);
 
 			pathArray.Add(currentPoint);
 		}
-
-		pathArray[0] -= offset;
-		pathArray[^1] -= offset;
-
+		
 		return pathArray;
 	}
 }

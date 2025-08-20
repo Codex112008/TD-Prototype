@@ -27,6 +27,8 @@ public partial class SniperProjectileBehaviour : RayCast2D
 
 				foreach (TowerEffect effect in SniperData.Effects)
 					effect.ApplyEffect(Stats, (Enemy)raycast.GetCollider());
+				
+				break;
 			}
 		}
 		

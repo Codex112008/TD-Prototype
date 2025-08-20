@@ -8,8 +8,9 @@ public partial class Enemy : CharacterBody2D
 {
 	[Export] public Dictionary<EnemyStat, int> BaseEnemyStats = [];
 	[Export] public Dictionary<EnemyEffectTrigger, EnemyEffect> Effects = [];
-	[Export] public float acceleration = 5f;
-	[Export] public float deceleration = 10f;
+	[Export] private float acceleration = 5f;
+	[Export] private float deceleration = 10f;
+	[Export] private float _offsetMargin = 0.4f;
 
 	[Export] private PackedScene _damageNumberScene;
 
@@ -18,7 +19,6 @@ public partial class Enemy : CharacterBody2D
 	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
 
-	private Vector2 _offset;
 	private Sprite2D _sprite;
 	private float _currentHealth;
 	private Dictionary<EnemyStat, int> _currentEnemyStats;
@@ -39,7 +39,7 @@ public partial class Enemy : CharacterBody2D
 			timer.Connect(Timer.SignalName.Timeout, Callable.From(() => ModifyStatusEffectStacks(status, -1)));
 			_currentStatusEffectTimers.Add(status, timer);
 			AddChild(timer);
-        }
+		}
 
 		_sprite = GetChild<Sprite2D>(0);
 
@@ -65,6 +65,12 @@ public partial class Enemy : CharacterBody2D
 		}
 
 		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(targetPos / PathfindingManager.instance.TileSize));
+		RandomNumberGenerator rand = new();
+		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
+		Vector2 offset = new(rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
+		rand.Dispose();
+		for (int i = 1; i < PathArray.Count - 1; i++)
+			PathArray[i] += offset;
 	}
 
 	public override void _Process(double delta)

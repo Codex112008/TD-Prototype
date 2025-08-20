@@ -41,7 +41,7 @@ public partial class BuildingManager : Node2D
 	{
 		if (_selectedTower != null && IsInstanceValid(_towerPreview))
 		{
-			MakePreviewFollowMouse((float)delta);
+			_towerPreview.GlobalPosition = _towerPreview.Position.Lerp(GetPreviewMousePosition(), 30f * (float)delta);
 		}
 	}
 
@@ -73,10 +73,9 @@ public partial class BuildingManager : Node2D
 		}
 	}
 
-	public void MakePreviewFollowMouse(float delta)
+	public Vector2I GetPreviewMousePosition()
 	{
-		Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
-		_towerPreview.Position = _towerPreview.Position.Lerp(mousePos, 30f * delta);
+		return (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
 	}
 
 	private void BuildTower()
@@ -89,15 +88,16 @@ public partial class BuildingManager : Node2D
 
 	public void SetSelectedTower(int index = -1)
 	{
+		_towerPreview?.QueueFree();
+
 		if (index != -1)
 		{
-			GD.Print(index);
 			if (_towersToBuild[index] != _selectedTower)
 			{
 				_selectedTower = _towersToBuild[index];
-
 				_towerPreview = _selectedTower.Instantiate<Tower>();
 				_towerPreview.IsBuildingPreview = true;
+				_towerPreview.GlobalPosition = GetPreviewMousePosition();
 				_towerParent.AddChild(_towerPreview);
 			}
 		}

@@ -19,6 +19,8 @@ public partial class BasicTower : Tower
             OneShot = true,
         };
         AddChild(_fireTimer);
+
+        _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
     }
 
     public override void _Process(double delta)
@@ -30,7 +32,6 @@ public partial class BasicTower : Tower
             if (_fireTimer.WaitTime != 1f / GetFinalTowerStats()[TowerStat.FireRate])
             {
                 _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
-                _fireTimer.Start();
             }
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0)
@@ -43,11 +44,13 @@ public partial class BasicTower : Tower
 
                 if (_target != null)
                 {
-                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / 250));
-                    _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, dir.Angle() + Mathf.Pi / 2f, _rotateSpeed * (float)delta);
+                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / 250f));
+                    float targetAngle = dir.Angle() + Mathf.Pi / 2f;
+                    _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, targetAngle, _rotateSpeed * (float)delta);
 
-                    if (_fireTimer.TimeLeft <= 0 && Mathf.Abs(Mathf.Wrap(dir.Angle() + Mathf.Pi / 2f - _pivotPoint.Rotation, -Mathf.Pi, Mathf.Pi)) <= Mathf.Pi / 32f)
+                    if (_fireTimer.IsStopped() && Mathf.Abs(Mathf.Wrap(targetAngle - _pivotPoint.Rotation, -Mathf.Pi, Mathf.Pi)) <= Mathf.Pi / 16f)
                     {
+                        _pivotPoint.Rotation = targetAngle;
                         Fire();
                         _fireTimer.Start();
                     }
