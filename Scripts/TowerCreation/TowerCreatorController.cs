@@ -18,68 +18,86 @@ public partial class TowerCreatorController : Node2D
 		instance = this;
 	}
 
+	[Export] public PackedScene BaseTowerScene;
+	[Export] public Array<Projectile> ProjectileOptions;
+	[Export] public Array<TowerEffect> EffectOptions;
+	[Export] public Array<PackedScene> TowerTypeScenes;
+
 	[Export] private string _savedTowerFilePath = "res://RuntimeData/SavedTowers/";
-	[Export] private PackedScene _baseTowerScene;
 	[Export] private VBoxContainer _towerCreatorUI;
 	[Export] private TileMapLayer _towerPreviewArea;
 	[Export] private PackedScene _statPickerScene;
 	[Export] private PackedScene _modifierPickerScene;
 	[Export] private int _towerLevel = 0;
+
 	private Dictionary<TowerStat, float> _selectedStats;
 	private Projectile _selectedProjectile;
 	private Array<TowerEffect> _selectedEffects;
 	private LineEdit _towerNameInput;
 	private RichTextLabel _totalTowerCostLabel;
 	private TowerColorPickerButton _towerColorPickerButton;
+	private TowerSelector _towerSelector;
 	private Tower _towerToCreatePreview;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
-		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
-		_towerNameInput.Text = SplitIntoPascalCase(_baseTowerScene.ResourcePath[(_baseTowerScene.ResourcePath.LastIndexOf('/') + 1).._baseTowerScene.ResourcePath.LastIndexOf(".tscn")]);
-		if (_towerLevel > 0) // Cant change name if its an upgraded tower
-			_towerNameInput.Editable = false;
-
 		// Creates a preview of the tower being created
-		_towerToCreatePreview = _baseTowerScene.Instantiate<Tower>();
+		if (BaseTowerScene != null)
+			_towerToCreatePreview = BaseTowerScene.Instantiate<Tower>();
+		else
+			_towerToCreatePreview = TowerTypeScenes[0].Instantiate<Tower>();
 		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerToCreatePreview);
 
+		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
+		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
+		_towerNameInput.Text = SplitIntoPascalCase(_towerToCreatePreview.Name);
+		if (_towerLevel > 0) // Cant change name if its an upgraded tower
+			_towerNameInput.Editable = false;
+
+		// Sets default color
 		_towerColorPickerButton = _towerCreatorUI.GetChild<TowerColorPickerButton>(2);
 		if (_towerToCreatePreview.SpritesToColor.Count > 0)
 			_towerColorPickerButton.Color = _towerToCreatePreview.SpritesToColor[0].SelfModulate;
 		else
 			_towerColorPickerButton.QueueFree();
 
+		// Init tower creator
+		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
+		_towerSelector.UpdateSelector();
+		if (BaseTowerScene != null)
+			_towerSelector.ItemList.Select(_towerSelector.GetIndexFromText(RemoveWhitespaces(_towerToCreatePreview.GetType().Name)));
+		else
+			_towerSelector.ItemList.Select(0);
+		
 		// Creates all the stat pickers
-		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
-		{
-			TowerStat stat = (TowerStat)i;
-
-			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
-			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
-			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
-
-			switch (stat)
+			for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
 			{
-				case TowerStat.Cost:
-					statPickerSpinBox.Step = 50;
-					statPickerSpinBox.MaxValue = 1000;
-					break;
-				case TowerStat.Range:
-					statPickerSpinBox.Step = 5;
-					break;
-				case TowerStat.FireRate:
-					statPickerSpinBox.Suffix = "/s";
-					statPickerSpinBox.CustomMinimumSize = new(90f, 0f);
-					break;
-			}
+				TowerStat stat = (TowerStat)i;
 
-			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
-		}
+				HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
+				SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
+				statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+
+				switch (stat)
+				{
+					case TowerStat.Cost:
+						statPickerSpinBox.Step = 50;
+						statPickerSpinBox.MaxValue = 1000;
+						break;
+					case TowerStat.Range:
+						statPickerSpinBox.Step = 5;
+						break;
+					case TowerStat.FireRate:
+						statPickerSpinBox.Suffix = "/s";
+						statPickerSpinBox.CustomMinimumSize = new(90f, 0f);
+						break;
+				}
+
+				statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+			}
 
 		// Creates the Modifier Selectors
 		InstantiateModifierSelector("Projectile", "res://Custom Resources/Projectiles/");
@@ -133,7 +151,9 @@ public partial class TowerCreatorController : Node2D
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
 				// Updates modifier selector text and sets it on the preview
-				TowerComponent towerComponent = ResourceLoader.Load<TowerComponent>(modifierPicker.PathToSelectedModifierResource);
+				TowerComponent towerComponent = EffectOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
+				if (modifierPicker.ItemLabel.Text.Contains("Projectile"))
+					towerComponent = ProjectileOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
 
 				if (towerComponent is Projectile projectile)
 					_towerToCreatePreview.Projectile = projectile;
@@ -220,27 +240,37 @@ public partial class TowerCreatorController : Node2D
 	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, string pathToModifiers, int number = -1)
 	{
 		ModifierSelector modifierSelector = _modifierPickerScene.Instantiate<ModifierSelector>();
+		bool IsProjectile = number != -1;
 
-		modifierSelector.PathToModifiers = pathToModifiers;
-
-		if (number != -1) // If an effect then add number to label
-			modifierSelectorLabelName += " " + (number + 1);
-		modifierSelector.ModifierLabel.Text = modifierSelectorLabelName;
-
-		modifierSelector.UpdateModifierSelector();
-
-		if (modifierSelectorLabelName.Contains("Projectile") && _towerToCreatePreview.Projectile != null)
+		if (!IsProjectile) // If has a number then its an effect
 		{
-            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.GetType().Name[..^10]);
-		}
-		else if (modifierSelectorLabelName.Contains("Effect") && _towerToCreatePreview.Projectile.Effects.Count > number)
-		{
-            SelectModifierIndexFromName(modifierSelector, _towerToCreatePreview.Projectile.Effects[number].GetType().Name[..^6]);
+			modifierSelector.ItemLabel.Text = "Effect " + (number + 1);
+			modifierSelector.ModifiersToDisplay = [.. EffectOptions.Cast<TowerComponent>()];
 		}
 		else
 		{
-			modifierSelector.ModifierList.Select(0);
-			modifierSelector.UpdatePathToSelectedModifierResource(0);
+			modifierSelector.ItemLabel.Text = "Projectile";
+			modifierSelector.ModifiersToDisplay = [.. ProjectileOptions.Cast<TowerComponent>()];
+		}
+
+		modifierSelector.UpdateSelector();
+
+		if (IsProjectile && _towerToCreatePreview.Projectile != null)
+		{
+			int index = modifierSelector.GetIndexFromText(modifierSelector.ModifiersToDisplay.FirstOrDefault(modifier => modifier.ResourceName == _towerToCreatePreview.Projectile.ResourceName).ResourceName);
+			modifierSelector.ItemList.Select(index);
+			modifierSelector.OnItemSelected(index);
+		}
+		else if (modifierSelectorLabelName.Contains("Effect") && _towerToCreatePreview.Projectile.Effects.Count > number)
+		{
+			int index = modifierSelector.GetIndexFromText(modifierSelector.ModifiersToDisplay.FirstOrDefault(modifier => modifier.ResourceName == _towerToCreatePreview.Projectile.Effects[number].ResourceName).ResourceName);
+			modifierSelector.ItemList.Select(index);
+			modifierSelector.OnItemSelected(index);
+		}
+		else
+		{
+			modifierSelector.ItemList.Select(0);
+			modifierSelector.OnItemSelected(0);
 		}
 
 		_towerCreatorUI.AddChild(modifierSelector);
@@ -255,20 +285,6 @@ public partial class TowerCreatorController : Node2D
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;
-	}
-
-	// Gets index of modifier from the modifier selector given the modifier's name
-	private static void SelectModifierIndexFromName(ModifierSelector modifierSelector, string modifierName)
-	{
-		for (int i = 0; i < modifierSelector.ModifierList.ItemCount; i++)
-		{
-			if (RemoveWhitespaces(modifierSelector.ModifierList.GetItemText(i)) == RemoveWhitespaces(modifierName))
-			{
-				modifierSelector.ModifierList.Select(i);
-				modifierSelector.UpdatePathToSelectedModifierResource(i);
-				break;
-			}
-		}
 	}
 
 	// TODO: maybe move this to some util class

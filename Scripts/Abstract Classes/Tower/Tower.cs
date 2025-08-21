@@ -6,6 +6,11 @@ using System.Linq;
 [GlobalClass]
 public abstract partial class Tower : Sprite2D
 {
+    [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
+    [Export] public Array<Sprite2D> SpritesForIcon = [];
+    [Export] public Array<Sprite2D> SpritesToColor = [];
+    [Export(PropertyHint.MultilineText)] public string Tooltip;
+
     [Export] private Texture2D _rangeOverlayTexture;
     private Projectile _projectile;
     private bool _createdProjectileInstance = false;
@@ -32,9 +37,6 @@ public abstract partial class Tower : Sprite2D
                 _projectile = value;
         }
     }
-    [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
-    [Export] public Array<Sprite2D> SpritesForIcon = [];
-    [Export] public Array<Sprite2D> SpritesToColor = [];
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;

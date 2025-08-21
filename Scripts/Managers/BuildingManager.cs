@@ -1,6 +1,5 @@
 using Godot;
 using Godot.Collections;
-using System;
 
 [GlobalClass]
 public partial class BuildingManager : Node2D
@@ -27,7 +26,7 @@ public partial class BuildingManager : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Array<string> savedTowers = GameManager.GetFolderNames(_pathToSavedTowers);
+		Array<string> savedTowers = GetFolderNames(_pathToSavedTowers);
 		for (int i = 0; i < savedTowers.Count; i++)
 		{
 			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
@@ -111,19 +110,33 @@ public partial class BuildingManager : Node2D
 	{
 		foreach (Node child in TowerSelectionButtonContainer.GetChildren())
 			child.QueueFree();
-		
+
 		for (int i = 0; i < _towersToBuild.Count; i++)
 		{
-            TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
+			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
 			int index = i;
-            towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
+			towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
 
 			// Change button textures to saved tower icon
 			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(_towersToBuild[i].ResourcePath[.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png"));
 			towerSelectionButton.TextureNormal = towerIcon;
 			towerSelectionButton.TexturePressed = towerIcon;
-			
+
 			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
 		}
+	}
+	
+	public static Array<string> GetFolderNames(string path)
+	{
+		// Get all directories at the specified path
+		string[] folders = DirAccess.GetDirectoriesAt(path);
+
+		if (folders == null)
+		{
+			GD.PushError($"Failed to access directory: {path}");
+			return [];
+		}
+
+		return [.. folders];
 	}
 }

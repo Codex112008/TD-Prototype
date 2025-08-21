@@ -14,18 +14,4 @@ public partial class GameManager : Node
 		}
 		instance = this;
 	}
-
-	public static Array<string> GetFolderNames(string path)
-	{
-		// Get all directories at the specified path
-		string[] folders = DirAccess.GetDirectoriesAt(path);
-
-		if (folders == null)
-		{
-			GD.PushError($"Failed to access directory: {path}");
-			return [];
-		}
-
-		return [.. folders];
-	}
 }
