@@ -20,7 +20,7 @@ BaseTowerStats = Dictionary[int, int]({
 2: 25,
 3: 2
 })
-SpritesForIcon = [NodePath("PivotPoint/TowerHead")]
+SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_vekyq")
 Projectile = ExtResource("4_vekyq")

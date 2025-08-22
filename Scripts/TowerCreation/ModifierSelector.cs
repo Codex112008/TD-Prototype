@@ -5,7 +5,7 @@ using System;
 public partial class ModifierSelector : Selector
 {
 	[Export] public RichTextLabel CostLabel;
-	[Export] public Array<TowerComponent> ModifiersToDisplay;
+	public Array<TowerComponent> ModifiersToDisplay;
 	public TowerComponent SelectedComponent;
 
 	public override void OnItemSelected(int index)

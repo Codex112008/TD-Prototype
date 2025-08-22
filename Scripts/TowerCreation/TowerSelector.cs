@@ -4,24 +4,34 @@ using System;
 
 public partial class TowerSelector : Selector
 {
-	[Export] public Array<PackedScene> TowerTypesToDisplay;
+	public PackedScene SelectedTowerType;
+	private Array<PackedScene> _towerTypeScenes;
 
-    public override void OnItemSelected(int index)
+	public override void OnItemSelected(int index)
 	{
-
+		SelectedTowerType = _towerTypeScenes[index];
 
 		base.OnItemSelected(index);
 	}
 
 	public override void UpdateSelector()
 	{
-		foreach (PackedScene type in TowerCreatorController.instance.TowerTypeScenes)
+		_towerTypeScenes = TowerCreatorController.instance.TowerTypeScenes;
+		foreach (PackedScene type in _towerTypeScenes)
 		{
 			Tower tempTower = type.Instantiate<Tower>();
-			int index = ItemList.AddItem(TowerCreatorController.SplitIntoPascalCase(type.ResourcePath[type.ResourcePath.LastIndexOf('/')..type.ResourcePath.LastIndexOf(".tscn")]), ImageTexture.CreateFromImage(TowerCreatorController.CreateImageFromSprites(tempTower)));
+			int index = ItemList.AddItem(TowerCreatorController.SplitIntoPascalCase(type.ResourcePath[(type.ResourcePath.LastIndexOf('/') + 1)..type.ResourcePath.LastIndexOf(".tscn")]), ImageTexture.CreateFromImage(TowerCreatorController.CreateImageFromSprites(tempTower)));
 			ItemList.SetItemTooltip(index, tempTower.Tooltip);
 			ItemList.SetItemTooltipEnabled(index, true);
 			tempTower.QueueFree();
 		}
+	}
+
+	public string SelectedTowerTypeName()
+	{
+		Tower tempTower = SelectedTowerType.Instantiate<Tower>();
+		string tempTowerScriptName = tempTower.GetType().Name;
+		tempTower.QueueFree();
+		return tempTowerScriptName;
 	}
 }

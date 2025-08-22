@@ -44,12 +44,9 @@ public partial class TowerCreatorController : Node2D
 	{
 		// Creates a preview of the tower being created
 		if (BaseTowerScene != null)
-			_towerToCreatePreview = BaseTowerScene.Instantiate<Tower>();
+			InstantiateTowerPreview(BaseTowerScene);
 		else
-			_towerToCreatePreview = TowerTypeScenes[0].Instantiate<Tower>();
-		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
-		_towerToCreatePreview.RangeAlwaysVisible = true;
-		_towerPreviewArea.AddChild(_towerToCreatePreview);
+			InstantiateTowerPreview(TowerTypeScenes[0]);
 
 		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
 		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
@@ -68,9 +65,16 @@ public partial class TowerCreatorController : Node2D
 		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
 		_towerSelector.UpdateSelector();
 		if (BaseTowerScene != null)
-			_towerSelector.ItemList.Select(_towerSelector.GetIndexFromText(RemoveWhitespaces(_towerToCreatePreview.GetType().Name)));
+		{
+			int index = _towerSelector.GetIndexFromText(RemoveWhitespaces(_towerToCreatePreview.GetType().Name));
+			_towerSelector.ItemList.Select(index);
+			_towerSelector.OnItemSelected(index);
+		}
 		else
+		{
 			_towerSelector.ItemList.Select(0);
+			_towerSelector.OnItemSelected(0);
+		}
 		
 		// Creates all the stat pickers
 			for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
@@ -126,27 +130,23 @@ public partial class TowerCreatorController : Node2D
 
 	public void UpdateTowerPreview()
 	{
+		// If the tower type is different
+		if (_towerToCreatePreview.GetType().Name != _towerSelector.SelectedTowerTypeName())
+		{
+			_towerToCreatePreview.QueueFree();
+			InstantiateTowerPreview(_towerSelector.SelectedTowerType);
+		}
+
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
 		{
 			Node pickerNodeType = _towerCreatorUI.GetChild(i);
-			if (pickerNodeType is StatSelector statPicker)
+			if (pickerNodeType is StatSelector statSelector)
 			{
 				// Updates stat picker text and sets it on the preview
-				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statPicker.StatLabel.Text));
-
-				_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statPicker.StatSpinBox.Value);
-
-				if (stat != TowerStat.Cost)
-				{
-					int statCost = _towerToCreatePreview.GetPointCostForStat(stat);
-					statPicker.CostLabel.Text = "Cost: " + statCost;
-				}
-				else
-				{
-					int max = _towerToCreatePreview.GetPointCostForStat(stat);
-					statPicker.CostLabel.Text = "Max Points: " + max;
-				}
+				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statSelector.StatLabel.Text));
+				UpdateTowerPreviewStat(statSelector, stat);
+				
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
@@ -179,6 +179,22 @@ public partial class TowerCreatorController : Node2D
 			_totalTowerCostLabel.Text = "Point Usage: " + _towerToCreatePreview.GetCurrentTotalPointsAllocated() + "/" + _towerToCreatePreview.GetMaximumPointsFromCost();
 			if (_towerToCreatePreview.GetCurrentTotalPointsAllocated() > _towerToCreatePreview.GetMaximumPointsFromCost())
 				_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (_towerToCreatePreview.GetCurrentTotalPointsAllocated() - _towerToCreatePreview.GetMaximumPointsFromCost()) + " points";
+		}
+	}
+
+	public void UpdateTowerPreviewStat(StatSelector statSelector, TowerStat stat)
+	{
+		_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statSelector.StatSpinBox.Value);
+
+		if (stat != TowerStat.Cost)
+		{
+			int statCost = _towerToCreatePreview.GetPointCostForStat(stat);
+			statSelector.CostLabel.Text = "Cost: " + statCost;
+		}
+		else
+		{
+			int max = _towerToCreatePreview.GetPointCostForStat(stat);
+			statSelector.CostLabel.Text = "Max Points: " + max;
 		}
 	}
 
@@ -287,6 +303,14 @@ public partial class TowerCreatorController : Node2D
 		return statPicker;
 	}
 
+	private void InstantiateTowerPreview(PackedScene towerType)
+	{
+		_towerToCreatePreview = towerType.Instantiate<Tower>();
+		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
+		_towerToCreatePreview.RangeAlwaysVisible = true;
+		_towerPreviewArea.AddChild(_towerToCreatePreview);
+	}
+
 	// TODO: maybe move this to some util class
 	private static readonly Regex sPascalCase = new("(?<!^)([A-Z])");
 	public static string SplitIntoPascalCase(string input)
@@ -305,7 +329,7 @@ public partial class TowerCreatorController : Node2D
 	}
 
 	// Credits to random guy from the internet that had GDScript that I converted to C#
-	public static Image CreateImageFromSprites(Tower towerToSave)
+	public static Image CreateImageFromSprites(Tower towerToSave, Color towerColor = default)
 	{
 		Array<Sprite2D> sprites = towerToSave.SpritesForIcon;
 		if (sprites.Count > 1)
@@ -322,16 +346,10 @@ public partial class TowerCreatorController : Node2D
 				foreach (Sprite2D sprite in sprites)
 				{
 					Image spriteImage = sprite.Texture.GetImage();
-					if (sprite.SelfModulate != Colors.White)
-					{
-						for (int i = 0; i < spriteImage.GetWidth(); i++)
-						{
-							for (int j = 0; j < spriteImage.GetHeight(); j++)
-							{
-								spriteImage.SetPixel(i, j, spriteImage.GetPixel(i, j) * sprite.SelfModulate);
-							}
-						}
-					}
+					if (sprite.SelfModulate != Colors.White && towerColor == default)
+						spriteImage = ColorImage(spriteImage, sprite.SelfModulate);
+					else if (towerColor != default)
+						spriteImage = ColorImage(spriteImage, towerColor);
 
 					image.BlendRect(spriteImage, new Rect2I(Vector2I.Zero, spriteImage.GetSize()), (Vector2I)(GetSpriteRect(sprite, towerToSave).Position - boundingBox.Position));
 				}
@@ -345,6 +363,19 @@ public partial class TowerCreatorController : Node2D
 			return sprites[0].Texture.GetImage();
 		else
 			return null;
+	}
+
+	private static Image ColorImage(Image image, Color color)
+	{
+		for (int i = 0; i < image.GetWidth(); i++)
+		{
+			for (int j = 0; j < image.GetHeight(); j++)
+			{
+				image.SetPixel(i, j, image.GetPixel(i, j) * color);
+			}
+		}
+
+		return image;
 	}
 
 	public static Rect2 GetSpriteRect(Sprite2D sprite, Tower towerToSave)

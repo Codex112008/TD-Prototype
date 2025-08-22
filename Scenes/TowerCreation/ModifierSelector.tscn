@@ -9,7 +9,6 @@ offset_bottom = 40.0
 theme = ExtResource("1_t4dkk")
 script = ExtResource("1_5ushg")
 CostLabel = NodePath("HBoxContainer/CostLabel")
-ModifiersToDisplay = Array[Resource]([])
 ItemLabel = NodePath("HBoxContainer/RichTextLabel")
 ItemList = NodePath("ModifierList")
 _selectedItemButton = NodePath("HBoxContainer/TextureButton")
