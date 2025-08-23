@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://dy2jvm1mvslvb"]
+[gd_scene load_steps=9 format=4 uid="uid://dy2jvm1mvslvb"]
 
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="1_bx147"]
 [ext_resource type="Script" uid="uid://d1tqor7cpb7rg" path="res://Scripts/Managers/GameManager.cs" id="1_vgiph"]
@@ -7,10 +7,7 @@
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="4_dy5id"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_dy5id"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="5_s0kwr"]
-[ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/EnemySpawnData/BasicEnemy/BasicEnemySpawnData.tres" id="6_1bllb"]
 [ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/TileHighlight.tscn" id="6_bx147"]
-[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="6_kmaga"]
-[ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/EnemySpawnData/FastEnemy/FastEnemySpawnData.tres" id="7_kmaga"]
 
 [node name="PrototypeLevel" type="Node2D"]
 
@@ -29,7 +26,6 @@ LevelTilemap = NodePath("../../LevelTilemap")
 _spawnPoint = NodePath("../../LevelTilemap/EnemySpawn")
 _enemyTarget = NodePath("../../LevelTilemap/Target")
 EnemyParent = NodePath("../../Enemies")
-EnemiesToSpawnData = Array[ExtResource("6_kmaga")]([ExtResource("6_1bllb"), ExtResource("7_kmaga")])
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(160, 94)

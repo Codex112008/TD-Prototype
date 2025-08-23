@@ -6,7 +6,13 @@ using System.Linq;
 [GlobalClass]
 public abstract partial class Tower : Sprite2D
 {
-    [Export] public Dictionary<TowerStat, int> BaseTowerStats = [];
+    [Export] public Dictionary<TowerStat, int> BaseTowerStats = new()
+    {
+        {TowerStat.Cost, 300},
+        {TowerStat.Damage, 2},
+        {TowerStat.Range, 25},
+        {TowerStat.FireRate, 2}
+    };
     [Export] public Array<Sprite2D> SpritesForIcon = [];
     [Export] public Array<Sprite2D> SpritesToColor = [];
     [Export(PropertyHint.MultilineText)] public string Tooltip;
@@ -149,7 +155,7 @@ public abstract partial class Tower : Sprite2D
 
     protected float GetRangeInTiles()
     {
-        return GetFinalTowerStats()[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10;
+        return GetFinalTowerStats()[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f;
     }
 
     protected Vector2 GetCenteredGlobalPosition()

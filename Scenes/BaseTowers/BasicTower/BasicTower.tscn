@@ -14,12 +14,6 @@ script = ExtResource("2_8n507")
 _firePoint = NodePath("PivotPoint/FirePoint")
 _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
-BaseTowerStats = Dictionary[int, int]({
-0: 300,
-1: 2,
-2: 25,
-3: 2
-})
 SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_vekyq")

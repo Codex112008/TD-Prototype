@@ -17,20 +17,22 @@ public partial class SniperProjectileBehaviour : RayCast2D
 		_raycasts.Insert(0, this);
 
 		Line2D line = GetChild<Line2D>(0);
-		
+
+		Vector2 endPos = TargetPosition.Normalized() * (Stats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f);
 		foreach (RayCast2D raycast in _raycasts)
 		{
 			raycast.ForceRaycastUpdate();
 			if (raycast.IsColliding())
 			{
-				line.SetPointPosition(1, raycast.ToLocal(raycast.GetCollisionPoint()));
+				endPos = raycast.ToLocal(raycast.GetCollisionPoint());
 
 				foreach (TowerEffect effect in SniperData.Effects)
 					effect.ApplyEffect(Stats, (Enemy)raycast.GetCollider());
-				
+
 				break;
 			}
 		}
+		line.SetPointPosition(1, endPos);
 		
 		_tween ??= CreateTween();
 		_tween.TweenProperty(line, "width", 0, 0.2f).SetDelay(0.1f);

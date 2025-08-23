@@ -159,10 +159,12 @@ public partial class Enemy : CharacterBody2D
 
 	protected void InstantiateDamageNumber(float damageDealt, DamageType damageType)
 	{
+		RandomNumberGenerator rand = new();
+
 		DamageNumber damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
 		damageNumber.DamageValue = Mathf.Round(damageDealt * 100) / 100;
 		damageNumber.DamageTypeDealt = damageType;
-		damageNumber.GlobalPosition = GlobalPosition;
+		damageNumber.GlobalPosition = GlobalPosition + new Vector2(rand.RandfRange(-2f, 2f), rand.RandfRange(-0.5f, 0.5f));
 		EnemyManager.instance.EnemyParent.AddChild(damageNumber);
 	}
 

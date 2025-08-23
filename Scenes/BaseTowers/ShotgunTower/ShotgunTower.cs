@@ -1,11 +1,13 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public partial class ShotgunTower : Tower
 {
-	[Export] private Marker2D _firePoint;
+	[Export] private Array<Marker2D> _firePoints = [];
     [Export] private Marker2D _pivotPoint;
     [Export] private float _rotateSpeed;
+    [Export] private float _shotSpread = 2f;
 
     private Timer _fireTimer;
     private Enemy _target = null;
@@ -21,6 +23,7 @@ public partial class ShotgunTower : Tower
         AddChild(_fireTimer);
 
         _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
+        _shotSpread /= 2;
     }
 
     public override void _Process(double delta)
@@ -79,6 +82,11 @@ public partial class ShotgunTower : Tower
 
     protected override void Fire()
     {
-        Projectile.InstantiateProjectile(GetFinalTowerStats(), _firePoint);
+        RandomNumberGenerator rand = new();
+        foreach (Marker2D firePoint in _firePoints)
+        {
+            firePoint.RotationDegrees = rand.RandfRange(-_shotSpread, _shotSpread);
+            Projectile.InstantiateProjectile(GetFinalTowerStats(), firePoint);
+        }
     }
 }

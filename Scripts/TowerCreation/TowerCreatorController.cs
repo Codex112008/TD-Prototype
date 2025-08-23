@@ -19,9 +19,9 @@ public partial class TowerCreatorController : Node2D
 	}
 
 	[Export] public PackedScene BaseTowerScene;
-	[Export] public Array<Projectile> ProjectileOptions;
-	[Export] public Array<TowerEffect> EffectOptions;
-	[Export] public Array<PackedScene> TowerTypeScenes;
+	[Export] public Array<Projectile> ProjectileOptions = [];
+	[Export] public Array<TowerEffect> EffectOptions = [];
+	[Export] public Array<PackedScene> TowerTypeScenes = [];
 
 	[Export] private string _savedTowerFilePath = "res://RuntimeData/SavedTowers/";
 	[Export] private VBoxContainer _towerCreatorUI;
@@ -104,9 +104,9 @@ public partial class TowerCreatorController : Node2D
 			}
 
 		// Creates the Modifier Selectors
-		InstantiateModifierSelector("Projectile", "res://Custom Resources/Projectiles/");
+		InstantiateModifierSelector("Projectile");
 		for (int i = 0; i < _towerLevel + 1; i++)
-			InstantiateModifierSelector("Effect", "res://Custom Resources/Effects/", i);
+			InstantiateModifierSelector("Effect", i);
 
 		// Creates the label showing the total and used cost
 		_totalTowerCostLabel = new RichTextLabel
@@ -131,10 +131,12 @@ public partial class TowerCreatorController : Node2D
 	public void UpdateTowerPreview()
 	{
 		// If the tower type is different
+		bool newTowerType = false;
 		if (_towerToCreatePreview.GetType().Name != _towerSelector.SelectedTowerTypeName())
 		{
 			_towerToCreatePreview.QueueFree();
-			InstantiateTowerPreview(_towerSelector.SelectedTowerType);
+			InstantiateTowerPreview(_towerSelector.SelectedTowerType, false);
+			newTowerType = true;
 		}
 
 		Array<TowerEffect> effects = [];
@@ -146,7 +148,7 @@ public partial class TowerCreatorController : Node2D
 				// Updates stat picker text and sets it on the preview
 				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statSelector.StatLabel.Text));
 				UpdateTowerPreviewStat(statSelector, stat);
-				
+
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
@@ -180,6 +182,9 @@ public partial class TowerCreatorController : Node2D
 			if (_towerToCreatePreview.GetCurrentTotalPointsAllocated() > _towerToCreatePreview.GetMaximumPointsFromCost())
 				_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (_towerToCreatePreview.GetCurrentTotalPointsAllocated() - _towerToCreatePreview.GetMaximumPointsFromCost()) + " points";
 		}
+
+		if (newTowerType)
+			_towerPreviewArea.AddChild(_towerToCreatePreview);
 	}
 
 	public void UpdateTowerPreviewStat(StatSelector statSelector, TowerStat stat)
@@ -253,7 +258,7 @@ public partial class TowerCreatorController : Node2D
 		towerToSave.Free();
 	}
 
-	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, string pathToModifiers, int number = -1)
+	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, int number = -1)
 	{
 		ModifierSelector modifierSelector = _modifierPickerScene.Instantiate<ModifierSelector>();
 		bool IsProjectile = number != -1;
@@ -303,12 +308,13 @@ public partial class TowerCreatorController : Node2D
 		return statPicker;
 	}
 
-	private void InstantiateTowerPreview(PackedScene towerType)
+	private void InstantiateTowerPreview(PackedScene towerType, bool addToScene = true)
 	{
 		_towerToCreatePreview = towerType.Instantiate<Tower>();
 		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
-		_towerPreviewArea.AddChild(_towerToCreatePreview);
+		if (addToScene)
+			_towerPreviewArea.AddChild(_towerToCreatePreview);
 	}
 
 	// TODO: maybe move this to some util class
