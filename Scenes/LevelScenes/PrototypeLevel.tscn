@@ -1,31 +1,10 @@
-[gd_scene load_steps=9 format=4 uid="uid://dy2jvm1mvslvb"]
+[gd_scene load_steps=4 format=4 uid="uid://dy2jvm1mvslvb"]
 
-[ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="1_bx147"]
-[ext_resource type="Script" uid="uid://d1tqor7cpb7rg" path="res://Scripts/Managers/GameManager.cs" id="1_vgiph"]
-[ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/LevelScenes/TowerSelectionButton.tscn" id="2_vgiph"]
-[ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="3_u1k0j"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="4_dy5id"]
-[ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_dy5id"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="5_s0kwr"]
 [ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/LevelScenes/TileHighlight.tscn" id="6_bx147"]
 
 [node name="PrototypeLevel" type="Node2D"]
-
-[node name="Managers" type="Node" parent="."]
-script = ExtResource("1_vgiph")
-
-[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("TowerSelectionButtonContainer", "_towerParent") instance=ExtResource("1_bx147")]
-TowerSelectionButtonScene = ExtResource("2_vgiph")
-TowerSelectionButtonContainer = NodePath("../../UI/TowerButtonContainers")
-_towerParent = NodePath("../../Towers")
-
-[node name="PathfindingManager" parent="Managers" node_paths=PackedStringArray("LevelTilemap") instance=ExtResource("3_u1k0j")]
-LevelTilemap = NodePath("../../LevelTilemap")
-
-[node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("_spawnPoint", "_enemyTarget", "EnemyParent") instance=ExtResource("5_dy5id")]
-_spawnPoint = NodePath("../../LevelTilemap/EnemySpawn")
-_enemyTarget = NodePath("../../LevelTilemap/Target")
-EnemyParent = NodePath("../../Enemies")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(160, 94)

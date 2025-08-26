@@ -26,13 +26,7 @@ public partial class BuildingManager : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Array<string> savedTowers = GetFolderNames(_pathToSavedTowers);
-		for (int i = 0; i < savedTowers.Count; i++)
-		{
-			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
-		}
-
-		GenerateTowerSelectionButtons();
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -42,6 +36,17 @@ public partial class BuildingManager : Node2D
 		{
 			_towerPreview.GlobalPosition = _towerPreview.Position.Lerp(GetPreviewMousePosition(), 30f * (float)delta);
 		}
+	}
+
+	public void Init()
+	{
+		Array<string> savedTowers = GetFolderNames(_pathToSavedTowers);
+		for (int i = 0; i < savedTowers.Count; i++)
+		{
+			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
+		}
+
+		GenerateTowerSelectionButtons();
 	}
 
 	public override void _UnhandledInput(InputEvent @event)

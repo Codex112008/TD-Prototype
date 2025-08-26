@@ -35,10 +35,7 @@ public partial class EnemyManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_tileSize = PathfindingManager.instance.TileSize;
-
-		foreach (EnemySpawnData spawnData in EnemiesToSpawnData)
-			spawnData.Weight = spawnData.BaseWeight;
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -76,6 +73,14 @@ public partial class EnemyManager : Node
 				_spawnTimer.Start();
 			}
 		}
+	}
+
+	public void Init()
+	{
+		_tileSize = PathfindingManager.instance.TileSize;
+
+		foreach (EnemySpawnData spawnData in EnemiesToSpawnData)
+			spawnData.Weight = spawnData.BaseWeight;
 	}
 
 	public List<Tuple<EnemySpawnData, float>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)

@@ -1,3 +1,23 @@
-[gd_scene format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=5 format=3 uid="uid://dgthljd51vhi"]
+
+[ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
+[ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/LevelScenes/TowerSelectionButton.tscn" id="3_23lj0"]
+[ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="4_lvlvj"]
+[ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_nvgt4"]
 
 [node name="RunController" type="Node2D"]
+
+[node name="Managers" type="Node" parent="."]
+
+[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("TowerSelectionButtonContainer", "_towerParent") instance=ExtResource("2_tjy1v")]
+TowerSelectionButtonScene = ExtResource("3_23lj0")
+TowerSelectionButtonContainer = NodePath("")
+_towerParent = NodePath("")
+
+[node name="PathfindingManager" parent="Managers" node_paths=PackedStringArray("LevelTilemap") instance=ExtResource("4_lvlvj")]
+LevelTilemap = NodePath("")
+
+[node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("_spawnPoint", "_enemyTarget", "EnemyParent") instance=ExtResource("5_nvgt4")]
+_spawnPoint = NodePath("")
+_enemyTarget = NodePath("")
+EnemyParent = NodePath("")
