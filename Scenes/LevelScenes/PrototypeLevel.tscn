@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="1_bx147"]
 [ext_resource type="Script" uid="uid://d1tqor7cpb7rg" path="res://Scripts/Managers/GameManager.cs" id="1_vgiph"]
-[ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/TowerSelectionButton.tscn" id="2_vgiph"]
+[ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/LevelScenes/TowerSelectionButton.tscn" id="2_vgiph"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="3_u1k0j"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="4_dy5id"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_dy5id"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="5_s0kwr"]
-[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/TileHighlight.tscn" id="6_bx147"]
+[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/LevelScenes/TileHighlight.tscn" id="6_bx147"]
 
 [node name="PrototypeLevel" type="Node2D"]
 
