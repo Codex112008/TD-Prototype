@@ -25,6 +25,18 @@ window/stretch/scale_mode="integer"
 
 project/assembly_name="TD-Prototype"
 
+[file_customization]
+
+folder_colors={
+"res://Custom Resources/": "yellow",
+"res://RuntimeData/": "purple",
+"res://RuntimeData/SavedTowers/": "pink",
+"res://Scenes/": "green",
+"res://Scenes/BaseTowers/": "red",
+"res://Scripts/": "blue",
+"res://Sprites/": "gray"
+}
+
 [global_group]
 
 Enemy="Group for every enemy"
