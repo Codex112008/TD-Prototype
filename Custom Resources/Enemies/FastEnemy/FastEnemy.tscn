@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://bvux7ekjdv5xh"]
+
+[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_gqp5r"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/LevelScenes/DamageNumber.tscn" id="2_p6vkx"]
+[ext_resource type="Texture2D" uid="uid://ck7hkwbgxut7p" path="res://Sprites/New Piskel-2.png (1).png" id="3_eu8iq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(6, 6)
+
+[node name="BasicEnemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_gqp5r")
+BaseEnemyStats = Dictionary[int, int]({
+0: 7,
+1: 50,
+2: 1,
+3: 0
+})
+acceleration = 9.0
+_offsetMargin = 0.55
+_damageNumberScene = ExtResource("2_p6vkx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_eu8iq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")

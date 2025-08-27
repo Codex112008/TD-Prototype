@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dwnfkc6e4143k"]
 
-[ext_resource type="Script" uid="uid://yv5ioy4l1vm3" path="res://Scripts/Managers/PathfindingManager.cs" id="1_v38as"]
+[ext_resource type="Script" uid="uid://yv5ioy4l1vm3" path="res://Scripts/Managers and Controllers/PathfindingManager.cs" id="1_v38as"]
 
 [node name="PathfindingManager" type="Node"]
 script = ExtResource("1_v38as")

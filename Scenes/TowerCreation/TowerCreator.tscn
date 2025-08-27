@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=4 uid="uid://byt35up7juchg"]
 
-[ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/TowerCreation/TowerCreatorController.cs" id="1_iqnq1"]
-[ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Scenes/BaseTowers/BasicTower/BasicTower.tscn" id="2_pcf17"]
+[ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/Managers and Controllers/TowerCreatorController.cs" id="1_iqnq1"]
+[ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.tscn" id="2_pcf17"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="2_vvvic"]
 [ext_resource type="PackedScene" uid="uid://m4rsxkv8b7ce" path="res://Scenes/TowerCreation/StatSelector.tscn" id="3_qpodo"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="3_rxuld"]
@@ -11,7 +11,7 @@
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/Effects/Damage/DamageEffectResource.tres" id="5_k7xnd"]
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_p8u2g"]
 [ext_resource type="Resource" uid="uid://dunae7lk31h0u" path="res://Custom Resources/Effects/Chill/ChillEffectResource.tres" id="6_vvvic"]
-[ext_resource type="PackedScene" uid="uid://djjdey4gi5ebf" path="res://Scenes/BaseTowers/ShotgunTower/ShotgunTower.tscn" id="7_akxta"]
+[ext_resource type="PackedScene" uid="uid://djjdey4gi5ebf" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.tscn" id="7_akxta"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="7_gom0i"]
 [ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/LevelScenes/TileHighlight.tscn" id="8_gom0i"]
 [ext_resource type="Script" uid="uid://bvunvv3p5u3e3" path="res://Scripts/TowerCreation/TowerColorPickerButton.cs" id="11_bdbue"]
@@ -122,8 +122,6 @@ allow_reselect = true
 auto_width = true
 auto_height = true
 icon_scale = 2.0
-
-[node name="Enemies" type="Node2D" parent="."]
 
 [connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
 [connection signal="picker_created" from="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]

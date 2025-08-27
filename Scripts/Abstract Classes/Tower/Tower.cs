@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 [GlobalClass]
-public abstract partial class Tower : Sprite2D
+public abstract partial class Tower : Sprite2D, ISavable
 {
     [Export] public Dictionary<TowerStat, int> BaseTowerStats = new()
     {
@@ -18,6 +18,7 @@ public abstract partial class Tower : Sprite2D
     [Export(PropertyHint.MultilineText)] public string Tooltip;
 
     [Export] private Texture2D _rangeOverlayTexture;
+
     private Projectile _projectile;
     private bool _createdProjectileInstance = false;
     [Export]
@@ -69,8 +70,7 @@ public abstract partial class Tower : Sprite2D
         Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
         if (mousePos == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview)
         {
-            if (_rangeOverlay.Visible != true)
-                _rangeOverlay.Visible = true;
+            _rangeOverlay.Visible = true;
             _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 128f) * 2f, 12.5f * (float)delta);
         }
         else
@@ -104,6 +104,22 @@ public abstract partial class Tower : Sprite2D
     protected virtual int GetPointCostFromStats()
     {
         return GetPointCostFromDamage() + GetPointCostFromRange() + GetPointCostFromFireRate();
+    }
+
+    public Dictionary<string, Variant> Save()
+    {
+        return new Dictionary<string, Variant>()
+        {
+            {"SceneFilePath", SceneFilePath},
+            {"Parent", GetParent().GetPath()},
+            {"PosX", Position.X},
+            {"PosY", Position.Y},
+        };
+    }
+
+    public void Load(Dictionary<string, Variant> saveData)
+    {
+        
     }
 
     public int GetPointCostForStat(TowerStat stat)

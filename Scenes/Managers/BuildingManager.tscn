@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://gtxproojnjj7"]
+[gd_scene load_steps=3 format=3 uid="uid://gtxproojnjj7"]
 
-[ext_resource type="Script" uid="uid://c0xc6gyo8i8u1" path="res://Scripts/Managers/BuildingManager.cs" id="1_7ei00"]
+[ext_resource type="Script" uid="uid://c0xc6gyo8i8u1" path="res://Scripts/Managers and Controllers/BuildingManager.cs" id="1_7ei00"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="2_5jbqv"]
 
-[node name="BuildingManager" type="Node2D"]
+[node name="BuildingManager" type="Node2D" node_paths=PackedStringArray("TowerSelectionButtonContainer")]
 script = ExtResource("1_7ei00")
+TowerSelectionButtonContainer = NodePath("UI/TowerButtonContainers")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TowerButtonContainers" type="HBoxContainer" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -78.205
+offset_bottom = -14.205
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("2_5jbqv")
+alignment = 1

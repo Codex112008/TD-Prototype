@@ -1,23 +1,35 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=10 format=3 uid="uid://dgthljd51vhi"]
 
+[ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/LevelScenes/TowerSelectionButton.tscn" id="3_23lj0"]
+[ext_resource type="PackedScene" uid="uid://byt35up7juchg" path="res://Scenes/TowerCreation/TowerCreator.tscn" id="3_lvlvj"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="4_lvlvj"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_nvgt4"]
+[ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/LevelScenes/PrototypeLevel.tscn" id="6_23lj0"]
+[ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/BasicEnemy/BasicEnemySpawnData.tres" id="8_nvgt4"]
+[ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/FastEnemy/FastEnemySpawnData.tres" id="9_skahh"]
 
 [node name="RunController" type="Node2D"]
+script = ExtResource("1_tjy1v")
+_levelSaveFilePath = "res://RuntimeData/LevelSaveFiles/"
+_levelScene = ExtResource("6_23lj0")
+_towerCreationScene = ExtResource("3_lvlvj")
 
 [node name="Managers" type="Node" parent="."]
 
-[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("TowerSelectionButtonContainer", "_towerParent") instance=ExtResource("2_tjy1v")]
+[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("_towerParent") instance=ExtResource("2_tjy1v")]
 TowerSelectionButtonScene = ExtResource("3_23lj0")
-TowerSelectionButtonContainer = NodePath("")
-_towerParent = NodePath("")
+_towerParent = NodePath("../../Towers")
 
-[node name="PathfindingManager" parent="Managers" node_paths=PackedStringArray("LevelTilemap") instance=ExtResource("4_lvlvj")]
-LevelTilemap = NodePath("")
+[node name="PathfindingManager" parent="Managers" instance=ExtResource("4_lvlvj")]
 
-[node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("_spawnPoint", "_enemyTarget", "EnemyParent") instance=ExtResource("5_nvgt4")]
-_spawnPoint = NodePath("")
-_enemyTarget = NodePath("")
-EnemyParent = NodePath("")
+[node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("EnemyParent") instance=ExtResource("5_nvgt4")]
+EnemyParent = NodePath("../../Enemies")
+EnemiesToSpawnData = [ExtResource("8_nvgt4"), ExtResource("9_skahh")]
+
+[node name="PrototypeLevel" parent="." instance=ExtResource("6_23lj0")]
+
+[node name="Towers" type="Node2D" parent="."]
+
+[node name="Enemies" type="Node2D" parent="."]

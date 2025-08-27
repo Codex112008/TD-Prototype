@@ -14,6 +14,10 @@ config/name="TD-Prototype"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://Sprites/icon.svg"
 
+[autoload]
+
+Rand="*res://Scripts/Managers and Controllers/Rand.cs"
+
 [display]
 
 window/size/viewport_width=1280
@@ -29,10 +33,10 @@ project/assembly_name="TD-Prototype"
 
 folder_colors={
 "res://Custom Resources/": "yellow",
+"res://Custom Resources/BaseTowers/": "yellow",
 "res://RuntimeData/": "purple",
 "res://RuntimeData/SavedTowers/": "pink",
 "res://Scenes/": "green",
-"res://Scenes/BaseTowers/": "red",
 "res://Scripts/": "blue",
 "res://Sprites/": "gray"
 }
@@ -40,6 +44,8 @@ folder_colors={
 [global_group]
 
 Enemy="Group for every enemy"
+Tilemap=""
+Persist=""
 
 [importer_defaults]
 

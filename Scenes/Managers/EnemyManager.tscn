@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ddy77x3qvehc1"]
 
-[ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers/EnemyManager.cs" id="1_1ax1c"]
+[ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers and Controllers/EnemyManager.cs" id="1_1ax1c"]
 
 [node name="EnemyManager" type="Node" node_paths=PackedStringArray("_waveTimer", "_spawnTimer")]
 script = ExtResource("1_1ax1c")
