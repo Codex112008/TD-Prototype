@@ -10,11 +10,6 @@ public partial class TowerCreatorController : Node2D
 	public static TowerCreatorController instance;
 	public override void _EnterTree()
 	{
-		if (instance != null)
-		{
-			GD.PrintErr("More than one TowerCreator in scene!");
-			return;
-		}
 		instance = this;
 	}
 
@@ -232,6 +227,10 @@ public partial class TowerCreatorController : Node2D
 		// Packs duplicated tower scene into a PackedScene to save
 		PackedScene towerToSaveScene = new();
 		Error packResult = towerToSaveScene.Pack(towerToSave);
+
+		// If modifying tower then remove old version
+		if (BaseTowerScene != null)
+			DirAccess.Open(BaseTowerScene.ResourcePath[..BaseTowerScene.ResourcePath.LastIndexOf('/')]).Remove("");
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{

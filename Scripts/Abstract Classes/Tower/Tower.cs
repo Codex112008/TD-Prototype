@@ -54,11 +54,12 @@ public abstract partial class Tower : Sprite2D, ISavable
     {
         SpritesForIcon.Insert(0, this);
 
+        Vector2 rectSize = GetRect().Size;
         _rangeOverlay = new Sprite2D
         {
             Texture = _rangeOverlayTexture,
             Visible = false,
-            Position = PathfindingManager.instance.LevelTilemap.TileSet.TileSize / 2,
+            Position = rectSize / 2,
             ZIndex = -1,
             SelfModulate = new Color(1f, 1f, 1f, 0.47f)
         };

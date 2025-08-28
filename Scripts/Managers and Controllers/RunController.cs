@@ -8,19 +8,20 @@ public partial class RunController : Node2D
 	[Export] private string _levelSaveFilePath;
 	[Export] private PackedScene _levelScene;
 	[Export] private PackedScene _towerCreationScene;
-
-	public int Seed;
+	[Export] private AnimationPlayer _cameraAnimPlayer;
 
 	private Node _currentScene = null;
+	private Node _managerParent;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_currentScene = _levelScene.Instantiate();
+		_managerParent = GetChild(0);
 
-		BuildingManager.instance.Init();
-		PathfindingManager.instance.Init();
-		EnemyManager.instance.Init();
+		_currentScene = _levelScene.Instantiate();
+		AddChild(_currentScene);
+
+		InitManagers();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,83 +34,147 @@ public partial class RunController : Node2D
 	{
 		if (@event is InputEventKey eventKey)
 		{
-			if (eventKey.Pressed && eventKey.Keycode == Key.S)
+			if (eventKey.Pressed && eventKey.Keycode == Key.W)
 			{
-				SaveLevel();
+				SwapScene(_towerCreationScene, Key.W);
 			}
-			else if (eventKey.Pressed && eventKey.Keycode == Key.L)
+			else if (eventKey.Pressed && eventKey.Keycode == Key.S)
 			{
-				LoadLevel();
+				SwapScene(_levelScene, Key.S);
 			}
 		}
 	}
 
-	public void SaveLevel()
+	public async void SwapScene(PackedScene scene, Key direction)
 	{
-        using FileAccess saveFile = FileAccess.Open(_levelSaveFilePath + "SavedLevel.save", FileAccess.ModeFlags.Write);
-        // Store tilemap level data
-        TileMapLayer levelTilemap = PathfindingManager.instance.LevelTilemap;
-        Array<Dictionary<string, Variant>> tilemapData = [];
-        for (int i = 0; i < levelTilemap.GetUsedRect().Size.X; i++)
-        {
-            for (int j = 0; j < levelTilemap.GetUsedRect().Size.Y; j++)
-            {
-                Vector2I tilePos = new Vector2I(i, j) + levelTilemap.GetUsedRect().Position;
-                Vector2I atlasCoords = levelTilemap.GetCellAtlasCoords(tilePos);
-                Dictionary<string, Variant> tileData = new()
-                {
-                    {"PosX", tilePos.X},
-                    {"PosY", tilePos.Y},
-                    {"SourceID", levelTilemap.GetCellSourceId(tilePos)},
-                    {"AtlasCoordX", atlasCoords.X},
-                    {"AtlasCoordY", atlasCoords.Y}
-                };
-                tilemapData.Add(tileData);
-            }
-        }
-        saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "TilemapData", tilemapData } }));
-
-        // Store current wave
-        saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "CurrentWave", EnemyManager.instance.CurrentWave } }));
-
-        // Store random number generator data
-        Dictionary<string, Variant> rngData = new()
-        {
-            { "SeedStr", Rand.instance.Seed.ToString() },
-            { "StateStr", Rand.instance.State.ToString() }
-        };
-        saveFile.StoreLine(Json.Stringify(rngData));
-
-        // Save data of all nodes that need to be saved
-        ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").Cast<ISavable>()];
-        foreach (ISavable nodeToSave in nodesToSave)
-        {
-            //Check the node is an instanced scene so it can be instanced again during load.
-            if (string.IsNullOrEmpty((nodeToSave as Node2D).SceneFilePath))
-            {
-            	GD.Print($"persistent node is not an instanced scene, skipped");
-            	continue;
-            }
-
-            Dictionary<string, Variant> saveData = nodeToSave.Save();
-
-            string jsonString = Json.Stringify(saveData);
-
-            saveFile.StoreLine(jsonString);
-        }
-    }
-
-	public void LoadLevel()
-	{
-		if (!FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
+		if (scene.ResourcePath != _currentScene.SceneFilePath)
 		{
-			GD.PrintErr("We don't have a save to load!");
+			if (_currentScene.SceneFilePath == _levelScene.ResourcePath)
+			{
+				SaveLevel();
+				GetChild(0).RemoveChild(BuildingManager.instance);
+			}
+
+			// Play animation
+			switch (direction)
+			{
+				case Key.W:
+					_cameraAnimPlayer.Queue("TransitionOutUp");
+					break;
+				case Key.S:
+					_cameraAnimPlayer.Queue("TransitionOutDown");
+					break;
+			}
+
+			SetProcessUnhandledKeyInput(false);
+
+			await ToSignal(_cameraAnimPlayer, AnimationPlayer.SignalName.AnimationFinished);
+
+			// Load the scene to swap to
+			_currentScene?.Free();
+			_currentScene = scene.Instantiate();
+			_currentScene.ProcessMode = ProcessModeEnum.Disabled;
+			_managerParent.ProcessMode = ProcessModeEnum.Disabled;
+
+			// If tower creator init it
+			if (scene.ResourcePath == _towerCreationScene.ResourcePath)
+			{
+				// If modifying a tower set scene as basetower
+			}
+
+			// Play another animation
+			switch (direction)
+			{
+				case Key.W:
+					_cameraAnimPlayer.Queue("TransitionInUp");
+					break;
+				case Key.S:
+					_cameraAnimPlayer.Queue("TransitionInDown");
+					break;
+			}
+
+			AddChild(_currentScene);
+
+			await ToSignal(_cameraAnimPlayer, AnimationPlayer.SignalName.AnimationFinished);
+
+			SetProcessUnhandledKeyInput(true);
+
+			_managerParent.ProcessMode = ProcessModeEnum.Inherit;
+			InitManagers();
+
+			if (scene.ResourcePath == _levelScene.ResourcePath && FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
+			{
+				GetChild(0).AddChild(BuildingManager.instance);
+				LoadLevel();
+			}
+
+			_currentScene.ProcessMode = ProcessModeEnum.Inherit;
+		}
+	}
+
+	private void SaveLevel()
+	{
+		if (_currentScene.SceneFilePath != _levelScene.ResourcePath)
+		{
+			GD.PrintErr("Current scene not the main level!");
 			return;
 		}
 
-		_currentScene?.QueueFree();
-		_currentScene = _levelScene.Instantiate();
+		using FileAccess saveFile = FileAccess.Open(_levelSaveFilePath + "SavedLevel.save", FileAccess.ModeFlags.Write);
+		// Store tilemap level data
+		TileMapLayer levelTilemap = PathfindingManager.instance.LevelTilemap;
+		Array<Dictionary<string, Variant>> tilemapData = [];
+		for (int i = 0; i < levelTilemap.GetUsedRect().Size.X; i++)
+		{
+			for (int j = 0; j < levelTilemap.GetUsedRect().Size.Y; j++)
+			{
+				Vector2I tilePos = new Vector2I(i, j) + levelTilemap.GetUsedRect().Position;
+				Vector2I atlasCoords = levelTilemap.GetCellAtlasCoords(tilePos);
+				Dictionary<string, Variant> tileData = new()
+				{
+					{"PosX", tilePos.X},
+					{"PosY", tilePos.Y},
+					{"SourceID", levelTilemap.GetCellSourceId(tilePos)},
+					{"AtlasCoordX", atlasCoords.X},
+					{"AtlasCoordY", atlasCoords.Y}
+				};
+				tilemapData.Add(tileData);
+			}
+		}
+		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "TilemapData", tilemapData } }));
 
+		// Store current wave
+		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "CurrentWave", EnemyManager.instance.CurrentWave } }));
+
+		// Store random number generator data
+		Dictionary<string, Variant> rngData = new()
+		{
+			{ "SeedStr", Rand.instance.Seed.ToString() },
+			{ "StateStr", Rand.instance.State.ToString() }
+		};
+		saveFile.StoreLine(Json.Stringify(rngData));
+
+		// Save data of all nodes that need to be saved
+		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").Cast<ISavable>()];
+		foreach (ISavable nodeToSave in nodesToSave)
+		{
+			//Check the node is an instanced scene so it can be instanced again during load.
+			if (string.IsNullOrEmpty((nodeToSave as Node2D).SceneFilePath))
+			{
+				GD.Print($"persistent node is not an instanced scene, skipped");
+				continue;
+			}
+
+			Dictionary<string, Variant> saveData = nodeToSave.Save();
+
+			string jsonString = Json.Stringify(saveData);
+
+			saveFile.StoreLine(jsonString);
+		}
+	}
+
+	private void LoadLevel()
+	{
 		// Delete nodes so we dont clone them (i think its redundant for my use case though)
 		ISavable[] savableNodes = [.. GetTree().Root.GetChildren(true).Where(node => node is ISavable).Cast<ISavable>()];
 		foreach (ISavable savable in savableNodes)
@@ -168,10 +233,13 @@ public partial class RunController : Node2D
 			}
 			counter++;
 		}
-		
-		// Init managers
-		BuildingManager.instance.Init();
-		PathfindingManager.instance.Init();
-		EnemyManager.instance.Init();
+	}
+
+	private void InitManagers()
+	{
+		foreach (Node manager in _managerParent.GetChildren())
+		{
+			manager.Call("Init");
+		}
 	}
 }

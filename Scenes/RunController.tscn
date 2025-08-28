@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=17 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
@@ -9,17 +9,108 @@
 [ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/LevelScenes/PrototypeLevel.tscn" id="6_23lj0"]
 [ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/BasicEnemy/BasicEnemySpawnData.tres" id="8_nvgt4"]
 [ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/FastEnemy/FastEnemySpawnData.tres" id="9_skahh"]
+[ext_resource type="Texture2D" uid="uid://buy2sc8pcjfcx" path="res://Sprites/Tilemap/New Piskel.png" id="10_skahh"]
 
-[node name="RunController" type="Node2D"]
+[sub_resource type="Animation" id="Animation_skahh"]
+resource_name = "TransitionUp"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(160, 94), Vector2(160, -94)]
+}
+
+[sub_resource type="Animation" id="Animation_8fpap"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(160, 94)]
+}
+
+[sub_resource type="Animation" id="Animation_gg8i0"]
+resource_name = "TransitionInDown"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(160, 282), Vector2(160, 94)]
+}
+
+[sub_resource type="Animation" id="Animation_w2sna"]
+resource_name = "TransitionOutDown"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(160, 94), Vector2(160, 282)]
+}
+
+[sub_resource type="Animation" id="Animation_rci85"]
+resource_name = "TransitionInDown"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(160, -98), Vector2(160, 94)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gg8i0"]
+_data = {
+&"RESET": SubResource("Animation_8fpap"),
+&"TransitionInDown": SubResource("Animation_rci85"),
+&"TransitionInUp": SubResource("Animation_gg8i0"),
+&"TransitionOutDown": SubResource("Animation_w2sna"),
+&"TransitionOutUp": SubResource("Animation_skahh")
+}
+
+[node name="RunController" type="Node2D" node_paths=PackedStringArray("_cameraAnimPlayer")]
 script = ExtResource("1_tjy1v")
 _levelSaveFilePath = "res://RuntimeData/LevelSaveFiles/"
 _levelScene = ExtResource("6_23lj0")
 _towerCreationScene = ExtResource("3_lvlvj")
+_cameraAnimPlayer = NodePath("Camera2D/AnimationPlayer")
 
 [node name="Managers" type="Node" parent="."]
 
-[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("_towerParent") instance=ExtResource("2_tjy1v")]
+[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("InstancedNodesParent", "_towerParent") instance=ExtResource("2_tjy1v")]
 TowerSelectionButtonScene = ExtResource("3_23lj0")
+InstancedNodesParent = NodePath("../../InstancedNodes")
 _towerParent = NodePath("../../Towers")
 
 [node name="PathfindingManager" parent="Managers" instance=ExtResource("4_lvlvj")]
@@ -28,10 +119,30 @@ _towerParent = NodePath("../../Towers")
 EnemyParent = NodePath("../../Enemies")
 EnemiesToSpawnData = [ExtResource("8_nvgt4"), ExtResource("9_skahh")]
 
-[node name="PrototypeLevel" parent="." instance=ExtResource("6_23lj0")]
-
 [node name="Towers" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="."]
+z_index = 1
 
 [node name="InstancedNodes" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(160, 94)
+zoom = Vector2(4, 4)
+process_callback = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Camera2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_gg8i0")
+}
+
+[node name="TransitionUp" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(160, -19)
+texture = ExtResource("10_skahh")
+
+[node name="TransitionDown" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(160, 207)
+texture = ExtResource("10_skahh")
+flip_v = true
