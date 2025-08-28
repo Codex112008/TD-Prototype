@@ -18,6 +18,7 @@ public partial class BuildingManager : Node2D
 	[Export] private string _pathToSavedTowers = "res://RuntimeData/SavedTowers/";
 	[Export] public PackedScene TowerSelectionButtonScene;
 	[Export] public HBoxContainer TowerSelectionButtonContainer;
+	[Export] public Node InstancedNodesParent;
 	[Export] private Node _towerParent;
 	private PackedScene _selectedTower = null;
 	private Tower _towerPreview = null;
@@ -41,6 +42,7 @@ public partial class BuildingManager : Node2D
 	public void Init()
 	{
 		Array<string> savedTowers = GetFolderNames(_pathToSavedTowers);
+		_towersToBuild.Clear();
 		for (int i = 0; i < savedTowers.Count; i++)
 		{
 			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));

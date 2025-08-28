@@ -36,7 +36,8 @@ public partial class EnemyManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-
+		foreach (EnemySpawnData spawnData in EnemiesToSpawnData)
+			spawnData.Weight = spawnData.BaseWeight;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -80,11 +81,11 @@ public partial class EnemyManager : Node
 	{
 		_tileSize = PathfindingManager.instance.TileSize;
 
-		foreach (EnemySpawnData spawnData in EnemiesToSpawnData)
-			spawnData.Weight = spawnData.BaseWeight;
-
 		_spawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
 		_baseLocations = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Base")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
+
+		foreach (Node child in EnemyParent.GetChildren())
+			child.QueueFree();
 	}
 
 	public List<Tuple<EnemySpawnData, float>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)

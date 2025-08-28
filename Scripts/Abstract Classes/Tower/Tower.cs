@@ -112,14 +112,14 @@ public abstract partial class Tower : Sprite2D, ISavable
         {
             {"SceneFilePath", SceneFilePath},
             {"Parent", GetParent().GetPath()},
-            {"PosX", Position.X},
-            {"PosY", Position.Y},
+            {"PosX", (int)Position.X},
+            {"PosY", (int)Position.Y},
         };
     }
 
     public void Load(Dictionary<string, Variant> saveData)
     {
-        
+        Position = new Vector2I((int)saveData["PosX"], (int)saveData["PosY"]);
     }
 
     public int GetPointCostForStat(TowerStat stat)

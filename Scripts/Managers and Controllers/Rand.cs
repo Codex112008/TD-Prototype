@@ -10,12 +10,12 @@ public partial class Rand : Node
 		instance.Randomize();
 	}
 
-	public void SetFromSaveData(int savedSeed, int savedState)
+	public static void SetFromSaveData(ulong savedSeed, ulong savedState)
 	{
         instance = new()
         {
-            Seed = (ulong)savedSeed,
-            State = (ulong)savedState
+            Seed = savedSeed,
+            State = savedState
         };
     }
 }

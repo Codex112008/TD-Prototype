@@ -33,3 +33,5 @@ EnemiesToSpawnData = [ExtResource("8_nvgt4"), ExtResource("9_skahh")]
 [node name="Towers" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="."]
+
+[node name="InstancedNodes" type="Node2D" parent="."]

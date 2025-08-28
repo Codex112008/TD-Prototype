@@ -16,6 +16,6 @@ public partial class BulletProjectile : Projectile
 
         bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.damageType)]);
 
-        firePoint.GetTree().Root.AddChild(bullet);
+        BuildingManager.instance.InstancedNodesParent.AddChild(bullet);
     }
 }

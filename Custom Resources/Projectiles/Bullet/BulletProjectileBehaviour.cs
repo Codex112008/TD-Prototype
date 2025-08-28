@@ -12,6 +12,10 @@ public partial class BulletProjectileBehaviour : CharacterBody2D
 	public override void _Ready()
 	{
 		Velocity = -Transform.Y * BulletData.fireForce;
+
+		VisibleOnScreenNotifier2D notifier = new();
+		AddChild(notifier);
+		notifier.ScreenExited += OnScreenExited;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,4 +37,9 @@ public partial class BulletProjectileBehaviour : CharacterBody2D
 			}
 		}
 	}
+	
+	private void OnScreenExited()
+    {
+		QueueFree();
+    }
 }
