@@ -39,6 +39,8 @@ public partial class PathfindingManager : Node
 	{
 		LevelTilemap = (TileMapLayer)GetTree().GetFirstNodeInGroup("Tilemap");
 		TileSize = LevelTilemap.TileSet.TileSize.X;
+
+		TilemapBuildableData.Clear();
 		foreach (Vector2I tilePos in LevelTilemap.GetUsedCells())
 		{
 			TilemapBuildableData[tilePos] = (bool)LevelTilemap.GetCellTileData(tilePos).GetCustomData("Buildable");
@@ -49,11 +51,14 @@ public partial class PathfindingManager : Node
 
 	private void SetUpAStarGrid()
 	{
-		_aStarGrid.Region = LevelTilemap.GetUsedRect();
-		_aStarGrid.CellSize = LevelTilemap.TileSet.TileSize;
-		_aStarGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never; // Maybe change this to smth else if dont like
+        _aStarGrid = new()
+        {
+            Region = LevelTilemap.GetUsedRect(),
+            CellSize = LevelTilemap.TileSet.TileSize,
+            DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never // Maybe change this to smth else if dont like
+        };
 
-		_aStarGrid.Update();
+        _aStarGrid.Update();
 
 		UpdateTerrainMovementValues();
 	}
@@ -77,6 +82,8 @@ public partial class PathfindingManager : Node
 	public Array<Vector2> GetValidPath(Vector2I startPos, Vector2I endPos)
 	{
 		Array<Vector2> pathArray = [];
+
+		GD.Print(_aStarGrid.GetPointPath(startPos, endPos).Length);
 
 		foreach (Vector2I point in _aStarGrid.GetPointPath(startPos, endPos).Select(v => (Vector2I)v))
 		{

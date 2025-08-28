@@ -21,10 +21,13 @@ public partial class EnemyManager : Node
 	[Export] private int _waveForSegmentScaling = 10;
 	[Export] private Timer _waveTimer;
 	[Export] private Timer _spawnTimer;
+	[Export] private RichTextLabel _waveCounter;
 	[Export] public Node EnemyParent;
 	[Export] public Array<EnemySpawnData> EnemiesToSpawnData = [];
 
 	public int CurrentWave = 0;
+	public bool InLevel = false;
+	public bool InTowerCreator = false;
 
 	private List<Tuple<EnemySpawnData, float>> _enemySpawnQueue = []; // Should only be one wave at a time
 	private int _enemiesToSpawn;
@@ -43,37 +46,27 @@ public partial class EnemyManager : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if ((_waveTimer.TimeLeft <= 0 || EnemyParent.GetChildCount() == 0) && _enemySpawnQueue.Count == 0)
+		if (InLevel)
 		{
-			_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
-			_spawnTimer.WaitTime = _enemySpawnQueue[0].Item2;
-			_spawnTimer.Start();
+			if ((_waveTimer.TimeLeft <= 0 || EnemyParent.GetChildCount() == 0) && _enemySpawnQueue.Count == 0)
+				StartWave();
+
+			if (_enemySpawnQueue.Count > 0 && _spawnTimer.TimeLeft <= 0)
+				SpawnQueuedEnemy();
+
+			_waveCounter.Text = "Wave " + CurrentWave;
 		}
-
-		if (_enemySpawnQueue.Count > 0)
+		else if (InTowerCreator && _spawnTimer.TimeLeft <= 0)
 		{
-			if (_spawnTimer.TimeLeft <= 0)
-			{
-				// Orders the wave based on 'difficulty' (maybe add a dedicated spawnorder/difficulty value to spawn data)
-				_enemySpawnQueue = [.. _enemySpawnQueue.OrderBy(spawnData => spawnData.Item1.MinWave)];
+			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
+			spawnedEnemy.targetPos = _baseLocations[Rand.instance.RandiRange(0, _baseLocations.Count - 1)];
+			spawnedEnemy.GlobalPosition = _spawnPoints[Rand.instance.RandiRange(0, _spawnPoints.Count - 1)];
 
-				EnemySpawnData enemyToSpawn = _enemySpawnQueue[0].Item1;
-				if (_enemySpawnQueue.Count > 1)
-					_spawnTimer.WaitTime = _enemySpawnQueue[1].Item2;
+			EnemyParent.AddChild(spawnedEnemy);
 
-				// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
-					_enemySpawnQueue.RemoveAt(0);
-				if (_enemySpawnQueue.Count == 0)
-					_waveTimer.Start();
+			_spawnTimer.Start();
 
-				Enemy spawnedEnemy = enemyToSpawn.EnemyScene.Instantiate<Enemy>();
-				spawnedEnemy.targetPos = _baseLocations[Rand.instance.RandiRange(0, _baseLocations.Count - 1)];
-				spawnedEnemy.GlobalPosition = _spawnPoints[Rand.instance.RandiRange(0, _spawnPoints.Count - 1)];
-
-				EnemyParent.AddChild(spawnedEnemy);
-
-				_spawnTimer.Start();
-			}
+			_waveCounter.Text = "Testing Towers";
 		}
 	}
 
@@ -86,6 +79,45 @@ public partial class EnemyManager : Node
 
 		foreach (Node child in EnemyParent.GetChildren())
 			child.QueueFree();
+
+		InLevel = RunController.instance.CurrentScene.SceneFilePath == RunController.instance.LevelScene.ResourcePath;
+		InTowerCreator = RunController.instance.CurrentScene.SceneFilePath == RunController.instance.TowerCreationScene.ResourcePath;
+
+		if (InTowerCreator)
+		{
+			_spawnTimer.WaitTime = 1f;
+			_spawnTimer.Start();
+		}
+	}
+
+	private void StartWave()
+	{
+		_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
+		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item2;
+		_spawnTimer.Start();
+	}
+
+	private void SpawnQueuedEnemy()
+	{
+		// Orders the wave based on 'difficulty' (maybe add a dedicated spawnorder/difficulty value to spawn data)
+		_enemySpawnQueue = [.. _enemySpawnQueue.OrderBy(spawnData => spawnData.Item1.MinWave)];
+
+		EnemySpawnData enemyToSpawn = _enemySpawnQueue[0].Item1;
+		if (_enemySpawnQueue.Count > 1)
+			_spawnTimer.WaitTime = _enemySpawnQueue[1].Item2;
+
+		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
+		_enemySpawnQueue.RemoveAt(0);
+		if (_enemySpawnQueue.Count == 0)
+			_waveTimer.Start();
+
+		Enemy spawnedEnemy = enemyToSpawn.EnemyScene.Instantiate<Enemy>();
+		spawnedEnemy.targetPos = _baseLocations[Rand.instance.RandiRange(0, _baseLocations.Count - 1)];
+		spawnedEnemy.GlobalPosition = _spawnPoints[Rand.instance.RandiRange(0, _spawnPoints.Count - 1)];
+
+		EnemyParent.AddChild(spawnedEnemy);
+
+		_spawnTimer.Start();
 	}
 
 	public List<Tuple<EnemySpawnData, float>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)

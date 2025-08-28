@@ -63,7 +63,7 @@ public partial class Enemy : CharacterBody2D
 				}
 			}
 		}
-
+		
 		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(targetPos / PathfindingManager.instance.TileSize));
 		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
 		Vector2 offset = new(Rand.instance.RandfRange(-offsetMargin / 2, offsetMargin / 2), Rand.instance.RandfRange(-offsetMargin / 2, offsetMargin / 2));

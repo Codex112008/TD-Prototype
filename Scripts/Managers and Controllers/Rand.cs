@@ -3,6 +3,7 @@ using System;
 
 public partial class Rand : Node
 {
+	// TODO: make unique randomnumbergenerators for stuff like enemy managers
 	public static RandomNumberGenerator instance;
 	public override void _Ready()
 	{

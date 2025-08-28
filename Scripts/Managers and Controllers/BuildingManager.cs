@@ -7,11 +7,6 @@ public partial class BuildingManager : Node2D
 	public static BuildingManager instance;
 	public override void _EnterTree()
 	{
-		if (instance != null)
-		{
-			GD.PrintErr("More than one BuildingManager in scene!");
-			return;
-		}
 		instance = this;
 	}
 

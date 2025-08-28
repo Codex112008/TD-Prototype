@@ -5,12 +5,23 @@ using System.Linq;
 
 public partial class RunController : Node2D
 {
+	public static RunController instance;
+	public override void _EnterTree()
+	{
+		if (instance != null)
+		{
+			GD.PrintErr("More than one RunController in scene!");
+			return;
+		}
+		instance = this;
+	}
+
 	[Export] private string _levelSaveFilePath;
-	[Export] private PackedScene _levelScene;
-	[Export] private PackedScene _towerCreationScene;
+	[Export] public PackedScene LevelScene;
+	[Export] public PackedScene TowerCreationScene;
 	[Export] private AnimationPlayer _cameraAnimPlayer;
 
-	private Node _currentScene = null;
+	public Node CurrentScene = null;
 	private Node _managerParent;
 
 	// Called when the node enters the scene tree for the first time.
@@ -18,8 +29,8 @@ public partial class RunController : Node2D
 	{
 		_managerParent = GetChild(0);
 
-		_currentScene = _levelScene.Instantiate();
-		AddChild(_currentScene);
+		CurrentScene = LevelScene.Instantiate();
+		AddChild(CurrentScene);
 
 		InitManagers();
 	}
@@ -36,20 +47,20 @@ public partial class RunController : Node2D
 		{
 			if (eventKey.Pressed && eventKey.Keycode == Key.W)
 			{
-				SwapScene(_towerCreationScene, Key.W);
+				SwapScene(TowerCreationScene, Key.W);
 			}
 			else if (eventKey.Pressed && eventKey.Keycode == Key.S)
 			{
-				SwapScene(_levelScene, Key.S);
+				SwapScene(LevelScene, Key.S);
 			}
 		}
 	}
 
 	public async void SwapScene(PackedScene scene, Key direction)
 	{
-		if (scene.ResourcePath != _currentScene.SceneFilePath)
+		if (scene.ResourcePath != CurrentScene.SceneFilePath)
 		{
-			if (_currentScene.SceneFilePath == _levelScene.ResourcePath)
+			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
 			{
 				SaveLevel();
 				GetChild(0).RemoveChild(BuildingManager.instance);
@@ -68,16 +79,20 @@ public partial class RunController : Node2D
 
 			SetProcessUnhandledKeyInput(false);
 
+			Node[] savables = [.. GetTree().GetNodesInGroup("Persist").Where(node => node is ISavable)];
+			foreach (Node savable in savables)
+				savable.QueueFree();
+
 			await ToSignal(_cameraAnimPlayer, AnimationPlayer.SignalName.AnimationFinished);
 
 			// Load the scene to swap to
-			_currentScene?.Free();
-			_currentScene = scene.Instantiate();
-			_currentScene.ProcessMode = ProcessModeEnum.Disabled;
+			CurrentScene?.Free();
+			CurrentScene = scene.Instantiate();
+			CurrentScene.ProcessMode = ProcessModeEnum.Disabled;
 			_managerParent.ProcessMode = ProcessModeEnum.Disabled;
 
 			// If tower creator init it
-			if (scene.ResourcePath == _towerCreationScene.ResourcePath)
+			if (scene.ResourcePath == TowerCreationScene.ResourcePath)
 			{
 				// If modifying a tower set scene as basetower
 			}
@@ -93,7 +108,7 @@ public partial class RunController : Node2D
 					break;
 			}
 
-			AddChild(_currentScene);
+			AddChild(CurrentScene);
 
 			await ToSignal(_cameraAnimPlayer, AnimationPlayer.SignalName.AnimationFinished);
 
@@ -102,25 +117,26 @@ public partial class RunController : Node2D
 			_managerParent.ProcessMode = ProcessModeEnum.Inherit;
 			InitManagers();
 
-			if (scene.ResourcePath == _levelScene.ResourcePath && FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
+			if (scene.ResourcePath == LevelScene.ResourcePath && FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
 			{
 				GetChild(0).AddChild(BuildingManager.instance);
 				LoadLevel();
 			}
 
-			_currentScene.ProcessMode = ProcessModeEnum.Inherit;
+			CurrentScene.ProcessMode = ProcessModeEnum.Inherit;
 		}
 	}
 
 	private void SaveLevel()
 	{
-		if (_currentScene.SceneFilePath != _levelScene.ResourcePath)
+		if (CurrentScene.SceneFilePath != LevelScene.ResourcePath)
 		{
 			GD.PrintErr("Current scene not the main level!");
 			return;
 		}
 
 		using FileAccess saveFile = FileAccess.Open(_levelSaveFilePath + "SavedLevel.save", FileAccess.ModeFlags.Write);
+
 		// Store tilemap level data
 		TileMapLayer levelTilemap = PathfindingManager.instance.LevelTilemap;
 		Array<Dictionary<string, Variant>> tilemapData = [];
@@ -144,7 +160,7 @@ public partial class RunController : Node2D
 		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "TilemapData", tilemapData } }));
 
 		// Store current wave
-		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "CurrentWave", EnemyManager.instance.CurrentWave } }));
+		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "CurrentWave", EnemyManager.instance.CurrentWave - 1 } }));
 
 		// Store random number generator data
 		Dictionary<string, Variant> rngData = new()
@@ -155,7 +171,7 @@ public partial class RunController : Node2D
 		saveFile.StoreLine(Json.Stringify(rngData));
 
 		// Save data of all nodes that need to be saved
-		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").Cast<ISavable>()];
+		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").Where(node => node is ISavable).Cast<ISavable>()];
 		foreach (ISavable nodeToSave in nodesToSave)
 		{
 			//Check the node is an instanced scene so it can be instanced again during load.
@@ -176,7 +192,7 @@ public partial class RunController : Node2D
 	private void LoadLevel()
 	{
 		// Delete nodes so we dont clone them (i think its redundant for my use case though)
-		ISavable[] savableNodes = [.. GetTree().Root.GetChildren(true).Where(node => node is ISavable).Cast<ISavable>()];
+		ISavable[] savableNodes = [.. GetChildren(true).OfType<ISavable>()];
 		foreach (ISavable savable in savableNodes)
 		{
 			if (savable is Node node)
@@ -190,7 +206,6 @@ public partial class RunController : Node2D
 		while (saveFile.GetPosition() < saveFile.GetLength())
 		{
 			string jsonString = saveFile.GetLine();
-			GD.Print(counter + ": " + jsonString);
 
 			// Creates the helper class to interact with JSON.
 			Json json = new();

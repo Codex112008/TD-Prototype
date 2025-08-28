@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="4_5hs5a"]
 [ext_resource type="Texture2D" uid="uid://b7byxvn5jhb0o" path="res://Sprites/Towers/ShotgunTower.png" id="5_8h754"]
 
-[node name="ShotgunTower" type="Sprite2D" node_paths=PackedStringArray("_firePoints", "_pivotPoint", "SpritesForIcon", "SpritesToColor")]
+[node name="ShotgunTower" type="Sprite2D" node_paths=PackedStringArray("_firePoints", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
 z_index = 1
 texture = ExtResource("1_3h0ks")
 centered = false
