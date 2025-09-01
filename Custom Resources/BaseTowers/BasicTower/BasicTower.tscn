@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="4_vekyq"]
 [ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="5_sgnhf"]
 
-[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor")]
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
 z_index = 1
 texture = ExtResource("1_vekyq")
 centered = false

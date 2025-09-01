@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://862i4hnn5kwv"
-path="res://.godot/imported/ShotgunTowerIcon.png-19d3edfa1681f68c785d8872d53a5799.ctex"
+uid="uid://dceh3sxg12rlu"
+path="res://.godot/imported/ShotgunSniperIcon.png-b923cc708ed37ef706077bd4112198d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/ShotgunTower/ShotgunTowerIcon.png"
-dest_files=["res://.godot/imported/ShotgunTowerIcon.png-19d3edfa1681f68c785d8872d53a5799.ctex"]
+source_file="res://RuntimeData/SavedTowers/ShotgunSniper/ShotgunSniperIcon.png"
+dest_files=["res://.godot/imported/ShotgunSniperIcon.png-b923cc708ed37ef706077bd4112198d4.ctex"]
 
 [params]
 

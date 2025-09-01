@@ -45,7 +45,7 @@ Projectile = SubResource("Resource_lyni3")
 position = Vector2(8, 8)
 
 [node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
-self_modulate = Color(0.133333, 1, 0.136718, 1)
+self_modulate = Color(0.133333, 1, 0.309375, 1)
 position = Vector2(0, -2)
 texture = ExtResource("9_rfshe")
 
@@ -53,20 +53,20 @@ texture = ExtResource("9_rfshe")
 
 [node name="FirePoint" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.598017
+rotation = 0.592816
 
 [node name="FirePoint2" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.765121
+rotation = -0.70596
 
 [node name="FirePoint3" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.762712
+rotation = -0.234522
 
 [node name="FirePoint4" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = 0.516199
+rotation = -0.00733162
 
 [node name="FirePoint5" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = 0.350114
+rotation = 0.356263

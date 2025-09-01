@@ -176,7 +176,7 @@ public partial class RunController : Node2D
 		saveFile.StoreLine(Json.Stringify(rngData));
 
 		// Save data of all nodes that need to be saved
-		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").Where(node => node is ISavable).Cast<ISavable>()];
+		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").OfType<ISavable>()];
 		foreach (ISavable nodeToSave in nodesToSave)
 		{
 			// Check the node is an instanced scene so it can be instanced again during load.
