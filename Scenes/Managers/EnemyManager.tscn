@@ -1,18 +1,39 @@
-[gd_scene load_steps=2 format=3 uid="uid://ddy77x3qvehc1"]
+[gd_scene load_steps=3 format=3 uid="uid://ddy77x3qvehc1"]
 
 [ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers and Controllers/EnemyManager.cs" id="1_1ax1c"]
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="2_iwexs"]
 
-[node name="EnemyManager" type="Node" node_paths=PackedStringArray("_waveTimer", "_spawnTimer")]
+[node name="EnemyManager" type="Node" node_paths=PackedStringArray("_spawnTimer", "WaveButtonContainer")]
 script = ExtResource("1_1ax1c")
-_waveTimer = NodePath("WaveTimer")
 _spawnTimer = NodePath("SpawnTimer")
-
-[node name="WaveTimer" type="Timer" parent="."]
-wait_time = 10.0
-one_shot = true
-autostart = true
+WaveButtonContainer = NodePath("UI/WaveButtonContainer")
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
 autostart = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="WaveButtonContainer" type="HBoxContainer" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -720.0
+offset_bottom = -656.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("2_iwexs")
+
+[node name="WaveCounter" type="RichTextLabel" parent="UI/WaveButtonContainer"]
+layout_mode = 2
+text = "Current wave: 1
+"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="NextWaveButton" type="Button" parent="UI/WaveButtonContainer"]
+layout_mode = 2
+text = "Next Wave"

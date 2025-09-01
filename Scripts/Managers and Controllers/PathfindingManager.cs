@@ -83,8 +83,6 @@ public partial class PathfindingManager : Node
 	{
 		Array<Vector2> pathArray = [];
 
-		GD.Print(_aStarGrid.GetPointPath(startPos, endPos).Length);
-
 		foreach (Vector2I point in _aStarGrid.GetPointPath(startPos, endPos).Select(v => (Vector2I)v))
 		{
 			Vector2 currentPoint = point;

@@ -115,13 +115,16 @@ public partial class RunController : Node2D
 			SetProcessUnhandledKeyInput(true);
 
 			_managerParent.ProcessMode = ProcessModeEnum.Inherit;
-			InitManagers();
+			
 
 			if (scene.ResourcePath == LevelScene.ResourcePath && FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
 			{
 				GetChild(0).AddChild(BuildingManager.instance);
+				InitManagers();
 				LoadLevel();
 			}
+			else
+				InitManagers();
 
 			CurrentScene.ProcessMode = ProcessModeEnum.Inherit;
 		}
@@ -160,21 +163,23 @@ public partial class RunController : Node2D
 		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "TilemapData", tilemapData } }));
 
 		// Store current wave
-		saveFile.StoreLine(Json.Stringify(new Dictionary<string, Variant>() { { "CurrentWave", EnemyManager.instance.CurrentWave - 1 } }));
+		Dictionary<string, Variant> waveData = new() { { "CurrentWave", EnemyManager.instance.CurrentWave } };
+		if (EnemyManager.instance.EnemyParent.GetChildCount() > 0)
+			waveData["CurrentWave"] = (int)waveData["CurrentWave"] - 1;
+		saveFile.StoreLine(Json.Stringify(waveData));
 
 		// Store random number generator data
-		Dictionary<string, Variant> rngData = new()
-		{
-			{ "SeedStr", Rand.instance.Seed.ToString() },
-			{ "StateStr", Rand.instance.State.ToString() }
-		};
+		Dictionary<string, Array<string>> rngData = [];
+		foreach ((Node node, RandomNumberGenerator rand) in RNGManager.instance.RandInstances)
+			rngData.Add(node.GetPath(), [rand.Seed.ToString(), rand.State.ToString()]);
+		
 		saveFile.StoreLine(Json.Stringify(rngData));
 
 		// Save data of all nodes that need to be saved
 		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").Where(node => node is ISavable).Cast<ISavable>()];
 		foreach (ISavable nodeToSave in nodesToSave)
 		{
-			//Check the node is an instanced scene so it can be instanced again during load.
+			// Check the node is an instanced scene so it can be instanced again during load.
 			if (string.IsNullOrEmpty((nodeToSave as Node2D).SceneFilePath))
 			{
 				GD.Print($"persistent node is not an instanced scene, skipped");
@@ -182,9 +187,7 @@ public partial class RunController : Node2D
 			}
 
 			Dictionary<string, Variant> saveData = nodeToSave.Save();
-
 			string jsonString = Json.Stringify(saveData);
-
 			saveFile.StoreLine(jsonString);
 		}
 	}
@@ -235,8 +238,9 @@ public partial class RunController : Node2D
 					EnemyManager.instance.CurrentWave = (int)waveData["CurrentWave"];
 					break;
 				case 2: // Load rng data
-					Dictionary<string, Variant> rngData = (Dictionary<string, Variant>)json.Data;
-					Rand.SetFromSaveData(ulong.Parse((string)rngData["SeedStr"]), ulong.Parse((string)rngData["StateStr"]));
+					Dictionary<string, Array<string>> rngData = (Dictionary<string, Array<string>>)json.Data;
+					foreach ((string nodePath, Array<string> randData) in rngData)
+						RNGManager.instance.SetFromSaveData(GetNode(nodePath), ulong.Parse(randData[0]), ulong.Parse(randData[1]));
 					break;
 				default: // Load all ISaveables
 					Dictionary<string, Variant> nodeData = (Dictionary<string, Variant>)json.Data;
@@ -254,7 +258,8 @@ public partial class RunController : Node2D
 	{
 		foreach (Node manager in _managerParent.GetChildren())
 		{
-			manager.Call("Init");
+			if (manager.HasMethod("Init"))
+				manager.Call("Init");
 		}
 	}
 }

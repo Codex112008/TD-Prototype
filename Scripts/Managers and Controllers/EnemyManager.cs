@@ -19,9 +19,8 @@ public partial class EnemyManager : Node
 
 	[Export] private float _chanceForPartnerWave = 0.75f;
 	[Export] private int _waveForSegmentScaling = 10;
-	[Export] private Timer _waveTimer;
 	[Export] private Timer _spawnTimer;
-	[Export] private RichTextLabel _waveCounter;
+	[Export] private HBoxContainer WaveButtonContainer;
 	[Export] public Node EnemyParent;
 	[Export] public Array<EnemySpawnData> EnemiesToSpawnData = [];
 
@@ -30,17 +29,23 @@ public partial class EnemyManager : Node
 	public bool InTowerCreator = false;
 
 	private List<Tuple<EnemySpawnData, float>> _enemySpawnQueue = []; // Should only be one wave at a time
-	private int _enemiesToSpawn;
 	private int _tileSize;
 	private Array<Vector2> _spawnPoints;
 	private Array<Vector2> _baseLocations;
-
+	private RichTextLabel _waveCounter;
+	private Button _startWaveButton;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		foreach (EnemySpawnData spawnData in EnemiesToSpawnData)
 			spawnData.Weight = spawnData.BaseWeight;
+
+		_waveCounter = WaveButtonContainer.GetChild<RichTextLabel>(0);
+		_startWaveButton = WaveButtonContainer.GetChild<Button>(1);
+		_startWaveButton.Pressed += StartWave;
+
+		RNGManager.instance.AddNewRNG(this);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -48,8 +53,8 @@ public partial class EnemyManager : Node
 	{
 		if (InLevel)
 		{
-			if ((_waveTimer.TimeLeft <= 0 || EnemyParent.GetChildCount() == 0) && _enemySpawnQueue.Count == 0)
-				StartWave();
+			if (_enemySpawnQueue.Count > 0 && _startWaveButton.Disabled == false)
+				_startWaveButton.Disabled = true;
 
 			if (_enemySpawnQueue.Count > 0 && _spawnTimer.TimeLeft <= 0)
 				SpawnQueuedEnemy();
@@ -59,8 +64,8 @@ public partial class EnemyManager : Node
 		else if (InTowerCreator && _spawnTimer.TimeLeft <= 0)
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.targetPos = _baseLocations[Rand.instance.RandiRange(0, _baseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = _spawnPoints[Rand.instance.RandiRange(0, _spawnPoints.Count - 1)];
+			spawnedEnemy.targetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
+			spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
 
 			EnemyParent.AddChild(spawnedEnemy);
 
@@ -85,13 +90,22 @@ public partial class EnemyManager : Node
 
 		if (InTowerCreator)
 		{
+			_startWaveButton.Disabled = true;
+			_startWaveButton.Visible = false;
+
 			_spawnTimer.WaitTime = 1f;
 			_spawnTimer.Start();
+		}
+		else if (InLevel)
+		{
+			_startWaveButton.Disabled = false;
+			_startWaveButton.Visible = true;
 		}
 	}
 
 	private void StartWave()
 	{
+		CurrentWave++;
 		_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
 		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item2;
 		_spawnTimer.Start();
@@ -109,11 +123,11 @@ public partial class EnemyManager : Node
 		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
 		_enemySpawnQueue.RemoveAt(0);
 		if (_enemySpawnQueue.Count == 0)
-			_waveTimer.Start();
+			_startWaveButton.Disabled = false;
 
 		Enemy spawnedEnemy = enemyToSpawn.EnemyScene.Instantiate<Enemy>();
-		spawnedEnemy.targetPos = _baseLocations[Rand.instance.RandiRange(0, _baseLocations.Count - 1)];
-		spawnedEnemy.GlobalPosition = _spawnPoints[Rand.instance.RandiRange(0, _spawnPoints.Count - 1)];
+		spawnedEnemy.targetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
+		spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
 
 		EnemyParent.AddChild(spawnedEnemy);
 
@@ -122,8 +136,6 @@ public partial class EnemyManager : Node
 
 	public List<Tuple<EnemySpawnData, float>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)
 	{
-		CurrentWave++;
-
 		List<Tuple<EnemySpawnData, float>> generatedWave = [];
 
 		// Calculates the amount of enemy segments
@@ -134,7 +146,7 @@ public partial class EnemyManager : Node
 		for (int i = 0; i < enemySegments; i++)
 		{
 			float spawnDelay = 0.6f;
-			bool condensedWave = Rand.instance.Randf() > 0.5f;
+			bool condensedWave = RNGManager.instance.RandInstances[this].Randf() > 0.5f;
 			if (condensedWave)
 				spawnDelay = 0.3f;
 
@@ -142,7 +154,7 @@ public partial class EnemyManager : Node
 			EnemySpawnData selectedEnemy = WeightedEnemyChoice(enemyPoolDatas);
 
 			// Triangular distribution taken from nova drift
-			float triangular = Rand.instance.Randf() - Rand.instance.Randf();
+			float triangular = RNGManager.instance.RandInstances[this].Randf() - RNGManager.instance.RandInstances[this].Randf();
 			float enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyHigh, triangular);
 			if (triangular < 0)
 				enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyLow, -triangular);
@@ -156,7 +168,7 @@ public partial class EnemyManager : Node
 
 			// Partner wave generation
 			float partnerWaveMultiplier = 0.65f;
-			if (selectedEnemy.PairingChoices.Count > 0 && Rand.instance.Randf() < _chanceForPartnerWave && enemyPoolDatas == EnemiesToSpawnData)
+			if (selectedEnemy.PairingChoices.Count > 0 && RNGManager.instance.RandInstances[this].Randf() < _chanceForPartnerWave && enemyPoolDatas == EnemiesToSpawnData)
 			{
 				enemyCount *= partnerWaveMultiplier;
 				generatedWave.AddRange(GenerateDynamicWave(selectedEnemy.PairingChoices));
@@ -179,7 +191,7 @@ public partial class EnemyManager : Node
 		Array<EnemySpawnData> enemySpawnData = [.. enemiesToSpawnData.Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
 
 		int totalWeight = enemySpawnData.Sum(spawnData => spawnData.Weight);
-		int randomChoice = Rand.instance.RandiRange(1, totalWeight);
+		int randomChoice = RNGManager.instance.RandInstances[this].RandiRange(1, totalWeight);
 		int currentSum = 0;
 		foreach (EnemySpawnData spawnData in enemySpawnData)
 		{

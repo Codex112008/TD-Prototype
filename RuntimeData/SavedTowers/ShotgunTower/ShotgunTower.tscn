@@ -35,7 +35,7 @@ script = ExtResource("2_5x45d")
 _firePoints = [NodePath("PivotPoint/FirePoints/FirePoint"), NodePath("PivotPoint/FirePoints/FirePoint2"), NodePath("PivotPoint/FirePoints/FirePoint3"), NodePath("PivotPoint/FirePoints/FirePoint4"), NodePath("PivotPoint/FirePoints/FirePoint5")]
 _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
-_shotSpread = 15.0
+_shotSpread = 45.0
 SpritesForIcon = [NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_0m3e0")
@@ -45,7 +45,7 @@ Projectile = SubResource("Resource_lyni3")
 position = Vector2(8, 8)
 
 [node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
-self_modulate = Color(0.385803, 0.466796, 0.574219, 1)
+self_modulate = Color(0.133333, 1, 0.136718, 1)
 position = Vector2(0, -2)
 texture = ExtResource("9_rfshe")
 
@@ -53,20 +53,20 @@ texture = ExtResource("9_rfshe")
 
 [node name="FirePoint" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = 0.21096
+rotation = -0.598017
 
 [node name="FirePoint2" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.175413
+rotation = -0.765121
 
 [node name="FirePoint3" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.0961189
+rotation = -0.762712
 
 [node name="FirePoint4" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.196095
+rotation = 0.516199
 
 [node name="FirePoint5" type="Marker2D" parent="PivotPoint/FirePoints"]
 position = Vector2(0, -6)
-rotation = -0.0791207
+rotation = 0.350114

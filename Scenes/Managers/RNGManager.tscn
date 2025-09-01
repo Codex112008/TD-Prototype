@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmgbeg3m83gjq"]
+
+[ext_resource type="Script" uid="uid://3xumgwx5be0a" path="res://Scripts/Managers and Controllers/RNGManager.cs" id="1_iw11w"]
+
+[node name="RngManager" type="Node"]
+script = ExtResource("1_iw11w")

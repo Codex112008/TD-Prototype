@@ -11,6 +11,7 @@ public partial class ShotgunTower : Tower
 
     private Timer _fireTimer;
     private Enemy _target = null;
+    private RandomNumberGenerator _rand = new();
 
     public override void _Ready()
     {
@@ -84,7 +85,7 @@ public partial class ShotgunTower : Tower
     {
         foreach (Marker2D firePoint in _firePoints)
         {
-            firePoint.RotationDegrees = Rand.instance.RandfRange(-_shotSpread, _shotSpread);
+            firePoint.RotationDegrees = _rand.RandfRange(-_shotSpread, _shotSpread);
             Projectile.InstantiateProjectile(GetFinalTowerStats(), firePoint);
         }
     }
