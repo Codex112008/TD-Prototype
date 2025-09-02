@@ -34,6 +34,7 @@ public partial class EnemyManager : Node
 	private Array<Vector2> _baseLocations;
 	private RichTextLabel _waveCounter;
 	private Button _startWaveButton;
+	private RandomNumberGenerator _tempRand = null; // Keep a temp copy of rand so can restore old version if saving in middle of wave for deterministic rng
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -64,8 +65,8 @@ public partial class EnemyManager : Node
 		else if (InTowerCreator && _spawnTimer.TimeLeft <= 0)
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.targetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
+			spawnedEnemy.targetPos = _baseLocations[_tempRand.RandiRange(0, _baseLocations.Count - 1)];
+			spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
 
 			EnemyParent.AddChild(spawnedEnemy);
 
@@ -77,6 +78,8 @@ public partial class EnemyManager : Node
 
 	public void Init()
 	{
+		_tempRand = null;
+
 		_tileSize = PathfindingManager.instance.TileSize;
 
 		_spawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
@@ -106,6 +109,16 @@ public partial class EnemyManager : Node
 	private void StartWave()
 	{
 		CurrentWave++;
+
+		if (_tempRand != null)
+			RNGManager.instance.RandInstances[this] = _tempRand;
+
+		_tempRand = new()
+		{
+			Seed = RNGManager.instance.RandInstances[this].Seed,
+			State = RNGManager.instance.RandInstances[this].State
+		};
+
 		_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
 		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item2;
 		_spawnTimer.Start();
@@ -123,11 +136,13 @@ public partial class EnemyManager : Node
 		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
 		_enemySpawnQueue.RemoveAt(0);
 		if (_enemySpawnQueue.Count == 0)
+		{
 			_startWaveButton.Disabled = false;
+		}
 
 		Enemy spawnedEnemy = enemyToSpawn.EnemyScene.Instantiate<Enemy>();
-		spawnedEnemy.targetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
-		spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
+		spawnedEnemy.targetPos = _baseLocations[_tempRand.RandiRange(0, _baseLocations.Count - 1)];
+		spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
 
 		EnemyParent.AddChild(spawnedEnemy);
 
@@ -146,7 +161,7 @@ public partial class EnemyManager : Node
 		for (int i = 0; i < enemySegments; i++)
 		{
 			float spawnDelay = 0.6f;
-			bool condensedWave = RNGManager.instance.RandInstances[this].Randf() > 0.5f;
+			bool condensedWave = _tempRand.Randf() > 0.5f;
 			if (condensedWave)
 				spawnDelay = 0.3f;
 
@@ -154,7 +169,7 @@ public partial class EnemyManager : Node
 			EnemySpawnData selectedEnemy = WeightedEnemyChoice(enemyPoolDatas);
 
 			// Triangular distribution taken from nova drift
-			float triangular = RNGManager.instance.RandInstances[this].Randf() - RNGManager.instance.RandInstances[this].Randf();
+			float triangular = _tempRand.Randf() - _tempRand.Randf();
 			float enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyHigh, triangular);
 			if (triangular < 0)
 				enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyLow, -triangular);
@@ -168,7 +183,7 @@ public partial class EnemyManager : Node
 
 			// Partner wave generation
 			float partnerWaveMultiplier = 0.65f;
-			if (selectedEnemy.PairingChoices.Count > 0 && RNGManager.instance.RandInstances[this].Randf() < _chanceForPartnerWave && enemyPoolDatas == EnemiesToSpawnData)
+			if (selectedEnemy.PairingChoices.Count > 0 && _tempRand.Randf() < _chanceForPartnerWave && enemyPoolDatas == EnemiesToSpawnData)
 			{
 				enemyCount *= partnerWaveMultiplier;
 				generatedWave.AddRange(GenerateDynamicWave(selectedEnemy.PairingChoices));
@@ -191,7 +206,7 @@ public partial class EnemyManager : Node
 		Array<EnemySpawnData> enemySpawnData = [.. enemiesToSpawnData.Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
 
 		int totalWeight = enemySpawnData.Sum(spawnData => spawnData.Weight);
-		int randomChoice = RNGManager.instance.RandInstances[this].RandiRange(1, totalWeight);
+		int randomChoice = _tempRand.RandiRange(1, totalWeight);
 		int currentSum = 0;
 		foreach (EnemySpawnData spawnData in enemySpawnData)
 		{
