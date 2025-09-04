@@ -1,5 +1,27 @@
-[gd_scene format=3 uid="uid://cwwsgm0a5fyur"]
+[gd_scene load_steps=2 format=3 uid="uid://bebxmlgevi2um"]
+
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_rw6w7"]
 
 [node name="TowerSelectionButton" type="TextureButton"]
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(64, 1.45519e-11)
+offset_right = 64.0
+offset_bottom = 72.0
+theme = ExtResource("1_rw6w7")
 stretch_mode = 5
+
+[node name="CostLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.000145216
+size_flags_horizontal = 4
+size_flags_vertical = 6
+mouse_filter = 2
+text = "$100"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 2

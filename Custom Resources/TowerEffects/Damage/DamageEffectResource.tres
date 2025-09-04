@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=3 uid="uid://yobokgplsuku"]
 
-[ext_resource type="Script" uid="uid://ckfol0wpekdnp" path="res://Custom Resources/Effects/Damage/DamageEffect.cs" id="1_abyiv"]
-[ext_resource type="Texture2D" uid="uid://m5tavfsnps4q" path="res://Custom Resources/Effects/Damage/DamageEffectIcon.png" id="1_ssfnc"]
+[ext_resource type="Script" uid="uid://ckfol0wpekdnp" path="res://Custom Resources/TowerEffects/Damage/DamageEffect.cs" id="1_abyiv"]
+[ext_resource type="Texture2D" uid="uid://m5tavfsnps4q" path="res://Custom Resources/TowerEffects/Damage/DamageEffectIcon.png" id="1_ssfnc"]
 
 [resource]
 resource_name = "Damage"

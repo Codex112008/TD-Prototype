@@ -65,14 +65,12 @@ public partial class EnemyManager : Node
 		else if (InTowerCreator && _spawnTimer.TimeLeft <= 0)
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.targetPos = _baseLocations[_tempRand.RandiRange(0, _baseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
+			spawnedEnemy.targetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
+			spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
 
 			EnemyParent.AddChild(spawnedEnemy);
 
 			_spawnTimer.Start();
-
-			_waveCounter.Text = "Testing Towers";
 		}
 	}
 
@@ -81,6 +79,8 @@ public partial class EnemyManager : Node
 		_tempRand = null;
 
 		_tileSize = PathfindingManager.instance.TileSize;
+
+		_enemySpawnQueue = [];
 
 		_spawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
 		_baseLocations = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Base")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
@@ -98,6 +98,8 @@ public partial class EnemyManager : Node
 
 			_spawnTimer.WaitTime = 1f;
 			_spawnTimer.Start();
+
+			_waveCounter.Text = "Testing Towers";
 		}
 		else if (InLevel)
 		{

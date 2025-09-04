@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=3]
 
-[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_fwoww"]
-[ext_resource type="Script" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.cs" id="2_0gg03"]
-[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_23yng"]
-[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="4_mbr7v"]
-[ext_resource type="Resource" path="res://Custom Resources/Effects/Damage/DamageEffectResource.tres" id="5_emw5j"]
-[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileIcon.png" id="6_3q4ys"]
-[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileScene.tscn" id="7_x1l3b"]
-[ext_resource type="Script" path="res://Custom Resources/Projectiles/Sniper/SniperProjectile.cs" id="8_xn5qb"]
-[ext_resource type="Texture2D" path="res://Sprites/Towers/ShotgunTower.png" id="9_45ja8"]
+[ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_fwoww"]
+[ext_resource type="Script" uid="uid://b1h0gvnxvj3t8" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.cs" id="2_0gg03"]
+[ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_23yng"]
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="4_mbr7v"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="5_emw5j"]
+[ext_resource type="Texture2D" uid="uid://b6gwb45e55rl4" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileIcon.png" id="6_3q4ys"]
+[ext_resource type="PackedScene" uid="uid://dxeutwyglujug" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileScene.tscn" id="7_x1l3b"]
+[ext_resource type="Script" uid="uid://c83flq2q3u2yx" path="res://Custom Resources/Projectiles/Sniper/SniperProjectile.cs" id="8_xn5qb"]
+[ext_resource type="Texture2D" uid="uid://b7byxvn5jhb0o" path="res://Sprites/Towers/ShotgunTower.png" id="9_45ja8"]
 
 [sub_resource type="Resource" id="Resource_f8mfe"]
 resource_name = "Sniper"

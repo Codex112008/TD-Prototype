@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+[GlobalClass]
 public abstract partial class EnemyEffect : Resource
 {
     /// <summary>
@@ -8,5 +9,5 @@ public abstract partial class EnemyEffect : Resource
     /// </summary>
     [Export] public float EffectInterval = 999;
 
-    public abstract void ApplyEffect();
+    public abstract void ApplyEffect(Enemy enemy);
 }

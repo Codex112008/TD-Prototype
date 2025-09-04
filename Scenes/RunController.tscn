@@ -1,8 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=17 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
-[ext_resource type="PackedScene" uid="uid://cwwsgm0a5fyur" path="res://Scenes/LevelScenes/TowerSelectionButton.tscn" id="3_23lj0"]
 [ext_resource type="PackedScene" uid="uid://byt35up7juchg" path="res://Scenes/TowerCreation/TowerCreator.tscn" id="3_lvlvj"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="4_lvlvj"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_nvgt4"]
@@ -110,7 +109,6 @@ _cameraAnimPlayer = NodePath("Camera2D/AnimationPlayer")
 [node name="Managers" type="Node" parent="."]
 
 [node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("InstancedNodesParent", "_towerParent") instance=ExtResource("2_tjy1v")]
-TowerSelectionButtonScene = ExtResource("3_23lj0")
 InstancedNodesParent = NodePath("../../InstancedNodes")
 _towerParent = NodePath("../../Towers")
 

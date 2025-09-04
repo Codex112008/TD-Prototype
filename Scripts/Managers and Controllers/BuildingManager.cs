@@ -10,19 +10,23 @@ public partial class BuildingManager : Node2D
 		instance = this;
 	}
 
-	[Export] private string _pathToSavedTowers = "res://RuntimeData/SavedTowers/";
 	[Export] public PackedScene TowerSelectionButtonScene;
 	[Export] public HBoxContainer TowerSelectionButtonContainer;
 	[Export] public Node InstancedNodesParent;
+	[Export] private string _pathToSavedTowers = "res://RuntimeData/SavedTowers/";
 	[Export] private Node _towerParent;
+	[Export] private RichTextLabel _currentCurrencyLabel;
+
+	public int _playerCurrency = 300;
 	private PackedScene _selectedTower = null;
 	private Tower _towerPreview = null;
 	private Array<PackedScene> _towersToBuild = [];
+	private bool _validTowerPlacement;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		
+
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,6 +35,14 @@ public partial class BuildingManager : Node2D
 		if (_selectedTower != null && IsInstanceValid(_towerPreview))
 		{
 			_towerPreview.GlobalPosition = _towerPreview.Position.Lerp(GetPreviewMousePosition(), 30f * (float)delta);
+			if (!_validTowerPlacement)
+				_towerPreview.Modulate = new Color("#ffa395");
+			else
+				_towerPreview.Modulate = Colors.White;
+
+			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] == true
+							&& IsInstanceValid(_towerPreview)
+							&& _towerPreview.GetFinalTowerStats()[TowerStat.Cost] <= _playerCurrency;
 		}
 	}
 
@@ -43,6 +55,8 @@ public partial class BuildingManager : Node2D
 			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
 		}
 
+		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
+
 		GenerateTowerSelectionButtons();
 	}
 
@@ -52,11 +66,9 @@ public partial class BuildingManager : Node2D
 		{
 			if (eventMouseButton.ButtonIndex == MouseButton.Left && eventMouseButton.Pressed == true)
 			{
-				Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize);
-
-				if (PathfindingManager.instance.TilemapBuildableData[mousePos] == true && IsInstanceValid(_towerPreview))
+				if (_validTowerPlacement)
 				{
-					PathfindingManager.instance.TilemapBuildableData[mousePos] = false;
+					PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] = false;
 
 					BuildTower();
 				}
@@ -84,12 +96,17 @@ public partial class BuildingManager : Node2D
 		_selectedTower = null;
 
 		_towerPreview.IsBuildingPreview = false;
+		_towerPreview.Modulate = Colors.White;
+		_playerCurrency -= Mathf.FloorToInt(_towerPreview.GetFinalTowerStats()[TowerStat.Cost]);
+		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
+
 		_towerPreview = null;
 	}
 
 	public void SetSelectedTower(int index = -1)
 	{
-		_towerPreview?.QueueFree();
+		if (IsInstanceValid(_towerPreview))
+			_towerPreview.QueueFree();
 
 		if (index != -1)
 		{
@@ -115,6 +132,8 @@ public partial class BuildingManager : Node2D
 
 		for (int i = 0; i < _towersToBuild.Count; i++)
 		{
+			Tower tempTower = _towersToBuild[i].Instantiate<Tower>();
+
 			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
 			int index = i;
 			towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
@@ -124,10 +143,17 @@ public partial class BuildingManager : Node2D
 			towerSelectionButton.TextureNormal = towerIcon;
 			towerSelectionButton.TexturePressed = towerIcon;
 
+			RichTextLabel costLabel = towerSelectionButton.GetChild<RichTextLabel>(0);
+			costLabel.Text = '$' + Mathf.FloorToInt(tempTower.GetFinalTowerStats()[TowerStat.Cost]).ToString();
+			if (costLabel.Size.X > towerSelectionButton.Size.X)
+				towerSelectionButton.Size = new(costLabel.Size.X, 0);
+
 			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
+
+			tempTower.QueueFree();
 		}
 	}
-	
+
 	public static Array<string> GetFolderNames(string path)
 	{
 		// Get all directories at the specified path
@@ -140,5 +166,11 @@ public partial class BuildingManager : Node2D
 		}
 
 		return [.. folders];
+	}
+
+	public void AddPlayerCurrency(int amount)
+	{
+		_playerCurrency += amount;
+		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
 	}
 }

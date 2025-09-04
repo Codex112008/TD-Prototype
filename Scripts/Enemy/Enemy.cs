@@ -6,26 +6,28 @@ using Godot.Collections;
 [GlobalClass]
 public partial class Enemy : CharacterBody2D
 {
-	[Export] public Dictionary<EnemyStat, int> BaseEnemyStats = [];
 	[Export] public Dictionary<EnemyEffectTrigger, EnemyEffect> Effects = [];
+	[Export] private Dictionary<EnemyStat, int> _baseEnemyStats = [];
 	[Export] private float acceleration = 5f;
 	[Export] private float deceleration = 10f;
 	[Export] private float _offsetMargin = 0.4f;
-
 	[Export] private PackedScene _damageNumberScene;
 
 	public Vector2 targetPos;
 	public Array<Vector2> PathArray = [];
+	public Dictionary<EnemyStat, int> CurrentEnemyStats;
+
 	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
-
 	private Sprite2D _sprite;
 	private float _currentHealth;
-	private Dictionary<EnemyStat, int> _currentEnemyStats;
 	private RandomNumberGenerator _rand = new();
+	private bool _isDead = false;
 
 	public override void _Ready()
 	{
+		Effects.Add(EnemyEffectTrigger.OnDeath, new RewardEffect());
+
 		// Initialises status efects dictionary
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
 		{
@@ -44,8 +46,9 @@ public partial class Enemy : CharacterBody2D
 
 		_sprite = GetChild<Sprite2D>(0);
 
-		_currentHealth = BaseEnemyStats[EnemyStat.MaxHealth];
-		_currentEnemyStats = BaseEnemyStats;
+		CurrentEnemyStats = _baseEnemyStats;
+		_currentHealth = CurrentEnemyStats[EnemyStat.MaxHealth];
+
 		TriggerEffects(EnemyEffectTrigger.OnSpawn);
 
 		if (Effects.ContainsKey(EnemyEffectTrigger.OnTimer))
@@ -58,7 +61,7 @@ public partial class Enemy : CharacterBody2D
 					AddChild(timer);
 
 					timer.WaitTime = effect.EffectInterval;
-					timer.Timeout += effect.ApplyEffect;
+					timer.Timeout += () => effect.ApplyEffect(this);
 
 					AddChild(timer);
 				}
@@ -78,10 +81,12 @@ public partial class Enemy : CharacterBody2D
 		{
 			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
 
-			Velocity = Velocity.Lerp(dir.Normalized() * CalculateSpeed(), acceleration * (float)delta);
+			UpdateSpeedStat();
+
+			Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed], acceleration * (float)delta);
 			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), acceleration * (float)delta);
 
-			if (GlobalPosition.DistanceTo(PathArray[0]) <= _currentEnemyStats[EnemyStat.Speed] / 5f)
+			if (GlobalPosition.DistanceTo(PathArray[0]) <= CurrentEnemyStats[EnemyStat.Speed] / 5f)
 			{
 				PathArray.RemoveAt(0);
 			}
@@ -100,22 +105,27 @@ public partial class Enemy : CharacterBody2D
 	// Returns Damage Dealt
 	public virtual float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
 	{
-		float damageDealt = amount;
-		if (!defenceBreak)
-			damageDealt = DamageAfterArmorPierce(damageDealt);
-
-		_currentHealth -= damageDealt;
-
-		InstantiateDamageNumber(damageDealt, damageType);
-
-		TriggerEffects(EnemyEffectTrigger.OnDamage);
-
-		if (_currentHealth <= 0)
+		if (!_isDead)
 		{
-			Die();
+			float damageDealt = amount;
+			if (!defenceBreak)
+				damageDealt = DamageAfterArmorPierce(damageDealt);
+
+			_currentHealth -= damageDealt;
+
+			InstantiateDamageNumber(damageDealt, damageType);
+
+			TriggerEffects(EnemyEffectTrigger.OnDamage);
+
+			if (_currentHealth <= 0)
+			{
+				Die();
+			}
+
+			return damageDealt;
 		}
 
-		return damageDealt;
+		return float.NaN;
 	}
 
 	public void ModifyStatusEffectStacks(StatusEffect status, int amount)
@@ -127,19 +137,22 @@ public partial class Enemy : CharacterBody2D
 
 	protected virtual void Die()
 	{
+		_isDead = true;
+		
 		TriggerEffects(EnemyEffectTrigger.OnDeath);
 
 		QueueFree();
 	}
 
-	protected virtual float CalculateSpeed()
+	protected virtual float UpdateSpeedStat()
 	{
-		float realSpeed = _currentEnemyStats[EnemyStat.Speed];
+		int speed = _baseEnemyStats[EnemyStat.Speed];
 
 		if (_currentStatusEffects[StatusEffect.Chill] > 0)
-			realSpeed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3, 2) + 0.35f;
+			speed *= Mathf.FloorToInt(6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3, 2) + 0.35f);
 
-		return realSpeed;
+		CurrentEnemyStats[EnemyStat.Speed] = speed;
+		return speed;
 	}
 
 	protected void TriggerEffects(EnemyEffectTrigger triggerEvent)
@@ -150,7 +163,7 @@ public partial class Enemy : CharacterBody2D
 			{
 				if (trigger == triggerEvent)
 				{
-					effect.ApplyEffect();
+					effect.ApplyEffect(this);
 				}
 			}
 		}
@@ -167,7 +180,7 @@ public partial class Enemy : CharacterBody2D
 
 	protected float DamageAfterArmorPierce(float originalDamage)
 	{
-		if (BaseEnemyStats.TryGetValue(EnemyStat.Defence, out int defence))
+		if (CurrentEnemyStats.TryGetValue(EnemyStat.Defence, out int defence))
 			return originalDamage * Mathf.Pow(0.975f, defence);
 		else
 			return originalDamage;

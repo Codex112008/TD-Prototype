@@ -1,0 +1,7 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://d340g2tvlb83t"]
+
+[ext_resource type="Script" uid="uid://dm5lk26wj6bai" path="res://Custom Resources/EnemyEffects/Reward/RewardEffect.cs" id="1_bnrpk"]
+
+[resource]
+script = ExtResource("1_bnrpk")
+EffectInterval = 967420.0

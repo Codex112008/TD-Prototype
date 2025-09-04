@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btrowvim40dsq"
-path="res://.godot/imported/ChillEffectIcon.png-495c9785670533c37b21fbf619a44034.ctex"
+uid="uid://m5tavfsnps4q"
+path="res://.godot/imported/DamageEffectIcon.png-a5485f4d8ccc59bc052a9d42c6b64782.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Custom Resources/Effects/Chill/ChillEffectIcon.png"
-dest_files=["res://.godot/imported/ChillEffectIcon.png-495c9785670533c37b21fbf619a44034.ctex"]
+source_file="res://Custom Resources/TowerEffects/Damage/DamageEffectIcon.png"
+dest_files=["res://.godot/imported/DamageEffectIcon.png-a5485f4d8ccc59bc052a9d42c6b64782.ctex"]
 
 [params]
 
@@ -31,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

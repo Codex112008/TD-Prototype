@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=6 format=3 uid="uid://diabts3pmdc7t"]
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_dubh1"]
-[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/Effects/Damage/DamageEffectResource.tres" id="2_2wxls"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_2wxls"]
 [ext_resource type="Texture2D" uid="uid://bnsoaen6emvx" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileIcon.png" id="3_dc0qi"]
 [ext_resource type="PackedScene" uid="uid://bcuufp67y4aq3" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileScene.tscn" id="4_smtav"]
 [ext_resource type="Script" uid="uid://dda7yiaawjumm" path="res://Custom Resources/Projectiles/Bullet/BulletProjectile.cs" id="5_xell5"]
