@@ -1,11 +1,13 @@
-[gd_scene load_steps=15 format=4 uid="uid://byt35up7juchg"]
+[gd_scene load_steps=17 format=4 uid="uid://byt35up7juchg"]
 
 [ext_resource type="Script" uid="uid://cl2mhm0eiwf6b" path="res://Scripts/Managers and Controllers/TowerCreatorController.cs" id="1_iqnq1"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="2_m4638"]
 [ext_resource type="PackedScene" uid="uid://c53r4y5k7lptf" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.tscn" id="2_pcf17"]
 [ext_resource type="PackedScene" uid="uid://m4rsxkv8b7ce" path="res://Scenes/TowerCreation/StatSelector.tscn" id="3_qpodo"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="3_rxuld"]
 [ext_resource type="PackedScene" uid="uid://d06d7n3ydut8p" path="res://Scenes/TowerCreation/ModifierSelector.tscn" id="4_4tq1g"]
 [ext_resource type="Resource" uid="uid://ds31paw0q7ffx" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileResource.tres" id="4_cigfv"]
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_akxta"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="5_bk7jn"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="5_k7xnd"]
 [ext_resource type="Resource" uid="uid://dunae7lk31h0u" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="6_vvvic"]
@@ -18,8 +20,8 @@
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI", "_towerPreviewArea")]
 z_index = -2
 script = ExtResource("1_iqnq1")
-ProjectileOptions = [ExtResource("3_rxuld"), ExtResource("4_cigfv")]
-EffectOptions = [ExtResource("5_k7xnd"), ExtResource("6_vvvic")]
+ProjectileOptions = Array[ExtResource("2_m4638")]([ExtResource("3_rxuld"), ExtResource("4_cigfv")])
+EffectOptions = Array[ExtResource("5_akxta")]([ExtResource("5_k7xnd"), ExtResource("6_vvvic")])
 TowerTypeScenes = Array[PackedScene]([ExtResource("2_pcf17"), ExtResource("7_akxta")])
 _towerCreatorUI = NodePath("UI/TowerCreatorUIPanel/TowerCreatorUI")
 _towerPreviewArea = NodePath("TowerPreview")

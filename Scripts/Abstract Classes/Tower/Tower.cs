@@ -47,8 +47,10 @@ public abstract partial class Tower : Sprite2D, ISavable
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
+    [Export] public string TowerName;
 
     private Sprite2D _rangeOverlay;
+    private RichTextLabel _nameLabel;
 
     public override void _Ready()
     {
@@ -64,6 +66,20 @@ public abstract partial class Tower : Sprite2D, ISavable
             SelfModulate = new Color(1f, 1f, 1f, 0.47f)
         };
         AddChild(_rangeOverlay);
+
+        _nameLabel = new RichTextLabel();
+        _nameLabel.SetAnchorsPreset(Control.LayoutPreset.Center);
+        _nameLabel.AddThemeFontSizeOverride("normal_font_size", 64);
+        _nameLabel.Scale = Vector2.One * 0.1f;
+        _nameLabel.Visible = false;
+        _nameLabel.Text = TowerName;
+        _nameLabel.FitContent = true;
+        _nameLabel.AutowrapMode = TextServer.AutowrapMode.Off;
+        _nameLabel.ScrollActive = false;
+        _nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+        _nameLabel.VerticalAlignment = VerticalAlignment.Center;
+        _nameLabel.Position = rectSize / 2;
+        AddChild(_nameLabel);
     }
 
     public override void _Process(double delta)
@@ -71,14 +87,23 @@ public abstract partial class Tower : Sprite2D, ISavable
         Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
         if (mousePos == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview)
         {
-            _rangeOverlay.Visible = true;
+            if (_rangeOverlay.Visible == false)
+                _rangeOverlay.Visible = true;
             _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 128f) * 2f, 12.5f * (float)delta);
+
+            if (_nameLabel.Visible == false)
+                _nameLabel.Visible = true;
+            _nameLabel.Scale = _nameLabel.Scale.Lerp(Vector2.One * 0.1f, 12.5f * (float)delta);
         }
         else
         {
             if (_rangeOverlay.Scale == Vector2.Zero && _rangeOverlay.Visible != false)
                 _rangeOverlay.Visible = false;
             _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
+
+            if (_nameLabel.Scale == Vector2.Zero && _nameLabel.Visible != false)
+                _nameLabel.Visible = false;
+            _nameLabel.Scale = _nameLabel.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
         }
     }
 

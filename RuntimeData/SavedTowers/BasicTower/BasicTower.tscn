@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=3]
 
-[ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_1hj8o"]
-[ext_resource type="Script" uid="uid://476fij86s3r3" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_3st7d"]
-[ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_qp8oa"]
-[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="4_blbt6"]
-[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="5_88nl6"]
-[ext_resource type="Texture2D" uid="uid://bnsoaen6emvx" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileIcon.png" id="6_mwn05"]
-[ext_resource type="PackedScene" uid="uid://bcuufp67y4aq3" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileScene.tscn" id="7_bkqqe"]
-[ext_resource type="Script" uid="uid://dda7yiaawjumm" path="res://Custom Resources/Projectiles/Bullet/BulletProjectile.cs" id="8_w0i78"]
-[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="9_hlhf4"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_1hj8o"]
+[ext_resource type="Script" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_3st7d"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_qp8oa"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="4_blbt6"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="5_88nl6"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileIcon.png" id="6_mwn05"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileScene.tscn" id="7_bkqqe"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/BulletProjectile.cs" id="8_w0i78"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="9_hlhf4"]
 
 [sub_resource type="Resource" id="Resource_r52c2"]
 resource_name = "Bullet"
@@ -39,6 +39,7 @@ SpritesForIcon = [NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_qp8oa")
 Projectile = SubResource("Resource_r52c2")
+TowerName = "Basic Tower"
 
 [node name="PivotPoint" type="Marker2D" parent="."]
 position = Vector2(8, 8)

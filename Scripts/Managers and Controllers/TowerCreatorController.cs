@@ -170,6 +170,9 @@ public partial class TowerCreatorController : Node2D
 			}
 		}
 
+		// Change name of the node
+		_towerToCreatePreview.TowerName = _towerNameInput.Text;
+
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)
 		{
@@ -246,8 +249,8 @@ public partial class TowerCreatorController : Node2D
 				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 
 				// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
-				//Array<Sprite2D> towerSprites = [.. towerToSave.GetChildren(true).Where(child => child is Sprite2D).Cast<Sprite2D>()];
-				//towerSprites.Insert(0, towerToSave);
+				// Array<Sprite2D> towerSprites = [.. towerToSave.GetChildren(true).Where(child => child is Sprite2D).Cast<Sprite2D>()];
+				// towerSprites.Insert(0, towerToSave);
 				Image towerAsImage = CreateImageFromSprites(towerToSave);
 				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
 			}

@@ -16,6 +16,7 @@ public partial class RunController : Node2D
 		instance = this;
 	}
 
+	[Export] private string _runSaveFilePath;
 	[Export] private string _levelSaveFilePath;
 	[Export] public PackedScene LevelScene;
 	[Export] public PackedScene TowerCreationScene;

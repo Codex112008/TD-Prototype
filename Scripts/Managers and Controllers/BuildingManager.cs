@@ -41,8 +41,8 @@ public partial class BuildingManager : Node2D
 				_towerPreview.Modulate = Colors.White;
 
 			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] == true
-							&& IsInstanceValid(_towerPreview)
-							&& _towerPreview.GetFinalTowerStats()[TowerStat.Cost] <= _playerCurrency;
+								   && IsInstanceValid(_towerPreview)
+								   && _towerPreview.GetFinalTowerStats()[TowerStat.Cost] <= _playerCurrency;
 		}
 	}
 
@@ -93,14 +93,17 @@ public partial class BuildingManager : Node2D
 
 	private void BuildTower()
 	{
-		_selectedTower = null;
+		if (_towerPreview != null)
+		{
+			_selectedTower = null;
 
-		_towerPreview.IsBuildingPreview = false;
-		_towerPreview.Modulate = Colors.White;
-		_playerCurrency -= Mathf.FloorToInt(_towerPreview.GetFinalTowerStats()[TowerStat.Cost]);
-		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
+			_towerPreview.IsBuildingPreview = false;
+			_towerPreview.Modulate = Colors.White;
+			_playerCurrency -= Mathf.FloorToInt(_towerPreview.GetFinalTowerStats()[TowerStat.Cost]);
+			_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
 
-		_towerPreview = null;
+			_towerPreview = null;
+		}
 	}
 
 	public void SetSelectedTower(int index = -1)
@@ -147,6 +150,8 @@ public partial class BuildingManager : Node2D
 			costLabel.Text = '$' + Mathf.FloorToInt(tempTower.GetFinalTowerStats()[TowerStat.Cost]).ToString();
 			if (costLabel.Size.X > towerSelectionButton.Size.X)
 				towerSelectionButton.Size = new(costLabel.Size.X, 0);
+
+			towerSelectionButton.TooltipText = tempTower.TowerName;
 
 			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
 

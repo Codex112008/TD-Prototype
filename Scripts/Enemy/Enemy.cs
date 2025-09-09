@@ -138,7 +138,7 @@ public partial class Enemy : CharacterBody2D
 	protected virtual void Die()
 	{
 		_isDead = true;
-		
+
 		TriggerEffects(EnemyEffectTrigger.OnDeath);
 
 		QueueFree();

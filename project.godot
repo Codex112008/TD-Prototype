@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="TD-Prototype"
+run/main_scene="uid://caojnjbhas8t5"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://Sprites/icon.svg"
 
@@ -42,6 +43,10 @@ folder_colors={
 Enemy="Group for every enemy"
 Tilemap=""
 Persist=""
+
+[gui]
+
+theme/custom="uid://dau7t85gbci6u"
 
 [importer_defaults]
 
