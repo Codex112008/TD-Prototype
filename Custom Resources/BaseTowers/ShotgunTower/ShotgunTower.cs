@@ -4,7 +4,7 @@ using System;
 
 public partial class ShotgunTower : Tower
 {
-	[Export] private Array<Marker2D> _firePoints = [];
+    [Export] private Array<Marker2D> _firePoints = [];
     [Export] private Marker2D _pivotPoint;
     [Export] private float _rotateSpeed;
     [Export] private float _shotSpread = 2f;
@@ -88,5 +88,20 @@ public partial class ShotgunTower : Tower
             firePoint.RotationDegrees = _rand.RandfRange(-_shotSpread, _shotSpread);
             Projectile.InstantiateProjectile(GetFinalTowerStats(), firePoint);
         }
+    }
+
+    protected override int GetPointCostFromDamage()
+    {
+        return BaseTowerStats[TowerStat.Damage] * 75;
+    }
+
+    protected override int GetPointCostFromRange()
+    {
+        return BaseTowerStats[TowerStat.Range] * 4;
+    }
+    
+    protected override int GetPointCostFromFireRate()
+    {
+        return BaseTowerStats[TowerStat.FireRate] * 50;
     }
 }
