@@ -83,7 +83,7 @@ public partial class TowerCreatorController : Node2D
 				switch (stat)
 				{
 					case TowerStat.Cost:
-						statPickerSpinBox.Step = 50;
+						statPickerSpinBox.Step = 25;
 						statPickerSpinBox.MaxValue = 1000;
 						break;
 					case TowerStat.Range:
@@ -148,9 +148,11 @@ public partial class TowerCreatorController : Node2D
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
 				// Updates modifier selector text and sets it on the preview
-				TowerComponent towerComponent = EffectOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
+				TowerComponent towerComponent;
 				if (modifierPicker.ItemLabel.Text.Contains("Projectile"))
 					towerComponent = ProjectileOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
+				else
+					towerComponent = EffectOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
 
 				if (towerComponent is Projectile projectile)
 					_towerToCreatePreview.Projectile = projectile;

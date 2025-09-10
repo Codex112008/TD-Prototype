@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://cncbumlea5eiv"]
+
+[ext_resource type="Script" uid="uid://d0nbdjqcrq2pb" path="res://Custom Resources/TowerEffects/AOE/AOEEffectBehaviour.cs" id="1_4salk"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_gm1yl"]
+[ext_resource type="Texture2D" uid="uid://cl1j1v2x0c6fu" path="res://Sprites/Circle.png" id="3_c7kp8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cdgoy"]
+radius = 16.0
+
+[node name="Aoe" type="Area2D" node_paths=PackedStringArray("AOECollider", "_aoeSprite")]
+collision_layer = 2
+script = ExtResource("1_4salk")
+AOECollider = NodePath("CollisionShape2D")
+_aoeSprite = NodePath("Sprite2D")
+_aoeEffect = ExtResource("2_gm1yl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.470588)
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("3_c7kp8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_cdgoy")

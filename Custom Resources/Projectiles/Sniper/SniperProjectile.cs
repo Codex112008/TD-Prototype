@@ -4,7 +4,7 @@ using System.Linq;
 
 public partial class SniperProjectile : Projectile
 {
-    public override void InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint)
+    public override SniperProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint)
     {
         SniperProjectileBehaviour projectile = ProjectileScene.Instantiate<SniperProjectileBehaviour>();
         projectile.GlobalPosition = firePoint.GlobalPosition;
@@ -16,5 +16,7 @@ public partial class SniperProjectile : Projectile
         projectile.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.damageType)]);
 
         BuildingManager.instance.InstancedNodesParent.AddChild(projectile);
+
+        return projectile;
     }
 }

@@ -6,7 +6,7 @@ public partial class BulletProjectile : Projectile
 {
     [Export] public float fireForce;
 
-    public override void InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint)
+    public override BulletProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint)
     {
         BulletProjectileBehaviour bullet = ProjectileScene.Instantiate<BulletProjectileBehaviour>();
         bullet.GlobalPosition = firePoint.GlobalPosition;
@@ -17,5 +17,7 @@ public partial class BulletProjectile : Projectile
         bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.damageType)]);
 
         BuildingManager.instance.InstancedNodesParent.AddChild(bullet);
+
+        return bullet;
     }
 }

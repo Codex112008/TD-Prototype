@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfk26pq7sbr5h"]
+
+[ext_resource type="Script" uid="uid://bp6v85mmrqiia" path="res://Custom Resources/Projectiles/Chain/ChainProjectileBehaviour.cs" id="1_p682m"]
+
+[node name="ChainProjectileScene" type="RayCast2D" node_paths=PackedStringArray("_raycasts")]
+target_position = Vector2(0, -500)
+script = ExtResource("1_p682m")
+_raycasts = [NodePath("RayCast2D"), NodePath("RayCast2D2")]
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0)
+width = 1.5
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(3, 0)
+target_position = Vector2(0, -500)
+
+[node name="RayCast2D2" type="RayCast2D" parent="."]
+position = Vector2(-3, 0)
+target_position = Vector2(0, -500)

@@ -15,7 +15,7 @@ public partial class Enemy : CharacterBody2D
 
 	public Vector2 targetPos;
 	public Array<Vector2> PathArray = [];
-	public Dictionary<EnemyStat, int> CurrentEnemyStats;
+	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
 
 	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
@@ -39,14 +39,15 @@ public partial class Enemy : CharacterBody2D
 				Autostart = true,
 				OneShot = true
 			};
-			timer.Connect(Timer.SignalName.Timeout, Callable.From(() => ModifyStatusEffectStacks(status, -1)));
+			timer.Connect(Timer.SignalName.Timeout, Callable.From(() => AddStatusEffectStacks(status, -1)));
 			_currentStatusEffectTimers.Add(status, timer);
 			AddChild(timer);
 		}
 
 		_sprite = GetChild<Sprite2D>(0);
 
-		CurrentEnemyStats = _baseEnemyStats;
+		foreach ((EnemyStat stat, int value) in _baseEnemyStats)
+			CurrentEnemyStats[stat] = value;
 		_currentHealth = CurrentEnemyStats[EnemyStat.MaxHealth];
 
 		TriggerEffects(EnemyEffectTrigger.OnSpawn);
@@ -128,7 +129,7 @@ public partial class Enemy : CharacterBody2D
 		return float.NaN;
 	}
 
-	public void ModifyStatusEffectStacks(StatusEffect status, int amount)
+	public void AddStatusEffectStacks(StatusEffect status, int amount)
 	{
 		_currentStatusEffects[status] += amount;
 		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status], 0);
@@ -146,10 +147,10 @@ public partial class Enemy : CharacterBody2D
 
 	protected virtual float UpdateSpeedStat()
 	{
-		int speed = _baseEnemyStats[EnemyStat.Speed];
+		float speed = _baseEnemyStats[EnemyStat.Speed];
 
 		if (_currentStatusEffects[StatusEffect.Chill] > 0)
-			speed *= Mathf.FloorToInt(6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3, 2) + 0.35f);
+			speed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3, 2) + 0.35f;
 
 		CurrentEnemyStats[EnemyStat.Speed] = speed;
 		return speed;
@@ -180,7 +181,7 @@ public partial class Enemy : CharacterBody2D
 
 	protected float DamageAfterArmorPierce(float originalDamage)
 	{
-		if (CurrentEnemyStats.TryGetValue(EnemyStat.Defence, out int defence))
+		if (CurrentEnemyStats.TryGetValue(EnemyStat.Defence, out float defence))
 			return originalDamage * Mathf.Pow(0.975f, defence);
 		else
 			return originalDamage;

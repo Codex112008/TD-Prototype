@@ -9,7 +9,7 @@ public abstract partial class Projectile : TowerComponent, ISavable
     [Export] public Array<TowerEffect> Effects = [];
 
     // Fire the projectile, SHOULD instantiate ProjectileScene
-    public abstract void InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint);
+    public abstract Node2D InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint);
 
     public Dictionary<string, Variant> Save()
     {

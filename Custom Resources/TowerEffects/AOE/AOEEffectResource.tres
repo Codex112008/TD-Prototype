@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://b8ls7kpielbbf"]
+
+[ext_resource type="Texture2D" uid="uid://m5tavfsnps4q" path="res://Custom Resources/TowerEffects/Damage/DamageEffectIcon.png" id="1_6aes2"]
+[ext_resource type="Script" uid="uid://bgsrn6p1ql65h" path="res://Custom Resources/TowerEffects/AOE/AOEEffect.cs" id="1_vdngu"]
+[ext_resource type="PackedScene" uid="uid://cncbumlea5eiv" path="res://Custom Resources/TowerEffects/AOE/AOEEffectScene.tscn" id="2_knh5n"]
+
+[resource]
+script = ExtResource("1_vdngu")
+_aoeScene = ExtResource("2_knh5n")
+damageType = 0
+Tooltip = "Big boom"
+Icon = ExtResource("1_6aes2")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 1.0,
+2: 1.0,
+3: 1.0
+})
+PointCost = 100
