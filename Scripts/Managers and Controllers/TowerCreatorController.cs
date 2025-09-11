@@ -18,7 +18,7 @@ public partial class TowerCreatorController : Node2D
 	[Export] public Array<TowerEffect> EffectOptions = [];
 	[Export] public Array<PackedScene> TowerTypeScenes = [];
 
-	[Export] private string _savedTowerFilePath = "res://RuntimeData/SavedTowers/";
+	[Export] private string _savedTowerFilePath = "RuntimeData/SavedTowers/";
 	[Export] private VBoxContainer _towerCreatorUI;
 	[Export] private TileMapLayer _towerPreviewArea;
 	[Export] private PackedScene _statPickerScene;
@@ -37,6 +37,10 @@ public partial class TowerCreatorController : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_savedTowerFilePath = OS.HasFeature("editor") ? "res://" + _savedTowerFilePath : "user://" + _savedTowerFilePath;
+		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
+            DirAccess.MakeDirRecursiveAbsolute(_savedTowerFilePath);
+
 		// Creates a preview of the tower being created
 		if (BaseTowerScene != null)
 			InstantiateTowerPreview(BaseTowerScene);

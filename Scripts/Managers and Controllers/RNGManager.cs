@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class RNGManager : Node
+public partial class RNGManager : Node, IManager
 {
 	public static RNGManager instance;
 	public Dictionary<Node, RandomNumberGenerator> RandInstances = [];
@@ -21,7 +21,7 @@ public partial class RNGManager : Node
 
 	public override void _Ready()
 	{
-		
+
 	}
 
 	public void AddNewRNG(Node node)
@@ -38,4 +38,14 @@ public partial class RNGManager : Node
 			State = savedState
 		};
 	}
+	
+	public void Deload()
+    {
+		instance = null;
+    }
+
+    public void Init()
+    {
+		
+    }
 }

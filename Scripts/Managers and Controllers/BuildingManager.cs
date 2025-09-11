@@ -1,8 +1,9 @@
+using System;
 using Godot;
 using Godot.Collections;
 
 [GlobalClass]
-public partial class BuildingManager : Node2D
+public partial class BuildingManager : Node2D, IManager
 {
 	public static BuildingManager instance;
 	public override void _EnterTree()
@@ -13,36 +14,38 @@ public partial class BuildingManager : Node2D
 	[Export] public PackedScene TowerSelectionButtonScene;
 	[Export] public HBoxContainer TowerSelectionButtonContainer;
 	[Export] public Node InstancedNodesParent;
-	[Export] private string _pathToSavedTowers = "res://RuntimeData/SavedTowers/";
+	[Export] private string _pathToSavedTowers = "RuntimeData/SavedTowers/";
 	[Export] private Node _towerParent;
 	[Export] private RichTextLabel _currentCurrencyLabel;
 
+	public Tower TowerPreview = null;
 	public int _playerCurrency = 300;
 	private PackedScene _selectedTower = null;
-	private Tower _towerPreview = null;
 	private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-
+		_pathToSavedTowers = OS.HasFeature("editor") ? "res://" + _pathToSavedTowers : "user://" + _pathToSavedTowers;
+		if (!DirAccess.DirExistsAbsolute(_pathToSavedTowers))
+            DirAccess.MakeDirRecursiveAbsolute(_pathToSavedTowers);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (_selectedTower != null && IsInstanceValid(_towerPreview))
+		if (_selectedTower != null && IsInstanceValid(TowerPreview))
 		{
-			_towerPreview.GlobalPosition = _towerPreview.Position.Lerp(GetPreviewMousePosition(), 30f * (float)delta);
+			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(GetPreviewMousePosition(), 30f * (float)delta);
 			if (!_validTowerPlacement)
-				_towerPreview.Modulate = new Color("#ffa395");
+				TowerPreview.Modulate = new Color("#ffa395");
 			else
-				_towerPreview.Modulate = Colors.White;
+				TowerPreview.Modulate = Colors.White;
 
 			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] == true
-								   && IsInstanceValid(_towerPreview)
-								   && _towerPreview.GetFinalTowerStats()[TowerStat.Cost] <= _playerCurrency;
+								   && IsInstanceValid(TowerPreview)
+								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= _playerCurrency;
 		}
 	}
 
@@ -60,7 +63,7 @@ public partial class BuildingManager : Node2D
 		GenerateTowerSelectionButtons();
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
+	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton eventMouseButton)
 		{
@@ -77,11 +80,11 @@ public partial class BuildingManager : Node2D
 
 		if (@event is InputEventKey eventKey)
 		{
-			if (eventKey.Pressed && eventKey.Keycode == Key.Escape && IsInstanceValid(_towerPreview))
+			if (eventKey.Pressed && eventKey.Keycode == Key.Escape && IsInstanceValid(TowerPreview))
 			{
 				_selectedTower = null;
 
-				_towerPreview.QueueFree();
+				TowerPreview.QueueFree();
 			}
 		}
 	}
@@ -93,33 +96,33 @@ public partial class BuildingManager : Node2D
 
 	private void BuildTower()
 	{
-		if (_towerPreview != null)
+		if (TowerPreview != null)
 		{
 			_selectedTower = null;
 
-			_towerPreview.IsBuildingPreview = false;
-			_towerPreview.Modulate = Colors.White;
-			_playerCurrency -= Mathf.FloorToInt(_towerPreview.GetFinalTowerStats()[TowerStat.Cost]);
+			TowerPreview.IsBuildingPreview = false;
+			TowerPreview.Modulate = Colors.White;
+			_playerCurrency -= Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
 			_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
 
-			_towerPreview = null;
+			TowerPreview = null;
 		}
 	}
 
 	public void SetSelectedTower(int index = -1)
 	{
-		if (IsInstanceValid(_towerPreview))
-			_towerPreview.QueueFree();
+		if (IsInstanceValid(TowerPreview))
+			TowerPreview.QueueFree();
 
 		if (index != -1)
 		{
 			if (_towersToBuild[index] != _selectedTower)
 			{
 				_selectedTower = _towersToBuild[index];
-				_towerPreview = _selectedTower.Instantiate<Tower>();
-				_towerPreview.IsBuildingPreview = true;
-				_towerPreview.GlobalPosition = GetPreviewMousePosition();
-				_towerParent.AddChild(_towerPreview);
+				TowerPreview = _selectedTower.Instantiate<Tower>();
+				TowerPreview.IsBuildingPreview = true;
+				TowerPreview.GlobalPosition = GetPreviewMousePosition();
+				_towerParent.AddChild(TowerPreview);
 			}
 		}
 		else
@@ -142,7 +145,10 @@ public partial class BuildingManager : Node2D
 			towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
 
 			// Change button textures to saved tower icon
-			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(ProjectSettings.GlobalizePath(_towersToBuild[i].ResourcePath[.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png")));
+			GD.Print();
+			string iconFilePath = _towersToBuild[i].ResourcePath[6.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png";
+			iconFilePath = OS.HasFeature("editor") ? "res://" + iconFilePath : "user://" + iconFilePath;
+			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(iconFilePath));
 			towerSelectionButton.TextureNormal = towerIcon;
 			towerSelectionButton.TexturePressed = towerIcon;
 
@@ -178,4 +184,9 @@ public partial class BuildingManager : Node2D
 		_playerCurrency += amount;
 		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
 	}
+
+	public void Deload()
+    {
+		instance = null;
+    }
 }

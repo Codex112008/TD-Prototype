@@ -1,13 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://caojnjbhas8t5"]
+[gd_scene load_steps=4 format=3 uid="uid://caojnjbhas8t5"]
 
-[ext_resource type="Script" uid="uid://jfuyx6f1eyo" path="res://StartGameButton.cs" id="1_tt5f1"]
+[ext_resource type="Script" uid="uid://cv5npt2esismv" path="res://Scripts/MainMenu/NewRunButton.cs" id="1_853f1"]
+[ext_resource type="Script" uid="uid://cv1eybuxvl2ai" path="res://Scripts/MainMenu/ContinueRunButton.cs" id="2_8saeu"]
 [ext_resource type="PackedScene" uid="uid://dgthljd51vhi" path="res://Scenes/RunController.tscn" id="2_853f1"]
 
 [node name="MainMenu" type="Node2D"]
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="StartGame" type="Button" parent="UI"]
+[node name="NewRun" type="Button" parent="UI"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -19,8 +20,39 @@ offset_right = 27.0
 offset_bottom = 15.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "sTaRT"
-script = ExtResource("1_tt5f1")
-levelScene = ExtResource("2_853f1")
+text = "New Run"
+script = ExtResource("1_853f1")
+_runControllerScene = ExtResource("2_853f1")
 
-[connection signal="pressed" from="UI/StartGame" to="UI/StartGame" method="OnPressed"]
+[node name="ContinueRun" type="Button" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.5
+offset_top = 40.0
+offset_right = 43.5
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Continue Run"
+script = ExtResource("2_8saeu")
+_runControllerScene = ExtResource("2_853f1")
+
+[node name="MainMenuText" type="RichTextLabel" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -487.5
+offset_top = 150.0
+offset_right = 487.5
+offset_bottom = 309.0
+grow_horizontal = 2
+theme_override_font_sizes/normal_font_size = 200
+text = "Main Menu!!!!"
+fit_content = true
+autowrap_mode = 0
+
+[connection signal="pressed" from="UI/NewRun" to="UI/NewRun" method="OnPressed"]
+[connection signal="pressed" from="UI/ContinueRun" to="UI/ContinueRun" method="OnPressed"]

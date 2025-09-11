@@ -16,24 +16,34 @@ public partial class RunController : Node2D
 		instance = this;
 	}
 
-	[Export] private string _runSaveFilePath;
-	[Export] private string _levelSaveFilePath;
+	[Export] private string _runSaveFilePath = "RuntimeData/RunSaveFiles/";
+	[Export] private string _levelSaveFilePath = "RuntimeData/LevelSaveFiles/";
 	[Export] public PackedScene LevelScene;
 	[Export] public PackedScene TowerCreationScene;
 	[Export] private AnimationPlayer _cameraAnimPlayer;
+	[Export] private Node _managerParent;
 
 	public Node CurrentScene = null;
-	private Node _managerParent;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_managerParent = GetChild(0);
+		_runSaveFilePath = OS.HasFeature("editor") ? "res://" + _runSaveFilePath : "user://" + _runSaveFilePath;
+		if (!DirAccess.DirExistsAbsolute(_runSaveFilePath))
+            DirAccess.MakeDirRecursiveAbsolute(_runSaveFilePath);
+		
+		_levelSaveFilePath = OS.HasFeature("editor") ? "res://" + _levelSaveFilePath : "user://" + _levelSaveFilePath;
+		if (!DirAccess.DirExistsAbsolute(_levelSaveFilePath))
+            DirAccess.MakeDirRecursiveAbsolute(_levelSaveFilePath);
 
 		CurrentScene = LevelScene.Instantiate();
 		AddChild(CurrentScene);
 
 		InitManagers();
+
+		DirAccess dirAccess = DirAccess.Open(_levelSaveFilePath);
+		if (dirAccess.GetFiles().Length > 0)
+			LoadLevel();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -64,7 +74,8 @@ public partial class RunController : Node2D
 			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
 			{
 				SaveLevel();
-				GetChild(0).RemoveChild(BuildingManager.instance);
+				if (BuildingManager.instance.GetParent() == _managerParent)
+					_managerParent.RemoveChild(BuildingManager.instance);
 			}
 
 			// Play animation
@@ -116,11 +127,11 @@ public partial class RunController : Node2D
 			SetProcessUnhandledKeyInput(true);
 
 			_managerParent.ProcessMode = ProcessModeEnum.Inherit;
-			
+
 
 			if (scene.ResourcePath == LevelScene.ResourcePath && FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
 			{
-				GetChild(0).AddChild(BuildingManager.instance);
+				_managerParent.AddChild(BuildingManager.instance);
 				InitManagers();
 				LoadLevel();
 			}
@@ -131,7 +142,7 @@ public partial class RunController : Node2D
 		}
 	}
 
-	private void SaveLevel()
+	public void SaveLevel()
 	{
 		if (CurrentScene.SceneFilePath != LevelScene.ResourcePath)
 		{
@@ -173,7 +184,7 @@ public partial class RunController : Node2D
 		Dictionary<string, Array<string>> rngData = [];
 		foreach ((Node node, RandomNumberGenerator rand) in RNGManager.instance.RandInstances)
 			rngData.Add(node.GetPath(), [rand.Seed.ToString(), rand.State.ToString()]);
-		
+
 		saveFile.StoreLine(Json.Stringify(rngData));
 
 		// Save data of all nodes that need to be saved
@@ -257,10 +268,20 @@ public partial class RunController : Node2D
 
 	private void InitManagers()
 	{
-		foreach (Node manager in _managerParent.GetChildren())
+		foreach (Node node in _managerParent.GetChildren())
 		{
-			if (manager.HasMethod("Init"))
-				manager.Call("Init");
+			if (node is IManager manager)
+				manager.Init();
 		}
+	}
+
+	public void DeloadRun()
+	{
+		foreach (Node node in _managerParent.GetChildren())
+		{
+			if (node is IManager manager)
+				manager.Deload();
+		}
+		instance = null;
 	}
 }

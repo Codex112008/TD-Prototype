@@ -22,6 +22,7 @@ public partial class AOEEffectBehaviour : Area2D
 	private async Task Init()
 	{
 		await ToSignal(GetTree(), "physics_frame");
+		await ToSignal(GetTree(), "physics_frame");
 		
 		foreach (Node2D body in GetOverlappingBodies())
 		{

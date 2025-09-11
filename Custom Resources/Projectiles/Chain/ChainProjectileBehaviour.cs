@@ -39,7 +39,8 @@ public partial class ChainProjectileBehaviour : RayCast2D
 				break;
 			}
 		}
-		GenerateLine(endPos);
+		if (endPos != TargetPosition.Normalized() * (Stats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f) || ChainedEnemies.Count == 0)
+			GenerateLine(endPos);
 
 		_tween ??= CreateTween();
 		_tween.TweenProperty(_line, "width", 0, 0.2f).SetDelay(0.1f);
@@ -62,10 +63,7 @@ public partial class ChainProjectileBehaviour : RayCast2D
 				Vector2 pointPosition = (directionToEndPos * pointDistance) + new Vector2(rand.RandfRange(-_lineVariation, _lineVariation), rand.RandfRange(-_lineVariation, _lineVariation));
 				_line.AddPoint(pointPosition);
 
-				Timer timer = new()
-				{
-					WaitTime = 0.01f
-				};
+				Timer timer = new() { WaitTime = 0.01f };
 				AddChild(timer);
 				timer.Start();
 				await ToSignal(timer, Timer.SignalName.Timeout);
@@ -75,7 +73,7 @@ public partial class ChainProjectileBehaviour : RayCast2D
 				_line.AddPoint(endPos);
 		}
 
-		if (ChainedEnemies.Count <= _chainCount)
+		if (ChainedEnemies.Count <= _chainCount && endPos != TargetPosition.Normalized() * (Stats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f))
 		{
 			Enemy nextEnemy = FindClosestEnemyToTarget(endPos);
 			Dictionary<TowerStat, float> halvedStats = [];

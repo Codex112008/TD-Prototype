@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 [GlobalClass]
-public partial class PathfindingManager : Node
+public partial class PathfindingManager : Node, IManager
 {
 	public static PathfindingManager instance;
 	public override void _EnterTree()
@@ -27,7 +27,7 @@ public partial class PathfindingManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		
+
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -51,14 +51,14 @@ public partial class PathfindingManager : Node
 
 	private void SetUpAStarGrid()
 	{
-        _aStarGrid = new()
-        {
-            Region = LevelTilemap.GetUsedRect(),
-            CellSize = LevelTilemap.TileSet.TileSize,
-            DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never // Maybe change this to smth else if dont like
-        };
+		_aStarGrid = new()
+		{
+			Region = LevelTilemap.GetUsedRect(),
+			CellSize = LevelTilemap.TileSet.TileSize,
+			DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never // Maybe change this to smth else if dont like
+		};
 
-        _aStarGrid.Update();
+		_aStarGrid.Update();
 
 		UpdateTerrainMovementValues();
 	}
@@ -90,7 +90,12 @@ public partial class PathfindingManager : Node
 
 			pathArray.Add(currentPoint);
 		}
-		
+
 		return pathArray;
 	}
+	
+	public void Deload()
+    {
+		instance = null;
+    }
 }

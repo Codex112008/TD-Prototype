@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=19 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://byt35up7juchg" path="res://Scenes/TowerCreation/TowerCreator.tscn" id="3_lvlvj"]
+[ext_resource type="Script" uid="uid://s32v0cw53gqn" path="res://Scripts/PauseMenu.cs" id="4_gg8i0"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="4_lvlvj"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_nvgt4"]
 [ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/LevelScenes/PrototypeLevel.tscn" id="6_23lj0"]
@@ -100,12 +101,32 @@ _data = {
 &"TransitionOutUp": SubResource("Animation_skahh")
 }
 
-[node name="RunController" type="Node2D" node_paths=PackedStringArray("_cameraAnimPlayer")]
+[node name="RunController" type="Node2D" node_paths=PackedStringArray("_cameraAnimPlayer", "_managerParent")]
 script = ExtResource("1_tjy1v")
-_levelSaveFilePath = "res://RuntimeData/LevelSaveFiles/"
 LevelScene = ExtResource("6_23lj0")
 TowerCreationScene = ExtResource("3_lvlvj")
 _cameraAnimPlayer = NodePath("Camera2D/AnimationPlayer")
+_managerParent = NodePath("Managers")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" type="PanelContainer" parent="UI"]
+custom_minimum_size = Vector2(400, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_gg8i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/PauseMenu"]
+layout_mode = 2
+
+[node name="MainMenu" type="Button" parent="UI/PauseMenu/VBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
 
 [node name="Managers" type="Node" parent="."]
 
@@ -148,3 +169,5 @@ z_index = 2
 position = Vector2(160, 207)
 texture = ExtResource("10_skahh")
 flip_v = true
+
+[connection signal="pressed" from="UI/PauseMenu/VBoxContainer/MainMenu" to="UI/PauseMenu" method="ReturnToMainMenu"]

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cncbumlea5eiv" path="res://Custom Resources/TowerEffects/AOE/AOEEffectScene.tscn" id="2_knh5n"]
 
 [resource]
+resource_name = "AOE"
 script = ExtResource("1_vdngu")
 _aoeScene = ExtResource("2_knh5n")
 damageType = 0
@@ -14,6 +15,6 @@ StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 1.0,
 2: 1.0,
-3: 1.0
+3: 0.5
 })
 PointCost = 100

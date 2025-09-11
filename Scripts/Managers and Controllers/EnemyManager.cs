@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class EnemyManager : Node
+public partial class EnemyManager : Node, IManager
 {
 	public static EnemyManager instance;
 	public override void _EnterTree()
@@ -218,4 +218,9 @@ public partial class EnemyManager : Node
 		}
 		return null;
 	}
+
+    public void Deload()
+    {
+		instance = null;
+    }
 }
