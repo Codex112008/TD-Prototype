@@ -13,9 +13,10 @@ public partial class Enemy : CharacterBody2D
 	[Export] private float _offsetMargin = 0.4f;
 	[Export] private PackedScene _damageNumberScene;
 
-	public Vector2 targetPos;
+	public Vector2 TargetPos;
 	public Array<Vector2> PathArray = [];
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
+	public int SpawnedWave;
 
 	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
@@ -69,7 +70,7 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(targetPos / PathfindingManager.instance.TileSize));
+		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
 		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
 		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), _rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
 		for (int i = 1; i < PathArray.Count - 1; i++)

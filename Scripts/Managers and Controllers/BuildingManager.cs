@@ -19,7 +19,7 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] private RichTextLabel _currentCurrencyLabel;
 
 	public Tower TowerPreview = null;
-	public int _playerCurrency = 300;
+	public int PlayerCurrency = 300;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
@@ -29,7 +29,7 @@ public partial class BuildingManager : Node2D, IManager
 	{
 		_pathToSavedTowers = OS.HasFeature("editor") ? "res://" + _pathToSavedTowers : "user://" + _pathToSavedTowers;
 		if (!DirAccess.DirExistsAbsolute(_pathToSavedTowers))
-            DirAccess.MakeDirRecursiveAbsolute(_pathToSavedTowers);
+			DirAccess.MakeDirRecursiveAbsolute(_pathToSavedTowers);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -45,7 +45,7 @@ public partial class BuildingManager : Node2D, IManager
 
 			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] == true
 								   && IsInstanceValid(TowerPreview)
-								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= _playerCurrency;
+								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= PlayerCurrency;
 		}
 	}
 
@@ -58,7 +58,7 @@ public partial class BuildingManager : Node2D, IManager
 			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
 		}
 
-		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
+		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 
 		GenerateTowerSelectionButtons();
 	}
@@ -102,8 +102,8 @@ public partial class BuildingManager : Node2D, IManager
 
 			TowerPreview.IsBuildingPreview = false;
 			TowerPreview.Modulate = Colors.White;
-			_playerCurrency -= Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
-			_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
+			PlayerCurrency -= Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
+			_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 
 			TowerPreview = null;
 		}
@@ -181,8 +181,8 @@ public partial class BuildingManager : Node2D, IManager
 
 	public void AddPlayerCurrency(int amount)
 	{
-		_playerCurrency += amount;
-		_currentCurrencyLabel.Text = '$' + _playerCurrency.ToString();
+		PlayerCurrency += amount;
+		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 	}
 
 	public void Deload()

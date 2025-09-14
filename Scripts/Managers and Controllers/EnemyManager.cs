@@ -28,7 +28,7 @@ public partial class EnemyManager : Node, IManager
 	public bool InLevel = false;
 	public bool InTowerCreator = false;
 
-	private List<Tuple<EnemySpawnData, float>> _enemySpawnQueue = []; // Should only be one wave at a time
+	private List<Tuple<EnemySpawnData, bool>> _enemySpawnQueue = []; // Should only be one wave at a time
 	private int _tileSize;
 	private Array<Vector2> _spawnPoints;
 	private Array<Vector2> _baseLocations;
@@ -65,7 +65,7 @@ public partial class EnemyManager : Node, IManager
 		else if (InTowerCreator && _spawnTimer.TimeLeft <= 0)
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.targetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
+			spawnedEnemy.TargetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
 			spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
 
 			EnemyParent.AddChild(spawnedEnemy);
@@ -122,7 +122,7 @@ public partial class EnemyManager : Node, IManager
 		};
 
 		_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
-		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item2;
+		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2? 0.5f : 1f);
 		_spawnTimer.Start();
 	}
 
@@ -133,7 +133,7 @@ public partial class EnemyManager : Node, IManager
 
 		EnemySpawnData enemyToSpawn = _enemySpawnQueue[0].Item1;
 		if (_enemySpawnQueue.Count > 1)
-			_spawnTimer.WaitTime = _enemySpawnQueue[1].Item2;
+			_spawnTimer.WaitTime = _enemySpawnQueue[1].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2? 0.5f : 1f);
 
 		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
 		_enemySpawnQueue.RemoveAt(0);
@@ -143,17 +143,18 @@ public partial class EnemyManager : Node, IManager
 		}
 
 		Enemy spawnedEnemy = enemyToSpawn.EnemyScene.Instantiate<Enemy>();
-		spawnedEnemy.targetPos = _baseLocations[_tempRand.RandiRange(0, _baseLocations.Count - 1)];
+		spawnedEnemy.TargetPos = _baseLocations[_tempRand.RandiRange(0, _baseLocations.Count - 1)];
 		spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
+		spawnedEnemy.SpawnedWave = CurrentWave;
 
 		EnemyParent.AddChild(spawnedEnemy);
 
 		_spawnTimer.Start();
 	}
 
-	public List<Tuple<EnemySpawnData, float>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)
+	public List<Tuple<EnemySpawnData, bool>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)
 	{
-		List<Tuple<EnemySpawnData, float>> generatedWave = [];
+		List<Tuple<EnemySpawnData, bool>> generatedWave = [];
 
 		// Calculates the amount of enemy segments
 		int enemySegments = 1 + CurrentWave / _waveForSegmentScaling;
@@ -162,10 +163,7 @@ public partial class EnemyManager : Node, IManager
 		float segmentScaling = 1.0f + Mathf.Log(1 + (enemySegments - 1 + CurrentWave % _waveForSegmentScaling / (float)_waveForSegmentScaling) * 0.4f);
 		for (int i = 0; i < enemySegments; i++)
 		{
-			float spawnDelay = 0.6f;
 			bool condensedWave = _tempRand.Randf() > 0.5f;
-			if (condensedWave)
-				spawnDelay = 0.3f;
 
 			// Select random enemy based on weight and calculate the amount to spawn
 			EnemySpawnData selectedEnemy = WeightedEnemyChoice(enemyPoolDatas);
@@ -197,7 +195,7 @@ public partial class EnemyManager : Node, IManager
 			int enemyCountInt = Mathf.Clamp(Mathf.FloorToInt(enemyCount), selectedEnemy.QtyMin, selectedEnemy.QtyMax);
 
 			// Add enemies to wave
-			generatedWave.InsertRange(0, [.. Enumerable.Range(0, enemyCountInt).Select(i => new Tuple<EnemySpawnData, float>(selectedEnemy, spawnDelay))]);
+			generatedWave.InsertRange(0, [.. Enumerable.Range(0, enemyCountInt).Select(i => new Tuple<EnemySpawnData, bool>(selectedEnemy, condensedWave))]);
 		}
 
 		return generatedWave;
