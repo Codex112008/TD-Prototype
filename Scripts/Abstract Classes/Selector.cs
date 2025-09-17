@@ -36,7 +36,7 @@ public abstract partial class Selector : VBoxContainer
 	{
 		for (int i = 0; i < ItemList.GetItemCount(); i++)
 		{
-			if (ItemList.GetItemText(i) == TowerCreatorController.RemoveWhitespaces(text))
+			if (Utils.RemoveWhitespaces(ItemList.GetItemText(i)) == Utils.RemoveWhitespaces(text))
 				return i;
 		}
 		return -1;

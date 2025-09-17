@@ -15,6 +15,10 @@ run/main_scene="uid://caojnjbhas8t5"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://Sprites/icon.svg"
 
+[autoload]
+
+Utils="*res://Scripts/Autoloads/Utils.cs"
+
 [display]
 
 window/size/viewport_width=1280

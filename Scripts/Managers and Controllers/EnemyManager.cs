@@ -122,7 +122,7 @@ public partial class EnemyManager : Node, IManager
 		};
 
 		_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
-		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2? 0.5f : 1f);
+		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2 ? 0.5f : 1f);
 		_spawnTimer.Start();
 	}
 
@@ -133,7 +133,7 @@ public partial class EnemyManager : Node, IManager
 
 		EnemySpawnData enemyToSpawn = _enemySpawnQueue[0].Item1;
 		if (_enemySpawnQueue.Count > 1)
-			_spawnTimer.WaitTime = _enemySpawnQueue[1].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2? 0.5f : 1f);
+			_spawnTimer.WaitTime = _enemySpawnQueue[1].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2 ? 0.5f : 1f);
 
 		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
 		_enemySpawnQueue.RemoveAt(0);
@@ -217,8 +217,8 @@ public partial class EnemyManager : Node, IManager
 		return null;
 	}
 
-    public void Deload()
-    {
+	public void Deload()
+	{
 		instance = null;
-    }
+	}
 }

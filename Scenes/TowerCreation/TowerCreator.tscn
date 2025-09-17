@@ -122,6 +122,7 @@ auto_height = true
 icon_scale = 2.0
 
 [connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
+[connection signal="text_changed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/NameInput" to="." method="UpdateTowerPreview"]
 [connection signal="picker_created" from="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]
 [connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector/HBoxContainer/TextureButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector" method="OnButtonPressed"]
 [connection signal="item_selected" from="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector/ModifierList" to="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector" method="OnItemSelected"]

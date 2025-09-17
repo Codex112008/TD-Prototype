@@ -30,11 +30,11 @@ public partial class RunController : Node2D
 	{
 		_runSaveFilePath = OS.HasFeature("editor") ? "res://" + _runSaveFilePath : "user://" + _runSaveFilePath;
 		if (!DirAccess.DirExistsAbsolute(_runSaveFilePath))
-            DirAccess.MakeDirRecursiveAbsolute(_runSaveFilePath);
-		
+			DirAccess.MakeDirRecursiveAbsolute(_runSaveFilePath);
+
 		_levelSaveFilePath = OS.HasFeature("editor") ? "res://" + _levelSaveFilePath : "user://" + _levelSaveFilePath;
 		if (!DirAccess.DirExistsAbsolute(_levelSaveFilePath))
-            DirAccess.MakeDirRecursiveAbsolute(_levelSaveFilePath);
+			DirAccess.MakeDirRecursiveAbsolute(_levelSaveFilePath);
 
 		CurrentScene = LevelScene.Instantiate();
 		AddChild(CurrentScene);
@@ -71,6 +71,7 @@ public partial class RunController : Node2D
 	{
 		if (scene.ResourcePath != CurrentScene.SceneFilePath)
 		{
+			// Swapping FROM the level
 			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
 			{
 				SaveLevel();
@@ -106,7 +107,7 @@ public partial class RunController : Node2D
 			// If tower creator init it
 			if (scene.ResourcePath == TowerCreationScene.ResourcePath)
 			{
-				// If modifying a tower set scene as basetower
+				(CurrentScene as TowerCreatorController).BaseTowerScene = BuildingManager.instance.GetSelectedTower();
 			}
 
 			// Play another animation
@@ -180,7 +181,7 @@ public partial class RunController : Node2D
 			{ "CurrentPlayerCurrency", BuildingManager.instance.PlayerCurrency }
 		};
 		if (EnemyManager.instance.EnemyParent.GetChildCount() > 0)
-			gameData["CurrentWave"] = (EnemyManager.instance.EnemyParent.GetChildren().OrderBy(child => (child as Enemy).SpawnedWave).ElementAt(0) as Enemy).SpawnedWave - 1;
+			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
 		saveFile.StoreLine(Json.Stringify(gameData));
 
 		// Store random number generator data
@@ -196,10 +197,11 @@ public partial class RunController : Node2D
 		{
 			// Check the node is an instanced scene so it can be instanced again during load.
 			if (string.IsNullOrEmpty((nodeToSave as Node2D).SceneFilePath))
-			{
-				GD.Print($"persistent node is not an instanced scene, skipped");
 				continue;
-			}
+
+			// Check if any towers are building previews and skip them
+			if (nodeToSave is Tower tower && tower.IsBuildingPreview)
+				continue;
 
 			Dictionary<string, Variant> saveData = nodeToSave.Save();
 			string jsonString = Json.Stringify(saveData);

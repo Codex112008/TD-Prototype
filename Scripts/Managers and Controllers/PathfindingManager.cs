@@ -3,7 +3,6 @@ using Godot.Collections;
 using System;
 using System.Linq;
 
-[GlobalClass]
 public partial class PathfindingManager : Node, IManager
 {
 	public static PathfindingManager instance;

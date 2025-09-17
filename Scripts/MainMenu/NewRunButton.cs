@@ -29,18 +29,8 @@ public partial class NewRunButton : Button
 		dirAccess.ChangeDir(towerDataSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(towerDataSaveFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(towerDataSaveFilePath);
-		RemoveRecursive(towerDataSaveFilePath);
+		Utils.RemoveDirRecursive(towerDataSaveFilePath);
 
 		GetTree().ChangeSceneToFile(_runControllerScene.ResourcePath);
-	}
-
-	private void RemoveRecursive(string directory)
-	{
-		DirAccess dirAccess = DirAccess.Open(directory);
-		foreach (string dir in dirAccess.GetDirectories())
-			RemoveRecursive(directory.PathJoin(dir));
-		foreach (string file in dirAccess.GetFiles())
-			dirAccess.Remove(directory.PathJoin(file));
-		dirAccess.Remove(directory);
 	}
 }

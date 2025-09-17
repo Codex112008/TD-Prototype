@@ -19,7 +19,7 @@ public partial class ModifierSelector : Selector
 	{
 		foreach (TowerComponent modifer in ModifiersToDisplay)
 		{
-			int index = ItemList.AddItem(TowerCreatorController.SplitIntoPascalCase(modifer.ResourceName), modifer.Icon);
+			int index = ItemList.AddItem(Utils.SplitIntoPascalCase(modifer.ResourceName), modifer.Icon);
 			ItemList.SetItemTooltip(index, modifer.Tooltip);
 			ItemList.SetItemTooltipEnabled(index, true);
 		}

@@ -2,7 +2,6 @@ using System;
 using Godot;
 using Godot.Collections;
 
-[GlobalClass]
 public partial class BuildingManager : Node2D, IManager
 {
 	public static BuildingManager instance;
@@ -96,7 +95,7 @@ public partial class BuildingManager : Node2D, IManager
 
 	private void BuildTower()
 	{
-		if (TowerPreview != null)
+		if (IsInstanceValid(TowerPreview))
 		{
 			_selectedTower = null;
 
@@ -129,6 +128,11 @@ public partial class BuildingManager : Node2D, IManager
 		{
 			_selectedTower = null;
 		}
+	}
+
+	public PackedScene GetSelectedTower()
+	{
+		return _selectedTower;
 	}
 
 	public void GenerateTowerSelectionButtons()

@@ -2,8 +2,6 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
-using static Godot.Image;
 
 public partial class TowerCreatorController : Node2D
 {
@@ -49,7 +47,7 @@ public partial class TowerCreatorController : Node2D
 
 		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
 		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
-		_towerNameInput.Text = SplitIntoPascalCase(_towerToCreatePreview.Name);
+		_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerToCreatePreview.Name);
 		if (_towerLevel > 0) // Cant change name if its an upgraded tower
 			_towerNameInput.Editable = false;
 
@@ -65,7 +63,7 @@ public partial class TowerCreatorController : Node2D
 		_towerSelector.UpdateSelector();
 		if (BaseTowerScene != null)
 		{
-			int index = _towerSelector.GetIndexFromText(RemoveWhitespaces(_towerToCreatePreview.GetType().Name));
+			int index = _towerSelector.GetIndexFromText(_towerToCreatePreview.GetType().Name);
 			_towerSelector.ItemList.Select(index);
 			_towerSelector.OnItemSelected(index);
 		}
@@ -74,33 +72,32 @@ public partial class TowerCreatorController : Node2D
 			_towerSelector.ItemList.Select(0);
 			_towerSelector.OnItemSelected(0);
 		}
-		
+
 		// Creates all the stat pickers
-			for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
+		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
+		{
+			TowerStat stat = (TowerStat)i;
+
+			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
+			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
+			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+
+			switch (stat)
 			{
-				TowerStat stat = (TowerStat)i;
-
-				HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
-				SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
-				statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
-
-				switch (stat)
-				{
-					case TowerStat.Cost:
-						statPickerSpinBox.Step = 25;
-						statPickerSpinBox.MaxValue = 1000;
-						break;
-					case TowerStat.Range:
-						statPickerSpinBox.Step = 5;
-						break;
-					case TowerStat.FireRate:
-						statPickerSpinBox.Suffix = "/s";
-						statPickerSpinBox.CustomMinimumSize = new(90f, 0f);
-						break;
-				}
-
-				statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+				case TowerStat.Cost:
+					statPickerSpinBox.Step = 25;
+					statPickerSpinBox.MaxValue = 1000;
+					break;
+				case TowerStat.Range:
+					statPickerSpinBox.Step = 5;
+					break;
+				case TowerStat.FireRate:
+					statPickerSpinBox.Suffix = "/s";
+					statPickerSpinBox.CustomMinimumSize = new(90f, 0f);
+					break;
 			}
+			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+		}	
 
 		// Creates the Modifier Selectors
 		InstantiateModifierSelector("Projectile");
@@ -127,7 +124,7 @@ public partial class TowerCreatorController : Node2D
 	{
 	}
 
-	public void UpdateTowerPreview()
+	public void UpdateTowerPreview(string _ = "")
 	{
 		// If the tower type is different
 		bool newTowerType = false;
@@ -145,7 +142,7 @@ public partial class TowerCreatorController : Node2D
 			if (pickerNodeType is StatSelector statSelector)
 			{
 				// Updates stat picker text and sets it on the preview
-				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), RemoveWhitespaces(statSelector.StatLabel.Text));
+				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text));
 				UpdateTowerPreviewStat(statSelector, stat);
 
 			}
@@ -239,7 +236,7 @@ public partial class TowerCreatorController : Node2D
 
 		// If modifying tower then remove old version
 		if (BaseTowerScene != null)
-			DirAccess.Open(BaseTowerScene.ResourcePath[..BaseTowerScene.ResourcePath.LastIndexOf('/')]).Remove("");
+			Utils.RemoveDirRecursive(BaseTowerScene.ResourcePath[..BaseTowerScene.ResourcePath.LastIndexOf('/')]);
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{
@@ -247,18 +244,18 @@ public partial class TowerCreatorController : Node2D
 			if (dirAccess != null)
 			{
 				// Checks if a folder for this tower exists and makes one if not
-				if (!dirAccess.DirExists(RemoveWhitespaces(_towerNameInput.Text)))
-					dirAccess.MakeDir(RemoveWhitespaces(_towerNameInput.Text));
-				dirAccess.ChangeDir(RemoveWhitespaces(_towerNameInput.Text));
+				if (!dirAccess.DirExists(Utils.RemoveWhitespaces(_towerNameInput.Text)))
+					dirAccess.MakeDir(Utils.RemoveWhitespaces(_towerNameInput.Text));
+				dirAccess.ChangeDir(Utils.RemoveWhitespaces(_towerNameInput.Text));
 
 				// Saves tower to the correct folder
-				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 
 				// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
 				// Array<Sprite2D> towerSprites = [.. towerToSave.GetChildren(true).Where(child => child is Sprite2D).Cast<Sprite2D>()];
 				// towerSprites.Insert(0, towerToSave);
-				Image towerAsImage = CreateImageFromSprites(towerToSave);
-				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
+				Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
+				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
 			}
 		}
 		else
@@ -311,7 +308,7 @@ public partial class TowerCreatorController : Node2D
 	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
 	{
 		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
-		statPicker.StatLabel.Text = SplitIntoPascalCase(statSelectorLabelName);
+		statPicker.StatLabel.Text = Utils.SplitIntoPascalCase(statSelectorLabelName);
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;
@@ -324,82 +321,5 @@ public partial class TowerCreatorController : Node2D
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		if (addToScene)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);
-	}
-
-	// TODO: maybe move this to some util class
-	private static readonly Regex sPascalCase = new("(?<!^)([A-Z])");
-	public static string SplitIntoPascalCase(string input)
-	{
-		// Inserts a space before each uppercase letter that is not the first character.
-		// The pattern ensures that a space is inserted only if the uppercase letter
-		// is preceded by a lowercase letter or another uppercase letter that is
-		// part of an acronym (e.g., "GPSData" becomes "GPS Data").
-		// IDFK how this works
-		return sPascalCase.Replace(input, " $1").Trim();
-	}
-
-	public static string RemoveWhitespaces(string input)
-	{
-		return input.Replace(" ", "");
-	}
-
-	// Credits to random guy from the internet that had GDScript that I converted to C#
-	public static Image CreateImageFromSprites(Tower towerToSave, Color towerColor = default)
-	{
-		Array<Sprite2D> sprites = towerToSave.SpritesForIcon;
-		if (sprites.Count > 1)
-		{
-			Format format = sprites[0].Texture.GetImage().GetFormat();
-			Rect2 boundingBox = GetSpriteRect(sprites[0], towerToSave);
-			for (int i = 1; i < sprites.Count; i++)
-				boundingBox = boundingBox.Merge(GetSpriteRect(sprites[i], towerToSave));
-
-			if (sprites.All(sprite => sprite.Texture.GetImage().GetFormat() == format) && boundingBox.Size.X > 0 && boundingBox.Size.Y > 0)
-			{
-				Image image = CreateEmpty((int)boundingBox.Size.X, (int)boundingBox.Size.Y, false, format);
-
-				foreach (Sprite2D sprite in sprites)
-				{
-					Image spriteImage = sprite.Texture.GetImage();
-					if (sprite.SelfModulate != Colors.White && towerColor == default)
-						spriteImage = ColorImage(spriteImage, sprite.SelfModulate);
-					else if (towerColor != default)
-						spriteImage = ColorImage(spriteImage, towerColor);
-
-					image.BlendRect(spriteImage, new Rect2I(Vector2I.Zero, spriteImage.GetSize()), (Vector2I)(GetSpriteRect(sprite, towerToSave).Position - boundingBox.Position));
-				}
-
-				return image;
-			}
-			else
-				return null;
-		}
-		else if (sprites.Count == 1)
-			return sprites[0].Texture.GetImage();
-		else
-			return null;
-	}
-
-	private static Image ColorImage(Image image, Color color)
-	{
-		for (int i = 0; i < image.GetWidth(); i++)
-		{
-			for (int j = 0; j < image.GetHeight(); j++)
-			{
-				image.SetPixel(i, j, image.GetPixel(i, j) * color);
-			}
-		}
-
-		return image;
-	}
-
-	public static Rect2 GetSpriteRect(Sprite2D sprite, Tower towerToSave)
-	{
-		Rect2 rect = new(towerToSave.ToLocal(sprite.GlobalPosition) + sprite.Offset, sprite.GetRect().Size);
-
-		if (sprite.Centered)
-			rect.Position -= rect.Size / 2f;
-
-		return rect;
 	}
 }
