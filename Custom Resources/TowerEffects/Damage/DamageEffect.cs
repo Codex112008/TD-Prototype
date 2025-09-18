@@ -4,6 +4,6 @@ public partial class DamageEffect : TowerEffect
 {
     public override void ApplyEffect(Dictionary<TowerStat, float> stats, Enemy target)
     {
-        target.TakeDamage(stats[TowerStat.Damage], damageType);
+        target.TakeDamage(stats[TowerStat.Damage], DamageType);
     }
 }

@@ -4,17 +4,17 @@ using System.Linq;
 
 public partial class BulletProjectile : Projectile
 {
-    [Export] public float fireForce;
+    [Export] public float FireForce;
 
-    public override BulletProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> finalStats, Marker2D firePoint)
+    public override BulletProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
     {
         BulletProjectileBehaviour bullet = ProjectileScene.Instantiate<BulletProjectileBehaviour>();
         bullet.GlobalPosition = firePoint.GlobalPosition;
         bullet.Rotation = firePoint.GlobalRotation;
-        bullet.Stats = finalStats;
+        bullet.Stats = towerStats;
         bullet.BulletData = this;
 
-        bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.damageType)]);
+        bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
         BuildingManager.instance.InstancedNodesParent.AddChild(bullet);
 

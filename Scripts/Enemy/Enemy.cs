@@ -8,8 +8,8 @@ public partial class Enemy : CharacterBody2D
 {
 	[Export] public Dictionary<EnemyEffectTrigger, EnemyEffect> Effects = [];
 	[Export] private Dictionary<EnemyStat, int> _baseEnemyStats = [];
-	[Export] private float acceleration = 5f;
-	[Export] private float deceleration = 10f;
+	[Export] private float _acceleration = 5f;
+	[Export] private float _deceleration = 10f;
 	[Export] private float _offsetMargin = 0.4f;
 	[Export] private PackedScene _damageNumberScene;
 
@@ -85,8 +85,8 @@ public partial class Enemy : CharacterBody2D
 
 			UpdateSpeedStat();
 
-			Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed], acceleration * (float)delta);
-			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), acceleration * (float)delta);
+			Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed], _acceleration * (float)delta);
+			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), _acceleration * (float)delta);
 
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= CurrentEnemyStats[EnemyStat.Speed] / 5f)
 			{
@@ -95,7 +95,7 @@ public partial class Enemy : CharacterBody2D
 		}
 		else
 		{
-			Velocity = Velocity.Lerp(Vector2.Zero, deceleration * (float)delta);
+			Velocity = Velocity.Lerp(Vector2.Zero, _deceleration * (float)delta);
 		}
 
 		MoveAndSlide();
