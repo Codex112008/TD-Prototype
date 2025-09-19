@@ -104,6 +104,7 @@ public partial class BuildingManager : Node2D, IManager
 		{
 			_selectedTower = null;
 
+			TowerPreview.GlobalPosition = GetPreviewMousePosition();
 			TowerPreview.IsBuildingPreview = false;
 			TowerPreview.Modulate = Colors.White;
 			PlayerCurrency -= Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
