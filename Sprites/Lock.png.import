@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkgy6slojnanv"
-path="res://.godot/imported/freezerIcon.png-cc4abd69416d425a3e5e439358a60b9d.ctex"
+uid="uid://b8nk4buhvrc5v"
+path="res://.godot/imported/Lock.png-898308536e4b4644f434d3a0852dd0ca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/freezer/freezerIcon.png"
-dest_files=["res://.godot/imported/freezerIcon.png-cc4abd69416d425a3e5e439358a60b9d.ctex"]
+source_file="res://Sprites/Lock.png"
+dest_files=["res://.godot/imported/Lock.png-898308536e4b4644f434d3a0852dd0ca.ctex"]
 
 [params]
 

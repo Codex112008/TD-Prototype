@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -16,12 +17,14 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] private string _pathToSavedTowers = "RuntimeData/SavedTowers/";
 	[Export] private Node _towerParent;
 	[Export] private RichTextLabel _currentCurrencyLabel;
+	[Export] private int _startingTowerSlots = 2;
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 300;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
+	private int _currentTowerSlots;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -29,6 +32,8 @@ public partial class BuildingManager : Node2D, IManager
 		_pathToSavedTowers = OS.HasFeature("editor") ? "res://" + _pathToSavedTowers : "user://" + _pathToSavedTowers;
 		if (!DirAccess.DirExistsAbsolute(_pathToSavedTowers))
 			DirAccess.MakeDirRecursiveAbsolute(_pathToSavedTowers);
+		
+		GenerateTowerSelectionButtons();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,7 +64,7 @@ public partial class BuildingManager : Node2D, IManager
 
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 
-		GenerateTowerSelectionButtons();
+		UpdateTowerSelectionButtons();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -113,20 +118,15 @@ public partial class BuildingManager : Node2D, IManager
 		if (IsInstanceValid(TowerPreview))
 			TowerPreview.QueueFree();
 
-		if (index != -1)
-		{
-			if (_towersToBuild[index] != _selectedTower)
-			{
-				_selectedTower = _towersToBuild[index];
-				TowerPreview = _selectedTower.Instantiate<Tower>();
-				TowerPreview.IsBuildingPreview = true;
-				TowerPreview.GlobalPosition = GetPreviewMousePosition();
-				_towerParent.AddChild(TowerPreview);
-			}
-		}
-		else
-		{
+		if (index >= _towersToBuild.Count || index == -1)
 			_selectedTower = null;
+		else if (_towersToBuild[index] != _selectedTower)
+		{
+			_selectedTower = _towersToBuild[index];
+			TowerPreview = _selectedTower.Instantiate<Tower>();
+			TowerPreview.IsBuildingPreview = true;
+			TowerPreview.GlobalPosition = GetPreviewMousePosition();
+			_towerParent.AddChild(TowerPreview);
 		}
 	}
 
@@ -135,37 +135,50 @@ public partial class BuildingManager : Node2D, IManager
 		return _selectedTower;
 	}
 
-	public void GenerateTowerSelectionButtons()
+	public void UpdateTowerSelectionButtons()
 	{
-		foreach (Node child in TowerSelectionButtonContainer.GetChildren())
-			child.QueueFree();
-
-		for (int i = 0; i < _towersToBuild.Count; i++)
+		for (int i = 0; i < GetTotalTowerSlots(); i++)
 		{
-			Tower tempTower = _towersToBuild[i].Instantiate<Tower>();
+			TextureButton towerSelectionButton = TowerSelectionButtonContainer.GetChild<TextureButton>(i);
+			if (i < GetOpenTowerSlots())
+			{
+				if (i < _towersToBuild.Count)
+				{
+					Tower tempTower = _towersToBuild[i].Instantiate<Tower>();
+					RichTextLabel costLabel = towerSelectionButton.GetChild<RichTextLabel>(0);
 
-			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
-			int index = i;
-			towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
+					// Change button textures to saved tower icon
+					string iconFilePath = _towersToBuild[i].ResourcePath[6.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png";
+					iconFilePath = OS.HasFeature("editor") ? "res://" + iconFilePath : "user://" + iconFilePath;
+					Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(iconFilePath));
+					towerSelectionButton.TextureNormal = towerIcon;
+					towerSelectionButton.TexturePressed = towerIcon;
+					towerSelectionButton.TextureHover = towerIcon;
 
-			// Change button textures to saved tower icon
-			GD.Print();
-			string iconFilePath = _towersToBuild[i].ResourcePath[6.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png";
-			iconFilePath = OS.HasFeature("editor") ? "res://" + iconFilePath : "user://" + iconFilePath;
-			Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(iconFilePath));
-			towerSelectionButton.TextureNormal = towerIcon;
-			towerSelectionButton.TexturePressed = towerIcon;
+					// Set cost label text
+					costLabel.Text = '$' + Mathf.FloorToInt(tempTower.GetFinalTowerStats()[TowerStat.Cost]).ToString();
+					if (costLabel.Size.X > towerSelectionButton.Size.X)
+						towerSelectionButton.Size = new(costLabel.Size.X, 0);
 
-			RichTextLabel costLabel = towerSelectionButton.GetChild<RichTextLabel>(0);
-			costLabel.Text = '$' + Mathf.FloorToInt(tempTower.GetFinalTowerStats()[TowerStat.Cost]).ToString();
-			if (costLabel.Size.X > towerSelectionButton.Size.X)
-				towerSelectionButton.Size = new(costLabel.Size.X, 0);
+					towerSelectionButton.TooltipText = tempTower.TowerName;
 
-			towerSelectionButton.TooltipText = tempTower.TowerName;
+					tempTower.QueueFree();
+				}
+				else
+				{
+					towerSelectionButton.TextureNormal = null;
+					towerSelectionButton.TexturePressed = null;
+					towerSelectionButton.TextureHover = null;
+					towerSelectionButton.TooltipText = "Empty Slot! Click 'W' to make your tower!";
+				}
 
-			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
-
-			tempTower.QueueFree();
+				towerSelectionButton.Disabled = false;
+			}
+			else
+			{
+				towerSelectionButton.TooltipText = "This tower slot is locked! Unlocks at wave " + EnemyManager.instance.TowerSlotUnlockWave[i - _startingTowerSlots];
+				towerSelectionButton.Disabled = true;
+			}
 		}
 	}
 
@@ -190,7 +203,37 @@ public partial class BuildingManager : Node2D, IManager
 	}
 
 	public void Deload()
-    {
+	{
 		instance = null;
-    }
+	}
+
+	public bool IsMaxTowersCreated()
+	{
+		return GetOpenTowerSlots() <= _towersToBuild.Count;
+	}
+
+	private void GenerateTowerSelectionButtons()
+	{
+		foreach (Node child in TowerSelectionButtonContainer.GetChildren())
+			child.QueueFree();
+
+		for (int i = 0; i < GetTotalTowerSlots(); i++)
+		{
+			TextureButton towerSelectionButton = TowerSelectionButtonScene.Instantiate<TextureButton>();
+			int index = i;
+			towerSelectionButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => SetSelectedTower(index)));
+
+			TowerSelectionButtonContainer.AddChild(towerSelectionButton);
+		}
+	}
+
+	private int GetTotalTowerSlots()
+	{
+		return EnemyManager.instance.TowerSlotUnlockWave.Count + _startingTowerSlots;
+	}
+
+	private int GetOpenTowerSlots()
+	{
+		return EnemyManager.instance.TowerSlotUnlockWave.Where(wave => wave <= EnemyManager.instance.CurrentWave).Count() + _startingTowerSlots;
+	}
 }

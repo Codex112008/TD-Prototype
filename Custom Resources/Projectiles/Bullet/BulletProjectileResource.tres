@@ -9,7 +9,7 @@
 [resource]
 resource_name = "Bullet"
 script = ExtResource("5_xell5")
-fireForce = 250.0
+FireForce = 300.0
 ProjectileScene = ExtResource("4_smtav")
 Effects = Array[ExtResource("1_dubh1")]([ExtResource("2_2wxls")])
 Tooltip = "Shoot a bullet

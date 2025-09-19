@@ -23,6 +23,8 @@ public partial class TowerCreatorController : Node2D
 	[Export] private PackedScene _modifierPickerScene;
 	[Export] private int _towerLevel = 0;
 
+	public bool IsMaxTowersCreated;
+
 	private Dictionary<TowerStat, float> _selectedStats;
 	private Projectile _selectedProjectile;
 	private Array<TowerEffect> _selectedEffects;
@@ -37,7 +39,7 @@ public partial class TowerCreatorController : Node2D
 	{
 		_savedTowerFilePath = OS.HasFeature("editor") ? "res://" + _savedTowerFilePath : "user://" + _savedTowerFilePath;
 		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
-            DirAccess.MakeDirRecursiveAbsolute(_savedTowerFilePath);
+			DirAccess.MakeDirRecursiveAbsolute(_savedTowerFilePath);
 
 		// Creates a preview of the tower being created
 		if (BaseTowerScene != null)
@@ -97,7 +99,7 @@ public partial class TowerCreatorController : Node2D
 					break;
 			}
 			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
-		}	
+		}
 
 		// Creates the Modifier Selectors
 		InstantiateModifierSelector("Projectile");
@@ -114,9 +116,17 @@ public partial class TowerCreatorController : Node2D
 		};
 		_towerCreatorUI.AddChild(_totalTowerCostLabel);
 
-		_towerCreatorUI.MoveChild(_towerCreatorUI.GetChild(0), -1); // Moves the save button to the last index, so appears last in container
+		Button saveButton = _towerCreatorUI.GetChild<Button>(0);
+		_towerCreatorUI.MoveChild(saveButton, -1); // Moves the save button to the last index, so appears last in container
 
 		UpdateTowerPreview();
+
+		// If no tower slots available, disable save button and display message on screen "No tower slots available, edit existing towers"
+		if (BuildingManager.instance.IsMaxTowersCreated())
+		{
+			saveButton.Disabled = true;
+			saveButton.Text = "No tower slots available";
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

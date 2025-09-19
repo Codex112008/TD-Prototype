@@ -20,7 +20,8 @@ public partial class EnemyManager : Node, IManager
 	[Export] private float _chanceForPartnerWave = 0.75f;
 	[Export] private int _waveForSegmentScaling = 10;
 	[Export] private Timer _spawnTimer;
-	[Export] private HBoxContainer WaveButtonContainer;
+	[Export] private HBoxContainer _waveButtonContainer;
+	[Export] public Array<int> TowerSlotUnlockWave;
 	[Export] public Node EnemyParent;
 	[Export] public Array<EnemySpawnData> EnemiesToSpawnData = [];
 
@@ -42,8 +43,8 @@ public partial class EnemyManager : Node, IManager
 		foreach (EnemySpawnData spawnData in EnemiesToSpawnData)
 			spawnData.Weight = spawnData.BaseWeight;
 
-		_waveCounter = WaveButtonContainer.GetChild<RichTextLabel>(0);
-		_startWaveButton = WaveButtonContainer.GetChild<Button>(1);
+		_waveCounter = _waveButtonContainer.GetChild<RichTextLabel>(0);
+		_startWaveButton = _waveButtonContainer.GetChild<Button>(1);
 		_startWaveButton.Pressed += StartWave;
 
 		RNGManager.instance.AddNewRNG(this);
@@ -112,8 +113,11 @@ public partial class EnemyManager : Node, IManager
 	{
 		CurrentWave++;
 
+		if (TowerSlotUnlockWave.Where(wave => CurrentWave == wave).Any())
+			BuildingManager.instance.UpdateTowerSelectionButtons();
+
 		if (_tempRand != null)
-			RNGManager.instance.RandInstances[this] = _tempRand;
+				RNGManager.instance.RandInstances[this] = _tempRand;
 
 		_tempRand = new()
 		{

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=16 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_tjy1v"]
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
@@ -7,9 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="4_lvlvj"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_nvgt4"]
 [ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/LevelScenes/PrototypeLevel.tscn" id="6_23lj0"]
-[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="7_8fpap"]
-[ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/BasicEnemy/BasicEnemySpawnData.tres" id="8_nvgt4"]
-[ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/FastEnemy/FastEnemySpawnData.tres" id="9_skahh"]
 [ext_resource type="PackedScene" uid="uid://cmgbeg3m83gjq" path="res://Scenes/Managers/RNGManager.tscn" id="10_8fpap"]
 [ext_resource type="Texture2D" uid="uid://buy2sc8pcjfcx" path="res://Sprites/Tilemap/New Piskel.png" id="10_skahh"]
 
@@ -138,7 +135,6 @@ _towerParent = NodePath("../../Towers")
 
 [node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("EnemyParent") instance=ExtResource("5_nvgt4")]
 EnemyParent = NodePath("../../Enemies")
-EnemiesToSpawnData = Array[ExtResource("7_8fpap")]([ExtResource("8_nvgt4"), ExtResource("9_skahh")])
 
 [node name="RngManager" parent="Managers" instance=ExtResource("10_8fpap")]
 
