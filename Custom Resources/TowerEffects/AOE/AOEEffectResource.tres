@@ -8,7 +8,7 @@
 resource_name = "AOE"
 script = ExtResource("1_vdngu")
 _aoeScene = ExtResource("2_knh5n")
-damageType = 0
+DamageType = 0
 Tooltip = "Big boom"
 Icon = ExtResource("1_6aes2")
 StatMultipliers = Dictionary[int, float]({

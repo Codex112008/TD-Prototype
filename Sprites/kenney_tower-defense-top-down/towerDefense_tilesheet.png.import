@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl1j1v2x0c6fu"
-path="res://.godot/imported/Circle.png-0c45e21435093ae348e4b37cb96ba5fa.ctex"
+uid="uid://c8d38tjs6fgqh"
+path="res://.godot/imported/towerDefense_tilesheet.png-790f44c70985dc055d1c3f2e1f866521.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Circle.png"
-dest_files=["res://.godot/imported/Circle.png-0c45e21435093ae348e4b37cb96ba5fa.ctex"]
+source_file="res://Sprites/kenney_tower-defense-top-down/towerDefense_tilesheet.png"
+dest_files=["res://.godot/imported/towerDefense_tilesheet.png-790f44c70985dc055d1c3f2e1f866521.ctex"]
 
 [params]
 

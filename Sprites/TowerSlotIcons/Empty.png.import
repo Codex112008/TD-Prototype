@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ck7hkwbgxut7p"
-path="res://.godot/imported/New Piskel-2.png (1).png-0159daf5b848aed7a792ba702fec4692.ctex"
+uid="uid://do7va0rsuyyun"
+path="res://.godot/imported/Empty.png-f14e93232d760351d69b3d5bb751b6bc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/New Piskel-2.png (1).png"
-dest_files=["res://.godot/imported/New Piskel-2.png (1).png-0159daf5b848aed7a792ba702fec4692.ctex"]
+source_file="res://Sprites/TowerSlotIcons/Empty.png"
+dest_files=["res://.godot/imported/Empty.png-f14e93232d760351d69b3d5bb751b6bc.ctex"]
 
 [params]
 

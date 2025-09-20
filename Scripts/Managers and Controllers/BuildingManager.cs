@@ -18,6 +18,7 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] private Node _towerParent;
 	[Export] private RichTextLabel _currentCurrencyLabel;
 	[Export] private int _startingTowerSlots = 2;
+	[Export] private Texture2D _openTowerSlotIcon;
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 300;
@@ -167,9 +168,9 @@ public partial class BuildingManager : Node2D, IManager
 				}
 				else
 				{
-					towerSelectionButton.TextureNormal = null;
-					towerSelectionButton.TexturePressed = null;
-					towerSelectionButton.TextureHover = null;
+					towerSelectionButton.TextureNormal = _openTowerSlotIcon;
+					towerSelectionButton.TexturePressed = _openTowerSlotIcon;
+					towerSelectionButton.TextureHover = _openTowerSlotIcon;
 					towerSelectionButton.TooltipText = "Empty Slot! Click 'W' to make your tower!";
 				}
 

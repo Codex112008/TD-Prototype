@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_gqp5r"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/LevelScenes/DamageNumber.tscn" id="2_p6vkx"]
-[ext_resource type="Texture2D" uid="uid://ck7hkwbgxut7p" path="res://Sprites/New Piskel-2.png (1).png" id="3_eu8iq"]
+[ext_resource type="Texture2D" uid="uid://ck7hkwbgxut7p" path="res://Sprites/Enemies/New Piskel-2.png (1).png" id="3_eu8iq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(6, 6)

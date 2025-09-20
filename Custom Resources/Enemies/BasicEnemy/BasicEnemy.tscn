@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_qjapj"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/LevelScenes/DamageNumber.tscn" id="2_xdyv2"]
-[ext_resource type="Texture2D" uid="uid://crat4o68hjhiy" path="res://Sprites/enemy.png" id="3_h87rr"]
+[ext_resource type="Texture2D" uid="uid://crat4o68hjhiy" path="res://Sprites/Enemies/enemy.png" id="3_h87rr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(6, 6)

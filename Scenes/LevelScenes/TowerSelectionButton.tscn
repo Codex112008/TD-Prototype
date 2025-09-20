@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bebxmlgevi2um"]
 
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_rw6w7"]
-[ext_resource type="Texture2D" uid="uid://b8nk4buhvrc5v" path="res://Sprites/Lock.png" id="2_20w48"]
+[ext_resource type="Texture2D" uid="uid://b8nk4buhvrc5v" path="res://Sprites/TowerSlotIcons/Lock.png" id="2_20w48"]
 
 [node name="TowerSelectionButton" type="TextureButton"]
 custom_minimum_size = Vector2(64, 64)

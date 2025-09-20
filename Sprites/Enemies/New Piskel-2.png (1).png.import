@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8d38tjs6fgqh"
-path="res://.godot/imported/towerDefense_tilesheet.png-68ade38bd3c41de999e752d06136d43b.ctex"
+uid="uid://ck7hkwbgxut7p"
+path="res://.godot/imported/New Piskel-2.png (1).png-d1b9b005cf9e05fd40fa7fab0408b1d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/towerDefense_tilesheet.png"
-dest_files=["res://.godot/imported/towerDefense_tilesheet.png-68ade38bd3c41de999e752d06136d43b.ctex"]
+source_file="res://Sprites/Enemies/New Piskel-2.png (1).png"
+dest_files=["res://.godot/imported/New Piskel-2.png (1).png-d1b9b005cf9e05fd40fa7fab0408b1d9.ctex"]
 
 [params]
 
