@@ -162,7 +162,7 @@ public partial class BuildingManager : Node2D, IManager
 					if (costLabel.Size.X > towerSelectionButton.Size.X)
 						towerSelectionButton.Size = new(costLabel.Size.X, 0);
 
-					towerSelectionButton.TooltipText = tempTower.TowerName;
+					towerSelectionButton.TooltipText = tempTower.TowerName + " - Select and click 'W' to modify";
 
 					tempTower.QueueFree();
 				}
