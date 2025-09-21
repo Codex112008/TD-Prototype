@@ -21,6 +21,7 @@ public partial class EnemyManager : Node, IManager
 	[Export] private int _waveForSegmentScaling = 10;
 	[Export] private Timer _spawnTimer;
 	[Export] private HBoxContainer _waveButtonContainer;
+	[Export] private PackedScene _baseScene;
 	[Export] public Array<int> TowerSlotUnlockWave;
 	[Export] public Node EnemyParent;
 	[Export] public Array<EnemySpawnData> EnemiesToSpawnData = [];
@@ -58,12 +59,12 @@ public partial class EnemyManager : Node, IManager
 			if (_enemySpawnQueue.Count > 0 && _startWaveButton.Disabled == false)
 				_startWaveButton.Disabled = true;
 
-			if (_enemySpawnQueue.Count > 0 && _spawnTimer.TimeLeft <= 0)
+			if (_enemySpawnQueue.Count > 0 && _spawnTimer.IsStopped())
 				SpawnQueuedEnemy();
 
 			_waveCounter.Text = "Wave " + CurrentWave;
 		}
-		else if (InTowerCreator && _spawnTimer.TimeLeft <= 0)
+		else if (InTowerCreator && _spawnTimer.IsStopped())
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
 			spawnedEnemy.TargetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
@@ -85,6 +86,12 @@ public partial class EnemyManager : Node, IManager
 
 		_spawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
 		_baseLocations = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Base")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
+		foreach (Vector2 location in _baseLocations)
+		{
+			Node2D baseInstance = _baseScene.Instantiate<Node2D>();
+			baseInstance.GlobalPosition = location;
+			PathfindingManager.instance.LevelTilemap.AddChild(baseInstance);
+		}
 
 		foreach (Node child in EnemyParent.GetChildren())
 			child.QueueFree();

@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Linq;
 using Godot;
 using Godot.Collections;
@@ -24,6 +24,7 @@ public partial class Enemy : CharacterBody2D
 	private float _currentHealth;
 	private RandomNumberGenerator _rand = new();
 	private bool _isDead = false;
+	private Timer _reachedBaseFreeTimer = null;
 
 	public override void _Ready()
 	{
@@ -79,19 +80,20 @@ public partial class Enemy : CharacterBody2D
 
 	public override void _Process(double delta)
 	{
-		if (PathArray.Count > 0)
+		if (PathArray.Count > 1)
 		{
-			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
-
-			UpdateSpeedStat();
-
-			Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed], _acceleration * (float)delta);
-			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), _acceleration * (float)delta);
+			MoveToNextPathPoint((float)delta);
 
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= CurrentEnemyStats[EnemyStat.Speed] / 5f)
-			{
 				PathArray.RemoveAt(0);
-			}
+		}
+		else if (PathArray.Count == 1)
+		{
+			// Slow down as reaching goal (looks cool and copying infinitode lmao)
+			MoveToNextPathPoint((float)delta, Mathf.Lerp(0.4f, 1f, Mathf.Clamp(GlobalPosition.DistanceTo(PathArray[0]) / 16f, 0f, 1f)));
+
+			if (GlobalPosition.DistanceTo(PathArray[0]) <= 0.5f)
+				QueueFree();
 		}
 		else
 		{
@@ -99,9 +101,6 @@ public partial class Enemy : CharacterBody2D
 		}
 
 		MoveAndSlide();
-
-		if (PathArray.Count == 0)
-			QueueFree();
 	}
 
 	// Returns Damage Dealt
@@ -135,6 +134,16 @@ public partial class Enemy : CharacterBody2D
 		_currentStatusEffects[status] += amount;
 		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status], 0);
 		_currentStatusEffectTimers[status].Start();
+	}
+
+	protected virtual void MoveToNextPathPoint(float delta, float speedMult = 1f)
+	{
+		Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
+
+		UpdateSpeedStat();
+
+		Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed] * speedMult, _acceleration * delta);
+		_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), _acceleration * delta);
 	}
 
 	protected virtual void Die()

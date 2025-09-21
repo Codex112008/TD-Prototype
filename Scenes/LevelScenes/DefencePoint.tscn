@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxtrwlefpqdy7"]
+
+[ext_resource type="Texture2D" uid="uid://wbpbt7b74by7" path="res://Sprites/Base/Base.png" id="1_wiugc"]
+[ext_resource type="Texture2D" uid="uid://bm85clt12soyk" path="res://Sprites/Base/Top.png" id="2_xecnn"]
+
+[node name="Base" type="Sprite2D"]
+texture = ExtResource("1_wiugc")
+
+[node name="Top" type="Sprite2D" parent="."]
+z_index = 3
+texture = ExtResource("2_xecnn")
