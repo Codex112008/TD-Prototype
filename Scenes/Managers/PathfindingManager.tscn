@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://yv5ioy4l1vm3" path="res://Scripts/Managers and Controllers/PathfindingManager.cs" id="1_v38as"]
 
-[node name="PathfindingManager" type="Node"]
+[node name="PathfindingManager" type="Node2D"]
 script = ExtResource("1_v38as")

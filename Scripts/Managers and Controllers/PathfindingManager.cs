@@ -3,7 +3,7 @@ using Godot.Collections;
 using System;
 using System.Linq;
 
-public partial class PathfindingManager : Node, IManager
+public partial class PathfindingManager : Node2D, IManager
 {
 	public static PathfindingManager instance;
 	public override void _EnterTree()
@@ -40,12 +40,26 @@ public partial class PathfindingManager : Node, IManager
 		TileSize = LevelTilemap.TileSet.TileSize.X;
 
 		TilemapBuildableData.Clear();
+		Array<Vector2I> towerPositions = [..BuildingManager.instance.TowerParent.GetChildren().Where(child => child is Tower).Select(tower => (Vector2I)((tower as Tower).GlobalPosition / TileSize))];
 		foreach (Vector2I tilePos in LevelTilemap.GetUsedCells())
 		{
-			TilemapBuildableData[tilePos] = (bool)LevelTilemap.GetCellTileData(tilePos).GetCustomData("Buildable");
+			if (towerPositions.Contains(tilePos))
+				TilemapBuildableData[tilePos] = false;
+			else
+				TilemapBuildableData[tilePos] = (bool)LevelTilemap.GetCellTileData(tilePos).GetCustomData("Buildable");
 		}
 
 		SetUpAStarGrid();
+	}
+
+	public Vector2I GetMouseGlobalTilemapPos()
+	{
+		return GetMouseTilemapPos() * TileSize;
+	}
+
+	public Vector2I GetMouseTilemapPos()
+	{
+		return (Vector2I)(GetGlobalMousePosition() / TileSize);
 	}
 
 	private void SetUpAStarGrid()

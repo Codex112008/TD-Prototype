@@ -6,6 +6,7 @@ using System.Linq;
 [GlobalClass]
 public abstract partial class Tower : Sprite2D, ISavable
 {
+    public static Tower SelectedTower;
     [Export] public Dictionary<TowerStat, int> BaseTowerStats = new()
     {
         {TowerStat.Cost, 300},
@@ -18,6 +19,7 @@ public abstract partial class Tower : Sprite2D, ISavable
     [Export(PropertyHint.MultilineText)] public string Tooltip;
 
     [Export] private Texture2D _rangeOverlayTexture;
+    [Export] private PackedScene _towerSelectedUIScene;
 
     private Projectile _projectile;
     private bool _createdProjectileInstance = false;
@@ -50,7 +52,7 @@ public abstract partial class Tower : Sprite2D, ISavable
     [Export] public string TowerName;
 
     private Sprite2D _rangeOverlay;
-    private RichTextLabel _nameLabel;
+    private TowerSelectedUI _selectedUI;
 
     public override void _Ready()
     {
@@ -67,33 +69,27 @@ public abstract partial class Tower : Sprite2D, ISavable
         };
         AddChild(_rangeOverlay);
 
-        _nameLabel = new RichTextLabel();
-        _nameLabel.SetAnchorsPreset(Control.LayoutPreset.Center);
-        _nameLabel.AddThemeFontSizeOverride("normal_font_size", 64);
-        _nameLabel.Scale = Vector2.One * 0.1f;
-        _nameLabel.Visible = false;
-        _nameLabel.Text = TowerName;
-        _nameLabel.FitContent = true;
-        _nameLabel.AutowrapMode = TextServer.AutowrapMode.Off;
-        _nameLabel.ScrollActive = false;
-        _nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
-        _nameLabel.VerticalAlignment = VerticalAlignment.Center;
-        _nameLabel.Position = rectSize / 2;
-        AddChild(_nameLabel);
+        _selectedUI = _towerSelectedUIScene.Instantiate<TowerSelectedUI>();
+        _selectedUI.Visible = false;
+        _selectedUI.GetChild<RichTextLabel>(0).Text = TowerName;
+        AddChild(_selectedUI);
+        _selectedUI.Position = rectSize;
     }
 
     public override void _Process(double delta)
     {
-        Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
-        if (mousePos == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview)
+        if (PathfindingManager.instance.GetMouseGlobalTilemapPos() == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview || SelectedTower == this)
         {
             if (_rangeOverlay.Visible == false)
                 _rangeOverlay.Visible = true;
             _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.One * (GetRangeInTiles() / 128f) * 2f, 12.5f * (float)delta);
 
-            if (_nameLabel.Visible == false)
-                _nameLabel.Visible = true;
-            _nameLabel.Scale = _nameLabel.Scale.Lerp(Vector2.One * 0.1f, 12.5f * (float)delta);
+            if (!RangeAlwaysVisible)
+            {
+                if (_selectedUI.Visible == false)
+                    _selectedUI.Visible = true;
+                _selectedUI.Scale = _selectedUI.Scale.Lerp(Vector2.One * 0.1f, 12.5f * (float)delta);
+            }
         }
         else
         {
@@ -101,9 +97,40 @@ public abstract partial class Tower : Sprite2D, ISavable
                 _rangeOverlay.Visible = false;
             _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
 
-            if (_nameLabel.Scale == Vector2.Zero && _nameLabel.Visible != false)
-                _nameLabel.Visible = false;
-            _nameLabel.Scale = _nameLabel.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
+            if (_selectedUI.Scale == Vector2.Zero && _selectedUI.Visible != false)
+                _selectedUI.Visible = false;
+            _selectedUI.Scale = _selectedUI.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
+        }
+
+        if (SelectedTower == this)
+            _selectedUI.UpdateUpgradeUIVisibility(true);
+        else
+            _selectedUI.UpdateUpgradeUIVisibility(false);
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Left && eventMouseButton.Pressed == true)
+        {
+            Vector2I mousePos = PathfindingManager.instance.GetMouseGlobalTilemapPos();
+
+            if (mousePos == (Vector2I)GlobalPosition)
+            {
+                if (SelectedTower != this)
+                    SelectedTower = this;
+            }
+
+            if (SelectedTower == this && mousePos != (Vector2I)GlobalPosition)
+                SelectedTower = null;
+        }
+
+        if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Escape)
+        {
+            if (SelectedTower == this)
+            {
+                SelectedTower = null;
+                GetViewport().SetInputAsHandled();
+            }
         }
     }
 
@@ -125,11 +152,6 @@ public abstract partial class Tower : Sprite2D, ISavable
     public int GetCurrentTotalPointsAllocated()
     {
         return Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
-    }
-
-    protected virtual int GetPointCostFromStats()
-    {
-        return GetPointCostFromDamage() + GetPointCostFromRange() + GetPointCostFromFireRate();
     }
 
     public Dictionary<string, Variant> Save()
@@ -161,6 +183,42 @@ public abstract partial class Tower : Sprite2D, ISavable
 
     }
 
+    // Calculates the stats of the tower after multipliers from effect and projectile
+    public Dictionary<TowerStat, float> GetFinalTowerStats()
+    {
+        Dictionary<TowerStat, float> finalTowerStats = [];
+        foreach ((TowerStat stat, int value) in BaseTowerStats)
+        {
+            finalTowerStats[stat] = value;
+            finalTowerStats[stat] *= Projectile.StatMultipliers[stat];
+            foreach (TowerEffect effect in Projectile.Effects)
+                finalTowerStats[stat] *= effect.StatMultipliers[stat];
+        }
+        return finalTowerStats;
+    }
+
+    public void Upgrade()
+    {
+        // Spawn upgraded tower
+
+        // Delete current tower
+    }
+
+    public void Sell()
+    {
+        // Give back some amount of money
+
+        // Make tile buildable again
+        PathfindingManager.instance.TilemapBuildableData[PathfindingManager.instance.GetMouseTilemapPos()] = true;
+
+        // Delete current tower
+    }
+
+    protected virtual int GetPointCostFromStats()
+    {
+        return GetPointCostFromDamage() + GetPointCostFromRange() + GetPointCostFromFireRate();
+    }
+
     protected virtual int GetPointCostFromDamage()
     {
         return BaseTowerStats[TowerStat.Damage] * 25;
@@ -179,20 +237,6 @@ public abstract partial class Tower : Sprite2D, ISavable
     public virtual int GetMaximumPointsFromCost()
     {
         return BaseTowerStats[TowerStat.Cost];
-    }
-
-    // Calculates the stats of the tower after multipliers from effect and projectile
-    public Dictionary<TowerStat, float> GetFinalTowerStats()
-    {
-        Dictionary<TowerStat, float> finalTowerStats = [];
-        foreach ((TowerStat stat, int value) in BaseTowerStats)
-        {
-            finalTowerStats[stat] = value;
-            finalTowerStats[stat] *= Projectile.StatMultipliers[stat];
-            foreach (TowerEffect effect in Projectile.Effects)
-                finalTowerStats[stat] *= effect.StatMultipliers[stat];
-        }
-        return finalTowerStats;
     }
 
     protected float GetRangeInTiles()

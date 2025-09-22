@@ -29,7 +29,7 @@ public partial class Utils : Node
 
 	// TODO: maybe move this to some util class // Update: yeah i moved it yay
 	[GeneratedRegex("(?<!^)([A-Z])")]
-    private static partial Regex PascalSplitRegex();
+	private static partial Regex PascalSplitRegex();
 	private static readonly Regex sPascalCase = PascalSplitRegex();
 	public static string SplitIntoPascalCase(string input)
 	{

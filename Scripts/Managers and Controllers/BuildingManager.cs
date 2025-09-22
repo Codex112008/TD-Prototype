@@ -14,8 +14,8 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] public PackedScene TowerSelectionButtonScene;
 	[Export] public HBoxContainer TowerSelectionButtonContainer;
 	[Export] public Node InstancedNodesParent;
+	[Export] public Node TowerParent;
 	[Export] private string _pathToSavedTowers = "RuntimeData/SavedTowers/";
-	[Export] private Node _towerParent;
 	[Export] private RichTextLabel _currentCurrencyLabel;
 	[Export] private int _startingTowerSlots = 2;
 	[Export] private Texture2D _openTowerSlotIcon;
@@ -42,13 +42,13 @@ public partial class BuildingManager : Node2D, IManager
 	{
 		if (_selectedTower != null && IsInstanceValid(TowerPreview))
 		{
-			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(GetPreviewMousePosition(), 30f * (float)delta);
+			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(PathfindingManager.instance.GetMouseGlobalTilemapPos(), 30f * (float)delta);
 			if (!_validTowerPlacement)
 				TowerPreview.Modulate = new Color("#ffa395");
 			else
 				TowerPreview.Modulate = Colors.White;
 
-			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] == true
+			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[PathfindingManager.instance.GetMouseTilemapPos()] == true
 								   && IsInstanceValid(TowerPreview)
 								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= PlayerCurrency;
 		}
@@ -68,24 +68,21 @@ public partial class BuildingManager : Node2D, IManager
 		UpdateTowerSelectionButtons();
 	}
 
-	public override void _Input(InputEvent @event)
+	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton eventMouseButton)
+		if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Left && eventMouseButton.Pressed == true)
 		{
-			if (eventMouseButton.ButtonIndex == MouseButton.Left && eventMouseButton.Pressed == true)
+			if (_validTowerPlacement)
 			{
-				if (_validTowerPlacement)
-				{
-					PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize)] = false;
+				PathfindingManager.instance.TilemapBuildableData[PathfindingManager.instance.GetMouseTilemapPos()] = false;
 
-					BuildTower();
-				}
+				BuildTower();
 			}
 		}
 
-		if (@event is InputEventKey eventKey)
+		if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Escape)
 		{
-			if (eventKey.Pressed && eventKey.Keycode == Key.Escape && IsInstanceValid(TowerPreview))
+			if (IsInstanceValid(TowerPreview))
 			{
 				_selectedTower = null;
 
@@ -94,22 +91,19 @@ public partial class BuildingManager : Node2D, IManager
 		}
 	}
 
-	public Vector2I GetPreviewMousePosition()
-	{
-		return (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize) * PathfindingManager.instance.TileSize;
-	}
-
 	private void BuildTower()
 	{
 		if (IsInstanceValid(TowerPreview))
 		{
 			_selectedTower = null;
 
-			TowerPreview.GlobalPosition = GetPreviewMousePosition();
+			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 			TowerPreview.IsBuildingPreview = false;
 			TowerPreview.Modulate = Colors.White;
 			PlayerCurrency -= Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
 			_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
+			
+			Tower.SelectedTower = null;
 
 			TowerPreview = null;
 		}
@@ -127,8 +121,8 @@ public partial class BuildingManager : Node2D, IManager
 			_selectedTower = _towersToBuild[index];
 			TowerPreview = _selectedTower.Instantiate<Tower>();
 			TowerPreview.IsBuildingPreview = true;
-			TowerPreview.GlobalPosition = GetPreviewMousePosition();
-			_towerParent.AddChild(TowerPreview);
+			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
+			TowerParent.AddChild(TowerPreview);
 		}
 	}
 

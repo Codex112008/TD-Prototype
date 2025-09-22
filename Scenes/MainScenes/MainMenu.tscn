@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cv5npt2esismv" path="res://Scripts/MainMenu/NewRunButton.cs" id="1_853f1"]
 [ext_resource type="Script" uid="uid://cv1eybuxvl2ai" path="res://Scripts/MainMenu/ContinueRunButton.cs" id="2_8saeu"]
-[ext_resource type="PackedScene" uid="uid://dgthljd51vhi" path="res://Scenes/RunController.tscn" id="2_853f1"]
+[ext_resource type="PackedScene" uid="uid://dgthljd51vhi" path="res://Scenes/MainScenes/RunController.tscn" id="2_853f1"]
 
 [node name="MainMenu" type="Node2D"]
 

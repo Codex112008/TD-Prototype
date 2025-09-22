@@ -1,15 +1,15 @@
 [gd_scene load_steps=17 format=3 uid="uid://dgthljd51vhi"]
 
-[ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_tjy1v"]
-[ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="2_tjy1v"]
-[ext_resource type="PackedScene" uid="uid://byt35up7juchg" path="res://Scenes/TowerCreation/TowerCreator.tscn" id="3_lvlvj"]
-[ext_resource type="Script" uid="uid://s32v0cw53gqn" path="res://Scripts/PauseMenu.cs" id="4_gg8i0"]
-[ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="4_lvlvj"]
-[ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="5_nvgt4"]
-[ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/LevelScenes/PrototypeLevel.tscn" id="6_23lj0"]
-[ext_resource type="PackedScene" uid="uid://cxtrwlefpqdy7" path="res://Scenes/LevelScenes/DefencePoint.tscn" id="8_skahh"]
-[ext_resource type="PackedScene" uid="uid://cmgbeg3m83gjq" path="res://Scenes/Managers/RNGManager.tscn" id="10_8fpap"]
-[ext_resource type="Texture2D" uid="uid://buy2sc8pcjfcx" path="res://Sprites/Tilemap/New Piskel.png" id="10_skahh"]
+[ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_r5dbq"]
+[ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/MainScenes/PrototypeLevel.tscn" id="2_ud3b5"]
+[ext_resource type="PackedScene" uid="uid://byt35up7juchg" path="res://Scenes/MainScenes/TowerCreator.tscn" id="3_tfoyi"]
+[ext_resource type="Script" uid="uid://s32v0cw53gqn" path="res://Scripts/PauseMenu.cs" id="4_45n42"]
+[ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="5_dl6nd"]
+[ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="6_m4rul"]
+[ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="7_r2f0h"]
+[ext_resource type="PackedScene" uid="uid://cxtrwlefpqdy7" path="res://Scenes/TilemapScenes/DefencePoint.tscn" id="8_mnqak"]
+[ext_resource type="PackedScene" uid="uid://cmgbeg3m83gjq" path="res://Scenes/Managers/RNGManager.tscn" id="9_1phdm"]
+[ext_resource type="Texture2D" uid="uid://buy2sc8pcjfcx" path="res://Sprites/Tilemap/New Piskel.png" id="10_gf1ev"]
 
 [sub_resource type="Animation" id="Animation_8fpap"]
 length = 0.001
@@ -100,9 +100,9 @@ _data = {
 }
 
 [node name="RunController" type="Node2D" node_paths=PackedStringArray("_cameraAnimPlayer", "_managerParent")]
-script = ExtResource("1_tjy1v")
-LevelScene = ExtResource("6_23lj0")
-TowerCreationScene = ExtResource("3_lvlvj")
+script = ExtResource("1_r5dbq")
+LevelScene = ExtResource("2_ud3b5")
+TowerCreationScene = ExtResource("3_tfoyi")
 _cameraAnimPlayer = NodePath("Camera2D/AnimationPlayer")
 _managerParent = NodePath("Managers")
 
@@ -117,7 +117,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("4_gg8i0")
+script = ExtResource("4_45n42")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/PauseMenu"]
 layout_mode = 2
@@ -128,17 +128,17 @@ text = "Main Menu"
 
 [node name="Managers" type="Node" parent="."]
 
-[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("InstancedNodesParent", "_towerParent") instance=ExtResource("2_tjy1v")]
+[node name="BuildingManager" parent="Managers" node_paths=PackedStringArray("InstancedNodesParent", "TowerParent") instance=ExtResource("5_dl6nd")]
 InstancedNodesParent = NodePath("../../InstancedNodes")
-_towerParent = NodePath("../../Towers")
+TowerParent = NodePath("../../Towers")
 
-[node name="PathfindingManager" parent="Managers" instance=ExtResource("4_lvlvj")]
+[node name="PathfindingManager" parent="Managers" instance=ExtResource("6_m4rul")]
 
-[node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("EnemyParent") instance=ExtResource("5_nvgt4")]
-_baseScene = ExtResource("8_skahh")
+[node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("EnemyParent") instance=ExtResource("7_r2f0h")]
+_baseScene = ExtResource("8_mnqak")
 EnemyParent = NodePath("../../Enemies")
 
-[node name="RngManager" parent="Managers" instance=ExtResource("10_8fpap")]
+[node name="RngManager" parent="Managers" instance=ExtResource("9_1phdm")]
 
 [node name="Towers" type="Node2D" parent="."]
 
@@ -160,12 +160,12 @@ libraries = {
 [node name="TransitionUp" type="Sprite2D" parent="."]
 z_index = 2
 position = Vector2(160, -19)
-texture = ExtResource("10_skahh")
+texture = ExtResource("10_gf1ev")
 
 [node name="TransitionDown" type="Sprite2D" parent="."]
 z_index = 2
 position = Vector2(160, 207)
-texture = ExtResource("10_skahh")
+texture = ExtResource("10_gf1ev")
 flip_v = true
 
 [connection signal="pressed" from="UI/PauseMenu/VBoxContainer/MainMenu" to="UI/PauseMenu" method="ReturnToMainMenu"]

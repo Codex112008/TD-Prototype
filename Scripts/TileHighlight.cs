@@ -6,7 +6,7 @@ public partial class TileHighlight : Sprite2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		Vector2I mousePos = (Vector2I)(GetGlobalMousePosition() / PathfindingManager.instance.TileSize);
+		Vector2I mousePos = PathfindingManager.instance.GetMouseTilemapPos();
 		Position = Position.Lerp(mousePos * PathfindingManager.instance.TileSize, 30f * (float)delta);
 
 		TileData targetTile = PathfindingManager.instance.LevelTilemap.GetCellTileData(mousePos);

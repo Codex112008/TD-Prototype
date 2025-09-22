@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://djjdey4gi5ebf" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.tscn" id="7_akxta"]
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="7_gom0i"]
 [ext_resource type="Resource" uid="uid://b8ls7kpielbbf" path="res://Custom Resources/TowerEffects/AOE/AOEEffectResource.tres" id="7_m4638"]
-[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/LevelScenes/TileHighlight.tscn" id="8_gom0i"]
+[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/TilemapScenes/TileHighlight.tscn" id="8_gom0i"]
 [ext_resource type="Script" uid="uid://bvunvv3p5u3e3" path="res://Scripts/TowerCreation/TowerColorPickerButton.cs" id="11_bdbue"]
 [ext_resource type="Script" uid="uid://bx1inkekj1aan" path="res://Scripts/TowerCreation/TowerSelector.cs" id="19_p8u2g"]
 

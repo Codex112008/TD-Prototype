@@ -10,7 +10,7 @@ public partial class PauseMenu : PanelContainer
 		Visible = false;
 	}
 
-	public override void _Input(InputEvent @event)
+	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (@event is InputEventKey eventKey)
 		{
@@ -45,6 +45,6 @@ public partial class PauseMenu : PanelContainer
 	{
 		RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();
-		GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainMenu.tscn"));
+		GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainScenes/MainMenu.tscn"));
 	}
 }

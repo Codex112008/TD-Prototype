@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhtwfd621wes7"]
+
+[ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_memxc"]
+[ext_resource type="Script" uid="uid://bf8giyrob4xtd" path="res://Scripts/Tower/TowerSelectedUI.cs" id="2_jdetb"]
+
+[node name="TowerSelectedUI" type="VBoxContainer" node_paths=PackedStringArray("_upgradeUI")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -132.0
+offset_top = -25.5
+offset_right = 132.0
+offset_bottom = 25.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.1, 0.1)
+theme = ExtResource("1_memxc")
+script = ExtResource("2_jdetb")
+_upgradeUI = NodePath("PanelContainer")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 64
+text = "Basic Tower"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Upgrade! $999"
+
+[node name="Button2" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Sell!"

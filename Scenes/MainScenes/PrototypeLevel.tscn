@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=4 uid="uid://dy2jvm1mvslvb"]
 
 [ext_resource type="TileSet" uid="uid://fgeau1gbnvdy" path="res://TileSets/MainTileSet.tres" id="5_s0kwr"]
-[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/LevelScenes/TileHighlight.tscn" id="6_bx147"]
+[ext_resource type="PackedScene" uid="uid://bn8ls5syaloyf" path="res://Scenes/TilemapScenes/TileHighlight.tscn" id="6_bx147"]
 
 [node name="PrototypeLevel" type="Node2D"]
 z_index = -2
