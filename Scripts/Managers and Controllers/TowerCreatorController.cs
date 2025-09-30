@@ -258,14 +258,28 @@ public partial class TowerCreatorController : Node2D
 					dirAccess.MakeDir(Utils.RemoveWhitespaces(_towerNameInput.Text));
 				dirAccess.ChangeDir(Utils.RemoveWhitespaces(_towerNameInput.Text));
 
-				// Saves tower to the correct folder
-				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+				// If tower is upgraded, make folder inside base tower's folder to save in, also sets up file name of tower
+				string towerFilename = Utils.RemoveWhitespaces(_towerNameInput.Text);
+				if (towerToSave.TowerLevel > 0)
+				{
+					if (!dirAccess.DirExists(Utils.RemoveWhitespaces(_towerNameInput.Text + towerToSave.TowerLevel)))
+						dirAccess.MakeDir(Utils.RemoveWhitespaces(_towerNameInput.Text + towerToSave.TowerLevel));
+					dirAccess.ChangeDir(Utils.RemoveWhitespaces(_towerNameInput.Text + towerToSave.TowerLevel));
 
-				// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
-				// Array<Sprite2D> towerSprites = [.. towerToSave.GetChildren(true).Where(child => child is Sprite2D).Cast<Sprite2D>()];
-				// towerSprites.Insert(0, towerToSave);
-				Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
-				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
+					towerFilename += towerToSave.TowerLevel;
+
+					// TODO: check if upgraded towers exist and if so change the effects of upgraded towers to the lower level one 
+				}
+
+				// Saves tower to the correct folder
+				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + towerFilename + ".tscn");
+
+				// Saves tower as image and saves it as an icon ONLY if its level 0
+				if (towerToSave.TowerLevel == 0)
+				{
+					Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
+					towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
+				}
 			}
 		}
 		else
@@ -277,12 +291,18 @@ public partial class TowerCreatorController : Node2D
 	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, int number = -1)
 	{
 		ModifierSelector modifierSelector = _modifierPickerScene.Instantiate<ModifierSelector>();
-		bool IsProjectile = number != -1;
+		bool IsProjectile = number == -1;
 
 		if (!IsProjectile) // If has a number then its an effect
 		{
 			modifierSelector.ItemLabel.Text = "Effect " + (number + 1);
 			modifierSelector.ModifiersToDisplay = [.. EffectOptions.Cast<TowerComponent>()];
+
+			// If upgraded tower then disable editors for already existing effects
+			if (_towerLevel > 0 && number < _towerLevel)
+			{
+				modifierSelector.ProcessMode = ProcessModeEnum.Disabled;
+			}
 		}
 		else
 		{
@@ -319,6 +339,11 @@ public partial class TowerCreatorController : Node2D
 	{
 		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
 		statPicker.StatLabel.Text = Utils.SplitIntoPascalCase(statSelectorLabelName);
+		
+		// If making an upgraded tower and instantiating cost selecter change text to "Upgrade Cost"
+		if (statSelectorLabelName.Contains("Cost") && _towerLevel > 0)
+			statPicker.StatLabel.Text = "Upgrade " + statPicker.StatLabel.Text;
+		
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;
@@ -329,6 +354,7 @@ public partial class TowerCreatorController : Node2D
 		_towerToCreatePreview = towerType.Instantiate<Tower>();
 		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
+		_towerToCreatePreview.TowerLevel = _towerLevel;
 		if (addToScene)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);
 	}

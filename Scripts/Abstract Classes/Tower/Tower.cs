@@ -49,7 +49,8 @@ public abstract partial class Tower : Sprite2D, ISavable
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
-    [Export] public string TowerName;
+    public string TowerName;
+    public int TowerLevel = 0;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
