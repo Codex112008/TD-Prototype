@@ -277,7 +277,7 @@ public partial class TowerCreatorController : Node2D
 	private ModifierSelector InstantiateModifierSelector(string modifierSelectorLabelName, int number = -1)
 	{
 		ModifierSelector modifierSelector = _modifierPickerScene.Instantiate<ModifierSelector>();
-		bool IsProjectile = number != -1;
+		bool IsProjectile = number == -1;
 
 		if (!IsProjectile) // If has a number then its an effect
 		{
