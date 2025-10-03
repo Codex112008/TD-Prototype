@@ -5,13 +5,14 @@ using System.Linq;
 
 public partial class TowerCreatorController : Node2D
 {
+	private static readonly System.Buffers.SearchValues<char> intChars = System.Buffers.SearchValues.Create("0123456789");
 	public static TowerCreatorController instance;
 	public override void _EnterTree()
 	{
 		instance = this;
 	}
 
-	[Export] public PackedScene BaseTowerScene;
+	[Export] public string BaseTowerFileName;
 	[Export] public Array<Projectile> ProjectileOptions = [];
 	[Export] public Array<TowerEffect> EffectOptions = [];
 	[Export] public Array<PackedScene> TowerTypeScenes = [];
@@ -42,8 +43,8 @@ public partial class TowerCreatorController : Node2D
 			DirAccess.MakeDirRecursiveAbsolute(_savedTowerFilePath);
 
 		// Creates a preview of the tower being created
-		if (BaseTowerScene != null)
-			InstantiateTowerPreview(BaseTowerScene);
+		if (BaseTowerFileName != null)
+			InstantiateTowerPreview(BuildingManager.instance.GetTowerFromFolderName(BaseTowerFileName[..(BaseTowerFileName.AsSpan().IndexOfAny(intChars) - 1)], int.Parse(BaseTowerFileName[BaseTowerFileName.AsSpan().IndexOfAny(intChars)..])));
 		else
 			InstantiateTowerPreview(TowerTypeScenes[0]);
 
@@ -63,7 +64,7 @@ public partial class TowerCreatorController : Node2D
 		// Init tower creator
 		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
 		_towerSelector.UpdateSelector();
-		if (BaseTowerScene != null)
+		if (BaseTowerFileName != null)
 		{
 			int index = _towerSelector.GetIndexFromText(_towerToCreatePreview.GetType().Name);
 			_towerSelector.ItemList.Select(index);
@@ -216,6 +217,8 @@ public partial class TowerCreatorController : Node2D
 
 	public void SaveTowerResource()
 	{
+		UpdateTowerPreview();
+
 		// Only allow tower creation if valid point allocation
 		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
@@ -227,7 +230,7 @@ public partial class TowerCreatorController : Node2D
 			return;
 		}
 
-		// Duplicates the tower preview to save temporaily so can change variables without changing the preview
+		// Duplicates the tower preview to save temporaily so can change variables without changing the preview to get correct icon
 		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();
 		AddToGroup("Persist", true);
 		towerToSave.RangeAlwaysVisible = false;
@@ -240,16 +243,10 @@ public partial class TowerCreatorController : Node2D
 			}
 		}
 
-		// Packs duplicated tower scene into a PackedScene to save
-		PackedScene towerToSaveScene = new();
-		Error packResult = towerToSaveScene.Pack(towerToSave);
-
-		// If modifying tower then remove old version
-		if (BaseTowerScene != null)
-			Utils.RemoveDirRecursive(BaseTowerScene.ResourcePath[..BaseTowerScene.ResourcePath.LastIndexOf('/')]);
-
-		if (towerToSave != null && packResult == Error.Ok)
+		DirAccess dirAccess = DirAccess.Open(_savedTowerFilePath);
+		if (dirAccess != null)
 		{
+<<<<<<< Updated upstream
 			DirAccess dirAccess = DirAccess.Open(_savedTowerFilePath);
 			if (dirAccess != null)
 			{
@@ -281,9 +278,33 @@ public partial class TowerCreatorController : Node2D
 					towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
 				}
 			}
+=======
+			// Checks if a folder for this tower exists and makes one if not
+			if (!dirAccess.DirExists(Utils.RemoveWhitespaces(towerToSave.TowerName)))
+				dirAccess.MakeDir(Utils.RemoveWhitespaces(towerToSave.TowerName));
+			dirAccess.ChangeDir(Utils.RemoveWhitespaces(towerToSave.TowerName));
+>>>>>>> Stashed changes
 		}
-		else
-			GD.Print("Smth went wrong xd");
+
+		// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
+		if (_towerLevel == 0 && towerToSave != null)
+		{
+			Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
+			towerAsImage?.SavePng(dirAccess.GetCurrentDir() + '/' + Utils.RemoveWhitespaces(towerToSave.TowerName) + "Icon.png");
+		}
+
+		// Store name, type, stats, projectile, and effects
+		using FileAccess towerSaveFile = FileAccess.Open(dirAccess.GetCurrentDir() + '/' + Utils.RemoveWhitespaces(towerToSave.TowerName) + towerToSave.TowerLevel + ".tower", FileAccess.ModeFlags.Write);
+
+		Projectile towerProjectile = towerToSave.Projectile;
+		Dictionary<string, Variant> towerData = new() {
+			{ "Name", towerToSave.TowerName },
+			{ "Type", towerToSave.GetType().Name },
+			{ "BaseStats", towerToSave.BaseTowerStats },
+			{ "Projectile", towerProjectile.GetType().Name },
+            { "Effects", towerProjectile.Effects.Select(effect => effect.GetType().Name).ToArray() }
+		};
+		towerSaveFile.StoreLine(Json.Stringify(towerData));
 
 		towerToSave.Free();
 	}
@@ -357,5 +378,13 @@ public partial class TowerCreatorController : Node2D
 		_towerToCreatePreview.TowerLevel = _towerLevel;
 		if (addToScene)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);
+	}
+	
+	private void InstantiateTowerPreview(Tower baseTower)
+	{
+		_towerToCreatePreview = baseTower;
+		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
+		_towerToCreatePreview.RangeAlwaysVisible = true;
+		_towerPreviewArea.AddChild(_towerToCreatePreview);
 	}
 }

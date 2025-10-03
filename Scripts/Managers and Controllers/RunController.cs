@@ -107,7 +107,7 @@ public partial class RunController : Node2D
 			// If tower creator init it
 			if (scene.ResourcePath == TowerCreationScene.ResourcePath)
 			{
-				(CurrentScene as TowerCreatorController).BaseTowerScene = BuildingManager.instance.GetSelectedTower();
+				(CurrentScene as TowerCreatorController).BaseTowerFileName = BuildingManager.instance.GetSelectedTowerFolderName();
 			}
 
 			// Play another animation

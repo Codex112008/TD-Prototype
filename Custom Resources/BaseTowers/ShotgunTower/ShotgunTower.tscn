@@ -17,6 +17,7 @@ _rotateSpeed = 20.0
 _shotSpread = 90.0
 SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+Tooltip = "Shoots 5 projectiles in a spread"
 _rangeOverlayTexture = ExtResource("3_sacu3")
 Projectile = ExtResource("4_5hs5a")
 

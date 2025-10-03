@@ -17,6 +17,8 @@ _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
 SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+Tooltip = "Shoots one bullet at a time
+Nothing special"
 _rangeOverlayTexture = ExtResource("3_vekyq")
 _towerSelectedUIScene = ExtResource("4_safry")
 Projectile = ExtResource("4_vekyq")

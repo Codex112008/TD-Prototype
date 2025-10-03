@@ -22,8 +22,8 @@ public partial class BuildingManager : Node2D, IManager
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 300;
-	private PackedScene _selectedTower = null;
-	private Array<PackedScene> _towersToBuild = [];
+	private Tower _selectedTower = null;
+	[Export] private Array<Tower> _towersToBuild = [];
 	private bool _validTowerPlacement;
 	private int _currentTowerSlots;
 
@@ -60,7 +60,7 @@ public partial class BuildingManager : Node2D, IManager
 		_towersToBuild.Clear();
 		for (int i = 0; i < savedTowers.Count; i++)
 		{
-			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
+			_towersToBuild.Add(GetTowerFromFolderName(savedTowers[i]));
 		}
 
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
@@ -119,17 +119,45 @@ public partial class BuildingManager : Node2D, IManager
 		else if (_towersToBuild[index] != _selectedTower)
 		{
 			_selectedTower = _towersToBuild[index];
-			TowerPreview = _selectedTower.Instantiate<Tower>();
+			TowerPreview = (Tower)_selectedTower.Duplicate();
 			TowerPreview.IsBuildingPreview = true;
 			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 			TowerParent.AddChild(TowerPreview);
 		}
 	}
 
-	public PackedScene GetSelectedTower()
+	public string GetSelectedTowerFolderName()
 	{
-		return _selectedTower;
+		if (_selectedTower != null)
+			return _selectedTower.TowerName;
+		else
+			return null;
 	}
+
+	public Tower GetTowerFromFolderName(string towerFolderName, int towerLevel = 0)
+	{
+		using FileAccess towerSaveFile = FileAccess.Open(_pathToSavedTowers + towerFolderName + '/' + towerFolderName + towerLevel + ".tower", FileAccess.ModeFlags.Read);
+		
+		string jsonString = towerSaveFile.GetLine();
+
+		// Creates the helper class to interact with JSON.
+		Json json = new();
+		Error parseResult = json.Parse(jsonString);
+		if (parseResult != Error.Ok)
+		{
+			GD.Print($"JSON Parse Error: {json.GetErrorMessage()} in {jsonString} at line {json.GetErrorLine()}");
+			return null;
+		}
+
+		Dictionary<string, Variant> towerData = (Dictionary<string, Variant>)json.Data;
+		Tower towerInstance = (Tower)Activator.CreateInstance(Type.GetType((string)towerData["Type"]));
+		towerInstance.TowerName = (string)towerData["Name"];
+		towerInstance.BaseTowerStats = (Dictionary<TowerStat, int>)towerData["BaseStats"];
+		towerInstance.Projectile = (Projectile)Activator.CreateInstance(Type.GetType((string)towerData["Projectile"]));;
+		towerInstance.SetEffects([.. ((string[])towerData["Effects"]).Select(effect => Activator.CreateInstance(Type.GetType(effect))).Cast<TowerEffect>()]);
+
+		return towerInstance;
+    }
 
 	public void UpdateTowerSelectionButtons()
 	{
@@ -140,12 +168,11 @@ public partial class BuildingManager : Node2D, IManager
 			{
 				if (i < _towersToBuild.Count)
 				{
-					Tower tempTower = _towersToBuild[i].Instantiate<Tower>();
+					Tower tempTower = (Tower)_towersToBuild[i].Duplicate();
 					RichTextLabel costLabel = towerSelectionButton.GetChild<RichTextLabel>(0);
 
 					// Change button textures to saved tower icon
-					string iconFilePath = _towersToBuild[i].ResourcePath[6.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png";
-					iconFilePath = OS.HasFeature("editor") ? "res://" + iconFilePath : "user://" + iconFilePath;
+					string iconFilePath = _pathToSavedTowers + Utils.RemoveWhitespaces(tempTower.TowerName) + '/' + Utils.RemoveWhitespaces(tempTower.TowerName) + "Icon.png";
 					Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(iconFilePath));
 					towerSelectionButton.TextureNormal = towerIcon;
 					towerSelectionButton.TexturePressed = towerIcon;
@@ -158,7 +185,7 @@ public partial class BuildingManager : Node2D, IManager
 
 					towerSelectionButton.TooltipText = tempTower.TowerName + " - Select and click 'W' to modify";
 
-					tempTower.QueueFree();
+					tempTower.Free();
 				}
 				else
 				{
