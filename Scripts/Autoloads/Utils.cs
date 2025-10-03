@@ -105,4 +105,9 @@ public partial class Utils : Node
 
 		return rect;
 	}
+
+	public static string AddCorrectDirectoryToPath(string pathWithoutDirectory)
+	{
+		return OS.HasFeature("editor") ? "res://" + pathWithoutDirectory : "user://" + pathWithoutDirectory;
+	}
 }

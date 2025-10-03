@@ -30,7 +30,7 @@ public partial class BuildingManager : Node2D, IManager
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_pathToSavedTowers = OS.HasFeature("editor") ? "res://" + _pathToSavedTowers : "user://" + _pathToSavedTowers;
+		_pathToSavedTowers = Utils.AddCorrectDirectoryToPath(_pathToSavedTowers);
 		if (!DirAccess.DirExistsAbsolute(_pathToSavedTowers))
 			DirAccess.MakeDirRecursiveAbsolute(_pathToSavedTowers);
 		
@@ -145,7 +145,7 @@ public partial class BuildingManager : Node2D, IManager
 
 					// Change button textures to saved tower icon
 					string iconFilePath = _towersToBuild[i].ResourcePath[6.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png";
-					iconFilePath = OS.HasFeature("editor") ? "res://" + iconFilePath : "user://" + iconFilePath;
+					iconFilePath = Utils.AddCorrectDirectoryToPath(iconFilePath);
 					Texture2D towerIcon = ImageTexture.CreateFromImage(Image.LoadFromFile(iconFilePath));
 					towerSelectionButton.TextureNormal = towerIcon;
 					towerSelectionButton.TexturePressed = towerIcon;

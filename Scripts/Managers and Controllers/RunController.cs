@@ -28,11 +28,11 @@ public partial class RunController : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_runSaveFilePath = OS.HasFeature("editor") ? "res://" + _runSaveFilePath : "user://" + _runSaveFilePath;
+		_runSaveFilePath = Utils.AddCorrectDirectoryToPath(_runSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(_runSaveFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(_runSaveFilePath);
 
-		_levelSaveFilePath = OS.HasFeature("editor") ? "res://" + _levelSaveFilePath : "user://" + _levelSaveFilePath;
+		_levelSaveFilePath = Utils.AddCorrectDirectoryToPath(_levelSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(_levelSaveFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(_levelSaveFilePath);
 

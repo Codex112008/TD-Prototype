@@ -9,13 +9,13 @@ public partial class ContinueRunButton : Button
 	public override void _Ready()
 	{
 		string levelSaveFilePath = "RuntimeData/LevelSaveFiles/";
-		levelSaveFilePath = OS.HasFeature("editor") ? "res://" + levelSaveFilePath : "user://" + levelSaveFilePath;
+		levelSaveFilePath = Utils.AddCorrectDirectoryToPath(levelSaveFilePath);
 		DirAccess dirAccessLevel = DirAccess.Open(levelSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(levelSaveFilePath))
             DirAccess.MakeDirRecursiveAbsolute(levelSaveFilePath);
 
 		string runSaveFilePath = "RuntimeData/RunSaveFiles/";
-		runSaveFilePath = OS.HasFeature("editor") ? "res://" + runSaveFilePath : "user://" + runSaveFilePath;
+		runSaveFilePath = Utils.AddCorrectDirectoryToPath(runSaveFilePath);
 		DirAccess dirAccessRun = DirAccess.Open(runSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(runSaveFilePath))
             DirAccess.MakeDirRecursiveAbsolute(runSaveFilePath);

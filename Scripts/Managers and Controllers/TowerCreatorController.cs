@@ -37,7 +37,7 @@ public partial class TowerCreatorController : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_savedTowerFilePath = OS.HasFeature("editor") ? "res://" + _savedTowerFilePath : "user://" + _savedTowerFilePath;
+		_savedTowerFilePath = Utils.AddCorrectDirectoryToPath(_savedTowerFilePath);
 		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(_savedTowerFilePath);
 
@@ -262,10 +262,11 @@ public partial class TowerCreatorController : Node2D
 				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
 
 				// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
-				// Array<Sprite2D> towerSprites = [.. towerToSave.GetChildren(true).Where(child => child is Sprite2D).Cast<Sprite2D>()];
-				// towerSprites.Insert(0, towerToSave);
-				Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
-				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
+				if (_towerLevel == 0)
+				{
+					Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
+					towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
+				}
 			}
 		}
 		else

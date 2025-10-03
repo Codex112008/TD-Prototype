@@ -50,6 +50,7 @@ public abstract partial class Tower : Sprite2D, ISavable
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
     [Export] public string TowerName;
+    public PackedScene UpgradedTower;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;

@@ -9,7 +9,7 @@ public partial class NewRunButton : Button
 	public void OnPressed()
 	{
 		string levelSaveFilePath = "RuntimeData/LevelSaveFiles/";
-		levelSaveFilePath = OS.HasFeature("editor") ? "res://" + levelSaveFilePath : "user://" + levelSaveFilePath;
+		levelSaveFilePath = Utils.AddCorrectDirectoryToPath(levelSaveFilePath);
 		DirAccess dirAccess = DirAccess.Open(levelSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(levelSaveFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(levelSaveFilePath);
@@ -17,7 +17,7 @@ public partial class NewRunButton : Button
 			dirAccess.Remove(file);
 
 		string runSaveFilePath = "RuntimeData/RunSaveFiles/";
-		runSaveFilePath = OS.HasFeature("editor") ? "res://" + runSaveFilePath : "user://" + runSaveFilePath;
+		runSaveFilePath = Utils.AddCorrectDirectoryToPath(runSaveFilePath);
 		dirAccess.ChangeDir(runSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(runSaveFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(runSaveFilePath);
@@ -25,7 +25,7 @@ public partial class NewRunButton : Button
 			dirAccess.Remove(file);
 
 		string towerDataSaveFilePath = "RuntimeData/SavedTowers/";
-		towerDataSaveFilePath = OS.HasFeature("editor") ? "res://" + towerDataSaveFilePath : "user://" + towerDataSaveFilePath;
+		towerDataSaveFilePath = Utils.AddCorrectDirectoryToPath(towerDataSaveFilePath);
 		dirAccess.ChangeDir(towerDataSaveFilePath);
 		if (!DirAccess.DirExistsAbsolute(towerDataSaveFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(towerDataSaveFilePath);
