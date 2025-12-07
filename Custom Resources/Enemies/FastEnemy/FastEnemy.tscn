@@ -16,7 +16,6 @@ _baseEnemyStats = Dictionary[int, int]({
 2: 60,
 3: 1
 })
-acceleration = 9.0
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("2_p6vkx")
 

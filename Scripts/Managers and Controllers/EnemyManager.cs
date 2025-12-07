@@ -167,32 +167,33 @@ public partial class EnemyManager : Node, IManager
 	{
 		List<Tuple<EnemySpawnData, bool>> generatedWave = [];
 
-		// Calculates the amount of enemy segments
+		// Calculates the amount of enemy segments (each segment rolls a different enemy type, more segments for more types of enemies)
 		int enemySegments = 1 + CurrentWave / _waveForSegmentScaling;
 
 		// Segment scaling so increases in segments dont cause massive jumps in total enemy counts (log for diminishing returns like 1-2 and 3-4)
 		float segmentScaling = 1.0f + Mathf.Log(1 + (enemySegments - 1 + CurrentWave % _waveForSegmentScaling / (float)_waveForSegmentScaling) * 0.4f);
 		for (int i = 0; i < enemySegments; i++)
 		{
+			// Random chance for a wave with half spawn delay (enemies instantiated closer together)
 			bool condensedWave = _tempRand.Randf() > 0.5f;
 
-			// Select random enemy based on weight and calculate the amount to spawn
+			// Select random enemy based on weights
 			EnemySpawnData selectedEnemy = WeightedEnemyChoice(enemyPoolDatas);
 
-			// Triangular distribution taken from nova drift
+			// Distribue enemy count between the high, mean and low values
 			float triangular = _tempRand.Randf() - _tempRand.Randf();
 			float enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyHigh, triangular);
 			if (triangular < 0)
 				enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyLow, -triangular);
 
-			// Wave scaling also taken from nova drift xd
+			// Scales enemy count based on wave number
 			float waveScaling = 1.25f + 0.00416667f * (Mathf.Min(CurrentWave - selectedEnemy.MinWave, 240) - 120);
 			enemyCount *= waveScaling;
 
-			// Segment scaling divided by segment count bc thats how math works
+			// Apply segment scaling (divided by segment count)
 			enemyCount *= segmentScaling / enemySegments;
 
-			// Partner wave generation
+			// Partner wave generation (chance to spawn a paired enemy type alongside the main one, and reduces main enemy count accordingly)
 			float partnerWaveMultiplier = 0.65f;
 			if (selectedEnemy.PairingChoices.Count > 0 && _tempRand.Randf() < _chanceForPartnerWave && enemyPoolDatas == EnemiesToSpawnData)
 			{

@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 [GlobalClass]
-public abstract partial class Tower : Sprite2D, ISavable
+public abstract partial class Tower : Sprite2D
 {
     public static Tower SelectedTower;
     [Export] public Dictionary<TowerStat, int> BaseTowerStats = new()
@@ -155,20 +155,39 @@ public abstract partial class Tower : Sprite2D, ISavable
         return Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
     }
 
-    public Dictionary<string, Variant> Save()
+    public Dictionary<string, Variant> SavePosition()
     {
         return new Dictionary<string, Variant>()
         {
-            {"SceneFilePath", SceneFilePath},
+            {"SceneFilePath", SceneFilePath}, // Replace this with json file path
             {"Parent", GetParent().GetPath()},
             {"PosX", (int)Position.X},
             {"PosY", (int)Position.Y},
         };
     }
 
-    public void Load(Dictionary<string, Variant> saveData)
+    public void LoadPosition(Dictionary<string, Variant> saveData)
     {
         Position = new Vector2I((int)saveData["PosX"], (int)saveData["PosY"]);
+    }
+
+    /* 
+		Save
+		- Tower type
+		- Tower stats
+		- Tower projectile
+		- Tower effects
+		- Tower name
+	*/
+    public Dictionary<string, Variant> SaveTowerData()
+    {
+        return new Dictionary<string, Variant>()
+        {
+            {"Type", GetType().Name},
+            {"BaseStats", BaseTowerStats},
+            {"Projectile", Projectile},
+            {"Name", TowerName}
+        };
     }
 
     public int GetPointCostForStat(TowerStat stat)

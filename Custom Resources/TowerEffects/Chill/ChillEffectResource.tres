@@ -6,7 +6,7 @@
 [resource]
 resource_name = "Chill"
 script = ExtResource("1_3p4qi")
-damageType = 1
+DamageType = 1
 Tooltip = "Slows Enemies Down
 Diminishing Returns
 Damage 0.1x"

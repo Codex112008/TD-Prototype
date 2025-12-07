@@ -12,7 +12,7 @@ public partial class BuildingManager : Node2D, IManager
 	}
 
 	[Export] public PackedScene TowerSelectionButtonScene;
-	[Export] public HBoxContainer TowerSelectionButtonContainer;
+	[Export] public VBoxContainer TowerSelectionButtonContainer;
 	[Export] public Node InstancedNodesParent;
 	[Export] public Node TowerParent;
 	[Export] private string _pathToSavedTowers = "RuntimeData/SavedTowers/";
@@ -42,13 +42,23 @@ public partial class BuildingManager : Node2D, IManager
 	{
 		if (_selectedTower != null && IsInstanceValid(TowerPreview))
 		{
-			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(PathfindingManager.instance.GetMouseGlobalTilemapPos(), 30f * (float)delta);
-			if (!_validTowerPlacement)
-				TowerPreview.Modulate = new Color("#ffa395");
-			else
-				TowerPreview.Modulate = Colors.White;
+			Vector2I mousePos = PathfindingManager.instance.GetMouseTilemapPos();
+			Dictionary<Vector2I, bool> tilemapBuildableData = PathfindingManager.instance.TilemapBuildableData;
 
-			_validTowerPlacement = PathfindingManager.instance.TilemapBuildableData[PathfindingManager.instance.GetMouseTilemapPos()] == true
+			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(PathfindingManager.instance.GetMouseGlobalTilemapPos(), 30f * (float)delta);
+			TileData targetTile = PathfindingManager.instance.LevelTilemap.GetCellTileData(mousePos);
+			if (targetTile == null || (tilemapBuildableData[mousePos] == false && (int)targetTile.GetCustomData("MovementCost") > 10))
+				TowerPreview.Modulate = TowerPreview.Modulate.Lerp(Colors.Transparent, 20f * (float)delta);
+            else
+            {
+				if (!_validTowerPlacement)
+					TowerPreview.Modulate = new Color("#ffa395");
+				else
+					TowerPreview.Modulate = Colors.White;
+			}
+
+			_validTowerPlacement = tilemapBuildableData.ContainsKey(mousePos) == true
+								   && tilemapBuildableData[mousePos] == true
 								   && IsInstanceValid(TowerPreview)
 								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= PlayerCurrency;
 		}
@@ -60,7 +70,7 @@ public partial class BuildingManager : Node2D, IManager
 		_towersToBuild.Clear();
 		for (int i = 0; i < savedTowers.Count; i++)
 		{
-			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + ".tscn"));
+			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn"));
 		}
 
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();

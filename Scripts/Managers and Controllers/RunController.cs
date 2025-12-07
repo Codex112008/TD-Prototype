@@ -25,6 +25,8 @@ public partial class RunController : Node2D
 
 	public Node CurrentScene = null;
 
+	private bool _swappingScene = false;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -54,7 +56,7 @@ public partial class RunController : Node2D
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (@event is InputEventKey eventKey)
+		if (!_swappingScene && @event is InputEventKey eventKey)
 		{
 			if (eventKey.Pressed && eventKey.Keycode == Key.W)
 			{
@@ -71,6 +73,8 @@ public partial class RunController : Node2D
 	{
 		if (scene.ResourcePath != CurrentScene.SceneFilePath)
 		{
+			_swappingScene = true;
+
 			// Swapping FROM the level
 			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
 			{
@@ -92,7 +96,7 @@ public partial class RunController : Node2D
 
 			SetProcessUnhandledKeyInput(false);
 
-			Node[] savables = [.. GetTree().GetNodesInGroup("Persist").Where(node => node is ISavable)];
+			Node[] savables = [.. GetTree().GetNodesInGroup("Persist").Where(node => node is Tower)];
 			foreach (Node savable in savables)
 				savable.QueueFree();
 
@@ -140,6 +144,8 @@ public partial class RunController : Node2D
 				InitManagers();
 
 			CurrentScene.ProcessMode = ProcessModeEnum.Inherit;
+
+			_swappingScene = false;
 		}
 	}
 
@@ -192,8 +198,8 @@ public partial class RunController : Node2D
 		saveFile.StoreLine(Json.Stringify(rngData));
 
 		// Save data of all nodes that need to be saved
-		ISavable[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").OfType<ISavable>()];
-		foreach (ISavable nodeToSave in nodesToSave)
+		Tower[] nodesToSave = [.. GetTree().GetNodesInGroup("Persist").OfType<Tower>()];
+		foreach (Tower nodeToSave in nodesToSave)
 		{
 			// Check the node is an instanced scene so it can be instanced again during load.
 			if (string.IsNullOrEmpty((nodeToSave as Node2D).SceneFilePath))
@@ -203,7 +209,7 @@ public partial class RunController : Node2D
 			if (nodeToSave is Tower tower && tower.IsBuildingPreview)
 				continue;
 
-			Dictionary<string, Variant> saveData = nodeToSave.Save();
+			Dictionary<string, Variant> saveData = nodeToSave.SavePosition();
 			string jsonString = Json.Stringify(saveData);
 			saveFile.StoreLine(jsonString);
 		}
@@ -212,8 +218,8 @@ public partial class RunController : Node2D
 	private void LoadLevel()
 	{
 		// Delete nodes so we dont clone them (i think its redundant for my use case though)
-		ISavable[] savableNodes = [.. GetChildren(true).OfType<ISavable>()];
-		foreach (ISavable savable in savableNodes)
+		Tower[] savableNodes = [.. GetChildren(true).OfType<Tower>()];
+		foreach (Tower savable in savableNodes)
 		{
 			if (savable is Node node)
 				node.QueueFree();
@@ -260,11 +266,11 @@ public partial class RunController : Node2D
 					foreach ((string nodePath, Array<string> randData) in rngData)
 						RNGManager.instance.SetFromSaveData(GetNode(nodePath), ulong.Parse(randData[0]), ulong.Parse(randData[1]));
 					break;
-				default: // Load all ISaveables
+				default: // Load all Towers back
 					Dictionary<string, Variant> nodeData = (Dictionary<string, Variant>)json.Data;
 					PackedScene nodeScene = GD.Load<PackedScene>(nodeData["SceneFilePath"].ToString());
-					ISavable instancedNode = nodeScene.Instantiate<ISavable>();
-					instancedNode.Load(nodeData);
+					Tower instancedNode = nodeScene.Instantiate<Tower>();
+					instancedNode.LoadPosition(nodeData);
 					GetNode(nodeData["Parent"].ToString()).AddChild((Node)instancedNode);
 					break;
 			}

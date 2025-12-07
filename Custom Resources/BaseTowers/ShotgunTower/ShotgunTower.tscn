@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://djjdey4gi5ebf"]
+[gd_scene load_steps=7 format=3 uid="uid://djjdey4gi5ebf"]
 
 [ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_3h0ks"]
 [ext_resource type="Script" uid="uid://b1h0gvnxvj3t8" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.cs" id="2_rnosi"]
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_sacu3"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="4_5hs5a"]
+[ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_6t2gx"]
 [ext_resource type="Texture2D" uid="uid://b7byxvn5jhb0o" path="res://Sprites/Towers/ShotgunTower.png" id="5_8h754"]
 
 [node name="ShotgunTower" type="Sprite2D" node_paths=PackedStringArray("_firePoints", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
@@ -18,6 +19,7 @@ _shotSpread = 90.0
 SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_sacu3")
+_towerSelectedUIScene = ExtResource("4_6t2gx")
 Projectile = ExtResource("4_5hs5a")
 
 [node name="PivotPoint" type="Marker2D" parent="."]

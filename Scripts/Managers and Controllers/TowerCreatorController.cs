@@ -223,7 +223,7 @@ public partial class TowerCreatorController : Node2D
 		}
 		else
 		{
-			GD.Print("Ur tower to op :skull:");
+			GD.Print("Tower is too strong");
 			return;
 		}
 
@@ -259,18 +259,15 @@ public partial class TowerCreatorController : Node2D
 				dirAccess.ChangeDir(Utils.RemoveWhitespaces(_towerNameInput.Text));
 
 				// Saves tower to the correct folder
-				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + ".tscn");
+				ResourceSaver.Save(towerToSaveScene, dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + _towerLevel + ".tscn");
 
 				// Gets every sprite under the tower and itself to convert into a image to save to the same folder as scene
-				if (_towerLevel == 0)
-				{
-					Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
-					towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + "Icon.png");
-				}
+				Image towerAsImage = Utils.CreateImageFromSprites(towerToSave);
+				towerAsImage?.SavePng(dirAccess.GetCurrentDir() + "/" + Utils.RemoveWhitespaces(_towerNameInput.Text) + _towerLevel + "Icon.png");
 			}
 		}
 		else
-			GD.Print("Smth went wrong xd");
+			GD.Print("Smth went wrong");
 
 		towerToSave.Free();
 	}
