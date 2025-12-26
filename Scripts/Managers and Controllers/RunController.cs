@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 public partial class RunController : Node2D
@@ -20,6 +21,7 @@ public partial class RunController : Node2D
 	[Export] private string _levelSaveFilePath = "RuntimeData/LevelSaveFiles/";
 	[Export] public PackedScene LevelScene;
 	[Export] public PackedScene TowerCreationScene;
+	[Export] public PackedScene TowerUpgradeTreeViewerScene;
 	[Export] private AnimationPlayer _cameraAnimPlayer;
 	[Export] private Node _managerParent;
 
@@ -56,21 +58,27 @@ public partial class RunController : Node2D
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (!_swappingScene && @event is InputEventKey eventKey)
+		if (!_swappingScene && @event is InputEventKey eventKey && eventKey.Pressed)
 		{
-			if (eventKey.Pressed && eventKey.Keycode == Key.W)
-			{
-				SwapScene(TowerCreationScene, Key.W);
-			}
-			else if (eventKey.Pressed && eventKey.Keycode == Key.S)
-			{
-				SwapScene(LevelScene, Key.S);
-			}
+			switch (eventKey.Keycode)
+            {
+                case Key.W:
+					SwapScene(TowerCreationScene, eventKey.Keycode, BuildingManager.instance.GetSelectedTower());
+					break;
+				case Key.S:
+					SwapScene(LevelScene, eventKey.Keycode);
+					break;
+            }
 		}
 	}
 
-	public async void SwapScene(PackedScene scene, Key direction)
+	public async void SwapScene(PackedScene scene, Key direction, PackedScene towerDataToSendToScene = null)
 	{
+		if (scene == TowerUpgradeTreeViewerScene && towerDataToSendToScene == null)
+        {
+            GD.PrintErr("Cant swap to this scene without tower data!");
+        }
+
 		if (scene.ResourcePath != CurrentScene.SceneFilePath)
 		{
 			_swappingScene = true;
@@ -92,6 +100,9 @@ public partial class RunController : Node2D
 				case Key.S:
 					_cameraAnimPlayer.Queue("TransitionOutDown");
 					break;
+				case Key.D:
+					_cameraAnimPlayer.Queue("TransitionOutRight");
+					break;
 			}
 
 			SetProcessUnhandledKeyInput(false);
@@ -111,7 +122,13 @@ public partial class RunController : Node2D
 			// If tower creator init it
 			if (scene.ResourcePath == TowerCreationScene.ResourcePath)
 			{
-				(CurrentScene as TowerCreatorController).BaseTowerScene = BuildingManager.instance.GetSelectedTower();
+				(CurrentScene as TowerCreatorController).BaseTowerScene = towerDataToSendToScene;
+			}
+			
+			// If tower upgrade viewer init it
+			if (scene.ResourcePath == TowerUpgradeTreeViewerScene.ResourcePath)
+			{
+				(CurrentScene as TowerUpgradeTree).TowerPathToDisplay = towerDataToSendToScene.ResourcePath[..towerDataToSendToScene.ResourcePath.LastIndexOf('/')];
 			}
 
 			// Play another animation
@@ -123,6 +140,9 @@ public partial class RunController : Node2D
 				case Key.S:
 					_cameraAnimPlayer.Queue("TransitionInDown");
 					break;
+				case Key.D:
+					_cameraAnimPlayer.Queue("TransitionInRight");
+					break;
 			}
 
 			AddChild(CurrentScene);
@@ -133,7 +153,7 @@ public partial class RunController : Node2D
 
 			_managerParent.ProcessMode = ProcessModeEnum.Inherit;
 
-
+			// If main level scene then load it and init magagers again
 			if (scene.ResourcePath == LevelScene.ResourcePath && FileAccess.FileExists(_levelSaveFilePath + "SavedLevel.save"))
 			{
 				_managerParent.AddChild(BuildingManager.instance);

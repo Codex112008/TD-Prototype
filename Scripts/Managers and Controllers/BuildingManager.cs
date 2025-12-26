@@ -40,7 +40,7 @@ public partial class BuildingManager : Node2D, IManager
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (_selectedTower != null && IsInstanceValid(TowerPreview))
+		if (IsInstanceValid(TowerPreview))
 		{
 			Vector2I mousePos = PathfindingManager.instance.GetMouseTilemapPos();
 			Dictionary<Vector2I, bool> tilemapBuildableData = PathfindingManager.instance.TilemapBuildableData;
@@ -59,7 +59,7 @@ public partial class BuildingManager : Node2D, IManager
 
 			_validTowerPlacement = tilemapBuildableData.ContainsKey(mousePos) == true
 								   && tilemapBuildableData[mousePos] == true
-								   && IsInstanceValid(TowerPreview)
+								   && /*IsInstanceValid(TowerPreview)*/ TowerPreview != null
 								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= PlayerCurrency;
 		}
 	}
@@ -92,7 +92,7 @@ public partial class BuildingManager : Node2D, IManager
 
 		if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Escape)
 		{
-			if (IsInstanceValid(TowerPreview))
+			if (TowerPreview != null/* && IsInstanceValid(TowerPreview)*/)
 			{
 				_selectedTower = null;
 
@@ -103,7 +103,7 @@ public partial class BuildingManager : Node2D, IManager
 
 	private void BuildTower()
 	{
-		if (IsInstanceValid(TowerPreview))
+		if (TowerPreview != null/* && IsInstanceValid(TowerPreview)*/)
 		{
 			_selectedTower = null;
 
@@ -119,10 +119,11 @@ public partial class BuildingManager : Node2D, IManager
 		}
 	}
 
+	private int _sameTowerSelectedCounter = 0;
 	public void SetSelectedTower(int index = -1)
 	{
 		if (IsInstanceValid(TowerPreview))
-			TowerPreview.QueueFree();
+            TowerPreview.QueueFree();
 
 		if (index >= _towersToBuild.Count || index == -1)
 			_selectedTower = null;
@@ -133,7 +134,18 @@ public partial class BuildingManager : Node2D, IManager
 			TowerPreview.IsBuildingPreview = true;
 			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 			TowerParent.AddChild(TowerPreview);
+
+			_sameTowerSelectedCounter = 0;
 		}
+        else // Same tower selected again
+        {
+            _sameTowerSelectedCounter++;
+			if (_sameTowerSelectedCounter >= 2)
+            {
+				RunController.instance.SwapScene(RunController.instance.TowerUpgradeTreeViewerScene, Key.D, GetSelectedTower());
+                _sameTowerSelectedCounter = 0;
+            }
+        }
 	}
 
 	public PackedScene GetSelectedTower()

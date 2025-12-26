@@ -211,8 +211,10 @@ public abstract partial class Tower : Sprite2D
         {
             finalTowerStats[stat] = value;
             finalTowerStats[stat] *= Projectile.StatMultipliers[stat];
+            /* Moving effect stat multipliers to happen on application of effect rather than forcing it onto the tower
             foreach (TowerEffect effect in Projectile.Effects)
                 finalTowerStats[stat] *= effect.StatMultipliers[stat];
+            */
         }
         return finalTowerStats;
     }

@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=20 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_r5dbq"]
 [ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/MainScenes/PrototypeLevel.tscn" id="2_ud3b5"]
 [ext_resource type="PackedScene" uid="uid://byt35up7juchg" path="res://Scenes/MainScenes/TowerCreator.tscn" id="3_tfoyi"]
 [ext_resource type="Script" uid="uid://s32v0cw53gqn" path="res://Scripts/PauseMenu.cs" id="4_45n42"]
+[ext_resource type="PackedScene" uid="uid://lhnmi5imbola" path="res://Scenes/MainScenes/TowerUpgradeTreeViewer.tscn" id="4_ud3b5"]
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="5_dl6nd"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="6_m4rul"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="7_r2f0h"]
@@ -42,6 +43,22 @@ tracks/0/keys = {
 "values": [Vector2(160, -98), Vector2(160, 94)]
 }
 
+[sub_resource type="Animation" id="Animation_tfoyi"]
+resource_name = "TransitionInRight"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(484, 94), Vector2(160, 94)]
+}
+
 [sub_resource type="Animation" id="Animation_gg8i0"]
 resource_name = "TransitionInDown"
 length = 0.05
@@ -74,6 +91,22 @@ tracks/0/keys = {
 "values": [Vector2(160, 94), Vector2(160, 282)]
 }
 
+[sub_resource type="Animation" id="Animation_ud3b5"]
+resource_name = "TransitionOutRight"
+length = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(160, 94), Vector2(484, 94)]
+}
+
 [sub_resource type="Animation" id="Animation_skahh"]
 resource_name = "TransitionUp"
 length = 0.05
@@ -94,8 +127,10 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_8fpap"),
 &"TransitionInDown": SubResource("Animation_rci85"),
+&"TransitionInRight": SubResource("Animation_tfoyi"),
 &"TransitionInUp": SubResource("Animation_gg8i0"),
 &"TransitionOutDown": SubResource("Animation_w2sna"),
+&"TransitionOutRight": SubResource("Animation_ud3b5"),
 &"TransitionOutUp": SubResource("Animation_skahh")
 }
 
@@ -103,6 +138,7 @@ _data = {
 script = ExtResource("1_r5dbq")
 LevelScene = ExtResource("2_ud3b5")
 TowerCreationScene = ExtResource("3_tfoyi")
+TowerUpgradeTreeViewerScene = ExtResource("4_ud3b5")
 _cameraAnimPlayer = NodePath("Camera2D/AnimationPlayer")
 _managerParent = NodePath("Managers")
 
@@ -157,15 +193,29 @@ libraries = {
 &"": SubResource("AnimationLibrary_gg8i0")
 }
 
-[node name="TransitionUp" type="Sprite2D" parent="."]
+[node name="TransitionElements" type="Node" parent="."]
+
+[node name="TransitionUp" type="Sprite2D" parent="TransitionElements"]
 z_index = 2
 position = Vector2(160, -19)
 texture = ExtResource("10_gf1ev")
 
-[node name="TransitionDown" type="Sprite2D" parent="."]
+[node name="TransitionDown" type="Sprite2D" parent="TransitionElements"]
 z_index = 2
 position = Vector2(160, 207)
 texture = ExtResource("10_gf1ev")
 flip_v = true
+
+[node name="TransitionRight" type="Sprite2D" parent="TransitionElements"]
+z_index = 2
+position = Vector2(329, 94)
+rotation = 1.5708
+texture = ExtResource("10_gf1ev")
+
+[node name="TransitionLeft" type="Sprite2D" parent="TransitionElements"]
+z_index = 2
+position = Vector2(-9, 94)
+rotation = -1.5708
+texture = ExtResource("10_gf1ev")
 
 [connection signal="pressed" from="UI/PauseMenu/VBoxContainer/MainMenu" to="UI/PauseMenu" method="ReturnToMainMenu"]

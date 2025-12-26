@@ -4,9 +4,9 @@ using System;
 
 public partial class ChillEffect : TowerEffect
 {
-    public override void ApplyEffect(Dictionary<TowerStat, float> stats, Enemy target)
+    protected override void ApplyEffectCore(Dictionary<TowerStat, float> stats, Enemy target)
     {
         target.AddStatusEffectStacks(StatusEffect.Chill, 1);
-        target.TakeDamage(stats[TowerStat.Damage], DamageType);
+        target.TakeDamage(_finalStats[TowerStat.Damage], DamageType);
     }
 }

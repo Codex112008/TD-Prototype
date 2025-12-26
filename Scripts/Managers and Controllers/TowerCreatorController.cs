@@ -33,16 +33,23 @@ public partial class TowerCreatorController : Node2D
 	private TowerColorPickerButton _towerColorPickerButton;
 	private TowerSelector _towerSelector;
 	private Tower _towerToCreatePreview;
+	private bool _isUpgrading;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_isUpgrading = BaseTowerScene != null;
+
 		_savedTowerFilePath = Utils.AddCorrectDirectoryToPath(_savedTowerFilePath);
 		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
 			DirAccess.MakeDirRecursiveAbsolute(_savedTowerFilePath);
 
+		// Sets tower level if upgrading tower
+		if (_isUpgrading)
+			_towerLevel = (int)char.GetNumericValue(BaseTowerScene.ResourcePath[BaseTowerScene.ResourcePath.LastIndexOf('/')..BaseTowerScene.ResourcePath.LastIndexOf('.')][^1]) + 1;
+
 		// Creates a preview of the tower being created
-		if (BaseTowerScene != null)
+		if (_isUpgrading)
 			InstantiateTowerPreview(BaseTowerScene);
 		else
 			InstantiateTowerPreview(TowerTypeScenes[0]);
@@ -50,7 +57,7 @@ public partial class TowerCreatorController : Node2D
 		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
 		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
 		_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerToCreatePreview.Name);
-		if (_towerLevel > 0) // Cant change name if its an upgraded tower
+		if (_isUpgrading) // Cant change name if its an upgraded tower
 			_towerNameInput.Editable = false;
 
 		// Sets default color
@@ -175,6 +182,7 @@ public partial class TowerCreatorController : Node2D
 		}
 		_towerToCreatePreview.SetEffects(effects);
 
+		// Colors the tower preview based on color picker
 		if (_towerColorPickerButton != null)
 		{
 			foreach (Sprite2D sprite in _towerToCreatePreview.SpritesToColor)
@@ -244,9 +252,11 @@ public partial class TowerCreatorController : Node2D
 		PackedScene towerToSaveScene = new();
 		Error packResult = towerToSaveScene.Pack(towerToSave);
 
+		/* Cutting out modification of towers
 		// If modifying tower then remove old version
 		if (BaseTowerScene != null)
 			Utils.RemoveDirRecursive(BaseTowerScene.ResourcePath[..BaseTowerScene.ResourcePath.LastIndexOf('/')]);
+		*/
 
 		if (towerToSave != null && packResult == Error.Ok)
 		{

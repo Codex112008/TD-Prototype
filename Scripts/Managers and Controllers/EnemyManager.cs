@@ -97,7 +97,7 @@ public partial class EnemyManager : Node, IManager
 			child.QueueFree();
 
 		InLevel = RunController.instance.CurrentScene.SceneFilePath == RunController.instance.LevelScene.ResourcePath;
-		InTowerCreator = RunController.instance.CurrentScene.SceneFilePath == RunController.instance.TowerCreationScene.ResourcePath;
+		InTowerCreator = RunController.instance.CurrentScene.SceneFilePath == RunController.instance.TowerCreationScene.ResourcePath || RunController.instance.CurrentScene.SceneFilePath == RunController.instance.TowerUpgradeTreeViewerScene.ResourcePath;
 
 		if (InTowerCreator)
 		{

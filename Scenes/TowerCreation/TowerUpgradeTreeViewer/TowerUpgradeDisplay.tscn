@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://q2w1uvswjj2f"]
+
+[ext_resource type="Script" uid="uid://cuoeag723moli" path="res://Scripts/TowerCreation/TowerUpgradeTreeViewer/TowerUpgradeDisplay.cs" id="1_0qm44"]
+[ext_resource type="PackedScene" uid="uid://1hvosywqx6oi" path="res://Scenes/TowerCreation/TowerUpgradeTreeViewer/TowerComponentDisplay.tscn" id="2_2urey"]
+
+[node name="TowerUpgradeDisplay" type="PanelContainer" node_paths=PackedStringArray("_nameLabel", "_statsContainer", "_projectileContainer", "_effectsContainer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0qm44")
+_towerComponentDisplay = ExtResource("2_2urey")
+_nameLabel = NodePath("TowerUpgradeDisplayContainer/Name")
+_statsContainer = NodePath("TowerUpgradeDisplayContainer/Stats")
+_projectileContainer = NodePath("TowerUpgradeDisplayContainer/Projectile")
+_effectsContainer = NodePath("TowerUpgradeDisplayContainer/Effects")
+
+[node name="TowerUpgradeDisplayContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Name" type="RichTextLabel" parent="TowerUpgradeDisplayContainer"]
+layout_mode = 2
+mouse_filter = 2
+text = "Debug text"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Stats" type="VBoxContainer" parent="TowerUpgradeDisplayContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Projectile" parent="TowerUpgradeDisplayContainer" instance=ExtResource("2_2urey")]
+layout_mode = 2
+
+[node name="Effects" type="VBoxContainer" parent="TowerUpgradeDisplayContainer"]
+layout_mode = 2
+mouse_filter = 2
