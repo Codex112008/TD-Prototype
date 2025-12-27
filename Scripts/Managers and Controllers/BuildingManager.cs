@@ -94,7 +94,7 @@ public partial class BuildingManager : Node2D, IManager
 		{
 			if (TowerPreview != null/* && IsInstanceValid(TowerPreview)*/)
 			{
-				_selectedTower = null;
+				SetSelectedTower();
 
 				TowerPreview.QueueFree();
 			}
@@ -105,13 +105,12 @@ public partial class BuildingManager : Node2D, IManager
 	{
 		if (TowerPreview != null/* && IsInstanceValid(TowerPreview)*/)
 		{
-			_selectedTower = null;
+			SetSelectedTower();
 
 			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 			TowerPreview.IsBuildingPreview = false;
 			TowerPreview.Modulate = Colors.White;
-			PlayerCurrency -= Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
-			_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
+			AddPlayerCurrency(-Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]));
 			
 			Tower.SelectedTower = null;
 
@@ -126,7 +125,11 @@ public partial class BuildingManager : Node2D, IManager
             TowerPreview.QueueFree();
 
 		if (index >= _towersToBuild.Count || index == -1)
-			_selectedTower = null;
+        {
+            _selectedTower = null;
+			_sameTowerSelectedCounter = 0;
+        }
+
 		else if (_towersToBuild[index] != _selectedTower)
 		{
 			_selectedTower = _towersToBuild[index];
@@ -142,8 +145,9 @@ public partial class BuildingManager : Node2D, IManager
             _sameTowerSelectedCounter++;
 			if (_sameTowerSelectedCounter >= 2)
             {
+				_sameTowerSelectedCounter = 0;
+
 				RunController.instance.SwapScene(RunController.instance.TowerUpgradeTreeViewerScene, Key.D, GetSelectedTower());
-                _sameTowerSelectedCounter = 0;
             }
         }
 	}

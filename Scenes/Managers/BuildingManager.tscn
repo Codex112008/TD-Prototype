@@ -43,3 +43,5 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[connection signal="mouse_exited" from="UI/TowerButtonContainer" to="." method="OnMouseExited"]

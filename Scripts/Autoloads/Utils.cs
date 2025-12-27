@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static Godot.Image;
@@ -110,4 +111,16 @@ public partial class Utils : Node
 	{
 		return OS.HasFeature("editor") ? "res://" + pathWithoutDirectory : "user://" + pathWithoutDirectory;
 	}
+
+	public static Tuple<string, int> TrimNumbersFromString(string inputString)
+    {
+		int lastNonDigitIndex = inputString.Length - 1;
+        while (lastNonDigitIndex >= 0 && char.IsDigit(inputString[lastNonDigitIndex]))
+			lastNonDigitIndex--;
+
+		if (lastNonDigitIndex == inputString.Length - 1)
+			return new Tuple<string, int>(inputString, -1);;
+		
+		return new Tuple<string, int>(inputString[..(lastNonDigitIndex + 1)], int.Parse(inputString[(lastNonDigitIndex + 1)..]));
+    }
 }

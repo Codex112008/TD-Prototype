@@ -50,7 +50,7 @@ public abstract partial class Tower : Sprite2D
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
     [Export] public string TowerName;
-    public PackedScene UpgradedTower;
+    public float SellPercentage = 0.8f;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
@@ -73,6 +73,15 @@ public abstract partial class Tower : Sprite2D
         _selectedUI = _towerSelectedUIScene.Instantiate<TowerSelectedUI>();
         _selectedUI.Visible = false;
         _selectedUI.GetChild<RichTextLabel>(0).Text = TowerName;
+        if (DoesUpgradeExist())
+        {
+            Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
+            Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
+            _selectedUI.UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - GetFinalTowerStats()[TowerStat.Cost]);
+        }
+        else
+            _selectedUI.UpgradeButton.Text = "Create an upgrade!";
+            
         AddChild(_selectedUI);
         _selectedUI.Position = rectSize;
     }
@@ -221,19 +230,40 @@ public abstract partial class Tower : Sprite2D
 
     public void Upgrade()
     {
-        // Spawn upgraded tower
+        if (DoesUpgradeExist())
+        {
+            // Spawn upgraded tower
+            Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
+            Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
+            upgradedTower.GlobalPosition = GlobalPosition;
+            BuildingManager.instance.TowerParent.AddChild(upgradedTower);
 
-        // Delete current tower
+            // Deduct player currency by difference in cost stats
+            BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] - upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
+
+            // Delete current tower
+            QueueFree();
+        }
+        else // If no upgrade exists send to upgrade creator
+            RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, GD.Load<PackedScene>(SceneFilePath));
     }
 
     public void Sell()
     {
         // Give back some amount of money
+        BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] * SellPercentage));
 
         // Make tile buildable again
-        PathfindingManager.instance.TilemapBuildableData[PathfindingManager.instance.GetMouseTilemapPos()] = true;
+        PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize)] = true;
 
         // Delete current tower
+        QueueFree();
+    }
+
+    protected bool DoesUpgradeExist()
+    {
+        Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
+        return ResourceLoader.Exists(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn");
     }
 
     protected virtual int GetPointCostFromStats()

@@ -88,7 +88,10 @@ public partial class RunController : Node2D
 			{
 				SaveLevel();
 				if (BuildingManager.instance.GetParent() == _managerParent)
+                {
+                    BuildingManager.instance.SetSelectedTower();
 					_managerParent.RemoveChild(BuildingManager.instance);
+                }
 			}
 
 			// Play animation

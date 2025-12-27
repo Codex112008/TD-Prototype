@@ -3,7 +3,10 @@ using System;
 
 public partial class TowerSelectedUI : VBoxContainer
 {
+	[Export] public Button UpgradeButton;
+	
 	[Export] private Control _upgradeUI;
+
 	private Tower _tower;
 
 	// Called when the node enters the scene tree for the first time.
