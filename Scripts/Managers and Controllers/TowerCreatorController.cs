@@ -11,7 +11,6 @@ public partial class TowerCreatorController : Node2D
 		instance = this;
 	}
 
-	[Export] public PackedScene BaseTowerScene;
 	[Export] public Array<Projectile> ProjectileOptions = [];
 	[Export] public Array<TowerEffect> EffectOptions = [];
 	[Export] public Array<PackedScene> TowerTypeScenes = [];
@@ -21,7 +20,6 @@ public partial class TowerCreatorController : Node2D
 	[Export] private TileMapLayer _towerPreviewArea;
 	[Export] private PackedScene _statPickerScene;
 	[Export] private PackedScene _modifierPickerScene;
-	[Export] private int _towerLevel = 0;
 
 	public bool IsMaxTowersCreated;
 
@@ -33,12 +31,20 @@ public partial class TowerCreatorController : Node2D
 	private TowerColorPickerButton _towerColorPickerButton;
 	private TowerSelector _towerSelector;
 	private Tower _towerToCreatePreview;
+
+	// Used for tower upgrading
+	[Export] public PackedScene BaseTowerScene;
 	private bool _isUpgrading;
+	private int _towerLevel = 0;
+	private Tower _baseTowerInstance;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		// Upgrading init
 		_isUpgrading = BaseTowerScene != null;
+		if (_isUpgrading)
+			_baseTowerInstance = BaseTowerScene.Instantiate<Tower>();
 
 		_savedTowerFilePath = Utils.AddCorrectDirectoryToPath(_savedTowerFilePath);
 		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
@@ -89,13 +95,16 @@ public partial class TowerCreatorController : Node2D
 
 			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
 			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
-			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+
+			statPickerSpinBox.MinValue = 0;
 
 			switch (stat)
 			{
 				case TowerStat.Cost:
 					statPickerSpinBox.Step = 25;
 					statPickerSpinBox.MaxValue = 1000;
+					if (_isUpgrading)
+						statPickerSpinBox.MinValue = 50;
 					break;
 				case TowerStat.Range:
 					statPickerSpinBox.Step = 5;
@@ -105,7 +114,9 @@ public partial class TowerCreatorController : Node2D
 					statPickerSpinBox.CustomMinimumSize = new(90f, 0f);
 					break;
 			}
-			statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
+
+			if (!_isUpgrading)
+				statPickerSpinBox.Value = _towerToCreatePreview.BaseTowerStats[stat];
 		}
 
 		// Creates the Modifier Selectors
@@ -197,9 +208,9 @@ public partial class TowerCreatorController : Node2D
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)
 		{
-			_totalTowerCostLabel.Text = "Point Usage: " + _towerToCreatePreview.GetCurrentTotalPointsAllocated() + "/" + _towerToCreatePreview.GetMaximumPointsFromCost();
-			if (_towerToCreatePreview.GetCurrentTotalPointsAllocated() > _towerToCreatePreview.GetMaximumPointsFromCost())
-				_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (_towerToCreatePreview.GetCurrentTotalPointsAllocated() - _towerToCreatePreview.GetMaximumPointsFromCost()) + " points";
+			_totalTowerCostLabel.Text = "Point Usage: " + CalculateCurrentTotalPointsAllocated() + "/" + CalculateMaximumPoints();
+			if (CalculateCurrentTotalPointsAllocated() > CalculateMaximumPoints())
+				_totalTowerCostLabel.Text += "\nCost exceeds maximum by " + (CalculateCurrentTotalPointsAllocated() - CalculateMaximumPoints()) + " points";
 		}
 
 		if (newTowerType)
@@ -208,18 +219,16 @@ public partial class TowerCreatorController : Node2D
 
 	public void UpdateTowerPreviewStat(StatSelector statSelector, TowerStat stat)
 	{
-		_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statSelector.StatSpinBox.Value);
-
-		if (stat != TowerStat.Cost)
-		{
-			int statCost = _towerToCreatePreview.GetPointCostForStat(stat);
-			statSelector.CostLabel.Text = "Cost: " + statCost;
-		}
+		if (_isUpgrading)
+			_towerToCreatePreview.BaseTowerStats[stat] = _baseTowerInstance.BaseTowerStats[stat] + Mathf.RoundToInt(statSelector.StatSpinBox.Value);
 		else
-		{
-			int max = _towerToCreatePreview.GetPointCostForStat(stat);
-			statSelector.CostLabel.Text = "Max Points: " + max;
-		}
+			_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statSelector.StatSpinBox.Value);
+
+		int pointCost = CalculatePointCostForStat(stat);
+		if (stat != TowerStat.Cost)
+			statSelector.CostLabel.Text = "Cost: " + pointCost;
+		else
+			statSelector.CostLabel.Text = "Max Points: " + pointCost;
 	}
 
 	public void SaveTowerResource()
@@ -340,4 +349,28 @@ public partial class TowerCreatorController : Node2D
 		if (addToScene)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);
 	}
+
+	private int CalculateCurrentTotalPointsAllocated()
+	{
+		if (_isUpgrading)
+			return _towerToCreatePreview.GetCurrentTotalPointsAllocated() - _baseTowerInstance.GetCurrentTotalPointsAllocated();
+
+		return _towerToCreatePreview.GetCurrentTotalPointsAllocated();
+	}
+
+	private int CalculateMaximumPoints()
+    {
+		if (_isUpgrading)
+			return _towerToCreatePreview.GetMaximumPointsFromCost() - _baseTowerInstance.GetMaximumPointsFromCost();
+
+        return _towerToCreatePreview.GetMaximumPointsFromCost();
+    }
+
+	private int CalculatePointCostForStat(TowerStat stat)
+    {
+		if (_isUpgrading)
+			return _towerToCreatePreview.GetPointCostForStat(stat) - _baseTowerInstance.GetPointCostForStat(stat);
+
+        return _towerToCreatePreview.GetPointCostForStat(stat);
+    }
 }
