@@ -18,7 +18,7 @@ public partial class Enemy : CharacterBody2D
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
 	public int SpawnedWave;
 
-	private Dictionary<StatusEffect, int> _currentStatusEffects = [];
+	private Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
 	private Sprite2D _sprite;
 	private float _currentHealth;
@@ -33,7 +33,7 @@ public partial class Enemy : CharacterBody2D
 		// Initialises status efects dictionary
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
 		{
-			_currentStatusEffects.Add(status, 0);
+			_currentStatusEffects.Add(status, 0f);
 
 			Timer timer = new()
 			{
@@ -129,7 +129,7 @@ public partial class Enemy : CharacterBody2D
 		return float.NaN;
 	}
 
-	public void AddStatusEffectStacks(StatusEffect status, int amount)
+	public void AddStatusEffectStacks(StatusEffect status, float amount)
 	{
 		_currentStatusEffects[status] += amount;
 		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status], 0);
@@ -159,8 +159,8 @@ public partial class Enemy : CharacterBody2D
 	{
 		float speed = _baseEnemyStats[EnemyStat.Speed];
 
-		if (_currentStatusEffects[StatusEffect.Chill] > 0)
-			speed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3, 2) + 0.35f;
+		if (_currentStatusEffects[StatusEffect.Chill] > 0f)
+			speed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3f, 2f) + 0.35f;
 
 		CurrentEnemyStats[EnemyStat.Speed] = speed;
 		return speed;

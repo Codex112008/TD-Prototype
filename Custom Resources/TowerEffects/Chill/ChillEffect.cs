@@ -6,7 +6,7 @@ public partial class ChillEffect : TowerEffect
 {
     protected override void ApplyEffectCore(Dictionary<TowerStat, float> stats, Enemy target)
     {
-        target.AddStatusEffectStacks(StatusEffect.Chill, 1);
+        target.AddStatusEffectStacks(StatusEffect.Chill, 1f);
         target.TakeDamage(_finalStats[TowerStat.Damage], DamageType);
     }
 }
