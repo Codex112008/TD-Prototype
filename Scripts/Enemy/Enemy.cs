@@ -19,15 +19,24 @@ public partial class Enemy : CharacterBody2D
 	public int SpawnedWave;
 
 	private Dictionary<StatusEffect, float> _currentStatusEffects = [];
-	private Dictionary<StatusEffect, Timer> _currentStatusEffectTimers = [];
+	private Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
+	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
 	private Sprite2D _sprite;
 	private float _currentHealth;
 	private RandomNumberGenerator _rand = new();
 	private bool _isDead = false;
 	private Timer _reachedBaseFreeTimer = null;
 
+	private bool _showMaxHp = true;
+
 	public override void _Ready()
 	{
+		if (_showMaxHp)
+		{
+			GetChild<RichTextLabel>(2).Visible = true;
+			GetChild<RichTextLabel>(2).Text = _baseEnemyStats[EnemyStat.MaxHealth].ToString() + '/' + _baseEnemyStats[EnemyStat.MaxHealth];
+		}
+
 		Effects.Add(EnemyEffectTrigger.OnDeath, new RewardEffect());
 
 		// Initialises status efects dictionary
@@ -35,15 +44,29 @@ public partial class Enemy : CharacterBody2D
 		{
 			_currentStatusEffects.Add(status, 0f);
 
-			Timer timer = new()
+			if (StatusEffectsData.GetStatusEffectDuration(status) != -1f)
 			{
-				WaitTime = StatusEffectsData.GetStatusEffectDuration(status),
-				Autostart = true,
-				OneShot = true
-			};
-			timer.Connect(Timer.SignalName.Timeout, Callable.From(() => AddStatusEffectStacks(status, -1)));
-			_currentStatusEffectTimers.Add(status, timer);
-			AddChild(timer);
+				Timer timer = new()
+				{
+					WaitTime = StatusEffectsData.GetStatusEffectDuration(status),
+					OneShot = true
+				};
+				timer.Connect(Timer.SignalName.Timeout, Callable.From(() => AddStatusEffectStacks(status, -1, true)));
+				_currentStatusEffectDecayTimers.Add(status, timer);
+				AddChild(timer);
+			}
+
+			if (StatusEffectsData.IsStatusEfectTicking(status))
+			{
+				Timer timer = new()
+				{
+					WaitTime = StatusEffectsData.GetBaseStatusEffectTickInterval(status),
+					OneShot = true
+				};
+				timer.Connect(Timer.SignalName.Timeout, Callable.From(() => TickStatusEffect(status)));
+				_currentStatusEffectTickTimers.Add(status, timer);
+				AddChild(timer);
+			}
 		}
 
 		_sprite = GetChild<Sprite2D>(0);
@@ -106,6 +129,9 @@ public partial class Enemy : CharacterBody2D
 	// Returns Damage Dealt
 	public virtual float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
 	{
+		if (amount == 0f)
+			return amount;
+
 		if (!_isDead)
 		{
 			float damageDealt = amount;
@@ -119,9 +145,11 @@ public partial class Enemy : CharacterBody2D
 			TriggerEffects(EnemyEffectTrigger.OnDamage);
 
 			if (_currentHealth <= 0)
-			{
 				Die();
-			}
+			
+			// Debug thing
+			if (_showMaxHp)
+				GetChild<RichTextLabel>(2).Text = _currentHealth.ToString() + '/' + CurrentEnemyStats[EnemyStat.MaxHealth];
 
 			return damageDealt;
 		}
@@ -129,11 +157,61 @@ public partial class Enemy : CharacterBody2D
 		return float.NaN;
 	}
 
-	public void AddStatusEffectStacks(StatusEffect status, float amount)
+	public void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
 	{
-		_currentStatusEffects[status] += amount;
+		// If status effect applied start decay timer of it if timer exists
+		if (!decay && _currentStatusEffects[status] <= 0 && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
+            decayTimer.Start();
+
+		// Apply status effects stacks
+		_currentStatusEffects[status] += statusStacks;
 		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status], 0);
-		_currentStatusEffectTimers[status].Start();
+
+		// If decayed but stacks sill above 0 then restart timer until it reaches 0
+		if (decay && _currentStatusEffects[status] > 0)
+			_currentStatusEffectDecayTimers[status].Start();
+
+		// If status is a ticking status and the timer isnt already started then start ticking timer
+		if (_currentStatusEffectTickTimers.TryGetValue(status, out Timer tickTimer) && tickTimer.IsStopped() && _currentStatusEffects[status] > 0)
+			tickTimer.Start();
+
+		// Special effects if status effects reach certain requirements
+		switch (status)
+		{
+			case StatusEffect.Chill: // If chill reaches max value convert it all to stun and recolor enemy slightly for a brief period
+				if (_currentStatusEffects[status] >= StatusEffectsData.GetMaxStatusEffectValue(status))
+				{
+					_currentStatusEffects[StatusEffect.Stun] += _currentStatusEffects[status];
+
+					Modulate = new Color(0.17f, 1f, 1f, 1f);
+					Timer timer = new()
+					{
+						WaitTime = _currentStatusEffects[status] / 10f,
+						Autostart = true,
+						OneShot = true
+					};
+					timer.Connect(Timer.SignalName.Timeout, Callable.From(RestoreOriginalColor));
+					timer.Connect(Timer.SignalName.Timeout, Callable.From(timer.QueueFree));
+					AddChild(timer);
+
+					_currentStatusEffects[status] = 0f;
+				}
+				break;
+		}
+	}
+
+	public void TickStatusEffect(StatusEffect status)
+	{
+		if (_currentStatusEffects[status] > 0 && StatusEffectsData.IsStatusEfectTicking(status))
+		{
+			_currentStatusEffectTickTimers[status].Start();
+			switch (status)
+			{
+				case StatusEffect.Poison:
+					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * 0.01f * _currentStatusEffects[status], DamageType.Poison, true);
+					break;
+			}
+		}
 	}
 
 	protected virtual void MoveToNextPathPoint(float delta, float speedMult = 1f)
@@ -161,6 +239,9 @@ public partial class Enemy : CharacterBody2D
 
 		if (_currentStatusEffects[StatusEffect.Chill] > 0f)
 			speed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3f, 2f) + 0.35f;
+
+		if (_currentStatusEffects[StatusEffect.Stun] > 0)
+			speed = 0;
 
 		CurrentEnemyStats[EnemyStat.Speed] = speed;
 		return speed;
@@ -195,5 +276,10 @@ public partial class Enemy : CharacterBody2D
 			return originalDamage * Mathf.Pow(0.975f, defence);
 		else
 			return originalDamage;
+	}
+
+	private void RestoreOriginalColor()
+	{
+		Modulate = Colors.White;
 	}
 }

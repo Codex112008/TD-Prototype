@@ -9,7 +9,7 @@ script = ExtResource("1_3p4qi")
 DamageType = 1
 Tooltip = "Slows Enemies Down
 Diminishing Returns
-Damage 0.1x"
+Effect does 0.1x damage stat damage"
 Icon = ExtResource("1_cxfo2")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,

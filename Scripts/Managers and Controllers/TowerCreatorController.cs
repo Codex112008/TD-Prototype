@@ -76,7 +76,7 @@ public partial class TowerCreatorController : Node2D
 		// Init tower creator
 		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
 		_towerSelector.UpdateSelector();
-		if (BaseTowerScene != null)
+		if (_isUpgrading)
 		{
 			int index = _towerSelector.GetIndexFromText(_towerToCreatePreview.GetType().Name);
 			_towerSelector.ItemList.Select(index);
@@ -87,7 +87,7 @@ public partial class TowerCreatorController : Node2D
 			_towerSelector.ItemList.Select(0);
 			_towerSelector.OnItemSelected(0);
 		}
-
+		
 		// Creates all the stat pickers
 		for (int i = 0; i < Enum.GetNames(typeof(TowerStat)).Length; i++)
 		{
@@ -154,6 +154,10 @@ public partial class TowerCreatorController : Node2D
 
 	public void UpdateTowerPreview(string _ = "")
 	{
+		// if performing an upgrade reset preview tower stats to base tower stats before updating them
+		if (_isUpgrading)
+    		_towerToCreatePreview.BaseTowerStats = new Dictionary<TowerStat, int>(_baseTowerInstance.BaseTowerStats);
+
 		// If the tower type is different
 		bool newTowerType = false;
 		if (_towerToCreatePreview.GetType().Name != _towerSelector.SelectedTowerTypeName())

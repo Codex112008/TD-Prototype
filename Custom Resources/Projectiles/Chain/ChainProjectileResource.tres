@@ -1,9 +1,10 @@
-[gd_resource type="Resource" load_steps=6 format=3 uid="uid://dmeywm8mfc8ht"]
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://dmeywm8mfc8ht"]
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_1joyg"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_3kpq4"]
 [ext_resource type="Texture2D" uid="uid://1roxrfrb41dm" path="res://Custom Resources/Projectiles/Chain/ChainProjectileIcon.png" id="3_0ly6g"]
 [ext_resource type="PackedScene" uid="uid://dfk26pq7sbr5h" path="res://Custom Resources/Projectiles/Chain/ChainProjectileScene.tscn" id="4_bixui"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_l556i"]
 [ext_resource type="Script" uid="uid://buggqv24nqp6a" path="res://Custom Resources/Projectiles/Chain/ChainProjectile.cs" id="5_04m7x"]
 
 [resource]
@@ -11,6 +12,7 @@ resource_name = "Chain"
 script = ExtResource("5_04m7x")
 ProjectileScene = ExtResource("4_bixui")
 Effects = Array[ExtResource("1_1joyg")]([ExtResource("2_3kpq4")])
+NextTierProjectiles = Array[ExtResource("4_l556i")]([])
 Tooltip = "Chains Between Enemies
 Damage 0.5x"
 Icon = ExtResource("3_0ly6g")

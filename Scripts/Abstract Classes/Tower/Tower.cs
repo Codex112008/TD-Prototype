@@ -56,7 +56,7 @@ public abstract partial class Tower : Sprite2D
     private TowerSelectedUI _selectedUI;
 
     public override void _Ready()
-    {
+    {        
         SpritesForIcon.Insert(0, this);
 
         Vector2 rectSize = GetRect().Size;
@@ -187,7 +187,6 @@ public abstract partial class Tower : Sprite2D
 		- Tower projectile
 		- Tower effects
 		- Tower name
-	*/
     public Dictionary<string, Variant> SaveTowerData()
     {
         return new Dictionary<string, Variant>()
@@ -198,6 +197,7 @@ public abstract partial class Tower : Sprite2D
             {"Name", TowerName}
         };
     }
+    */
 
     public int GetPointCostForStat(TowerStat stat)
     {
@@ -218,12 +218,13 @@ public abstract partial class Tower : Sprite2D
         Dictionary<TowerStat, float> finalTowerStats = [];
         foreach ((TowerStat stat, int value) in BaseTowerStats)
         {
-            finalTowerStats[stat] = value;
-            finalTowerStats[stat] *= Projectile.StatMultipliers[stat];
-            /* Moving effect stat multipliers to happen on application of effect rather than forcing it onto the tower
-            foreach (TowerEffect effect in Projectile.Effects)
-                finalTowerStats[stat] *= effect.StatMultipliers[stat];
-            */
+            finalTowerStats[stat] = value * Projectile.StatMultipliers[stat];
+            
+            if (stat != TowerStat.Damage) // Only damage multiplier individually applied per effect, so other multipliers are on tower
+            {
+                foreach (TowerEffect effect in Projectile.Effects)
+                    finalTowerStats[stat] *= effect.StatMultipliers[stat];
+            }
         }
         return finalTowerStats;
     }

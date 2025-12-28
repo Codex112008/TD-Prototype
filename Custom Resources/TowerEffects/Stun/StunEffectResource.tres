@@ -1,0 +1,20 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://ug7q0xqixgmb"]
+
+[ext_resource type="Texture2D" uid="uid://b28qi2ew5f6ql" path="res://Custom Resources/TowerEffects/Stun/StunEffectIcon.png" id="1_dmcdo"]
+[ext_resource type="Script" uid="uid://kx1u8fnl2gs5" path="res://Custom Resources/TowerEffects/Stun/StunEffect.cs" id="2_or5c1"]
+
+[resource]
+resource_name = "Stun"
+script = ExtResource("2_or5c1")
+DamageType = 0
+Tooltip = "Stuns enemies
+Stops them for 0.5x damage seconds
+Firerate 0.5x"
+Icon = ExtResource("1_dmcdo")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 1.0,
+2: 1.0,
+3: 0.5
+})
+PointCost = 25

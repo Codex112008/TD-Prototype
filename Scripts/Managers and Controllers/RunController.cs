@@ -261,7 +261,7 @@ public partial class RunController : Node2D
 			Error parseResult = json.Parse(jsonString);
 			if (parseResult != Error.Ok)
 			{
-				GD.Print($"JSON Parse Error: {json.GetErrorMessage()} in {jsonString} at line {json.GetErrorLine()}");
+				GD.PrintErr($"JSON Parse Error: {json.GetErrorMessage()} in {jsonString} at line {json.GetErrorLine()}");
 				continue;
 			}
 

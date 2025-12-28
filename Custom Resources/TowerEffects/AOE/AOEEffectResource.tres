@@ -9,7 +9,9 @@ resource_name = "AOE"
 script = ExtResource("1_vdngu")
 _aoeScene = ExtResource("2_knh5n")
 DamageType = 0
-Tooltip = "Big boom"
+Tooltip = "Big boom
+Larger aoe from range stat
+Firerate 0.5x"
 Icon = ExtResource("1_6aes2")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,

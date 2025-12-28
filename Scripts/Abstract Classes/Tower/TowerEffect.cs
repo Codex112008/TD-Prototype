@@ -23,8 +23,10 @@ public abstract partial class TowerEffect : TowerComponent
         Dictionary<TowerStat, float> finalTowerStats = [];
         foreach ((TowerStat stat, float value) in towerStats)
         {
-            finalTowerStats[stat] = value;
-            finalTowerStats[stat] *= StatMultipliers[stat];
+            if (stat == TowerStat.Damage)
+                finalTowerStats[stat] = value * StatMultipliers[stat]; // Damage mult is applied per effect not on tower
+            else
+                finalTowerStats[stat] = value;
         }
         _finalStats = finalTowerStats;
     }

@@ -21,7 +21,7 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] private Texture2D _openTowerSlotIcon;
 
 	public Tower TowerPreview = null;
-	public int PlayerCurrency = 300;
+	public int PlayerCurrency = 30000;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
@@ -92,7 +92,7 @@ public partial class BuildingManager : Node2D, IManager
 
 		if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Escape)
 		{
-			if (TowerPreview != null/* && IsInstanceValid(TowerPreview)*/)
+			if (IsInstanceValid(TowerPreview))
 			{
 				SetSelectedTower();
 
@@ -105,7 +105,8 @@ public partial class BuildingManager : Node2D, IManager
 	{
 		if (TowerPreview != null/* && IsInstanceValid(TowerPreview)*/)
 		{
-			SetSelectedTower();
+			_selectedTower = null;
+			_sameTowerSelectedCounter = 0;
 
 			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 			TowerPreview.IsBuildingPreview = false;
@@ -182,7 +183,7 @@ public partial class BuildingManager : Node2D, IManager
 					if (costLabel.Size.X > towerSelectionButton.Size.X)
 						towerSelectionButton.Size = new(costLabel.Size.X, 0);
 
-					towerSelectionButton.TooltipText = tempTower.TowerName + " - Select and click 'W' to modify";
+					towerSelectionButton.TooltipText = tempTower.TowerName + " - Select and click 'W' to design upgrade!";
 
 					tempTower.QueueFree();
 				}

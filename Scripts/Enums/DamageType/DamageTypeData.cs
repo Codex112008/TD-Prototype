@@ -6,7 +6,8 @@ public static class DamageTypeData
 	public static readonly Dictionary<DamageType, Color> _damageTypeColors = new()
 	{
 		{DamageType.Physical, new Color("#dadada")},
-		{DamageType.Chill, new Color("#6ddcff")}
+		{DamageType.Chill, new Color("#6ddcff")},
+		{DamageType.Poison, new Color("#d976f2ff")}
 	};
 
 	public static Color GetDamageTypeColor(DamageType damageType)

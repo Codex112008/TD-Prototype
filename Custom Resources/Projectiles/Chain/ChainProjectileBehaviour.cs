@@ -73,7 +73,7 @@ public partial class ChainProjectileBehaviour : RayCast2D
 				_line.AddPoint(endPos);
 		}
 
-		if (ChainedEnemies.Count <= _chainCount && endPos != TargetPosition.Normalized() * (Stats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f))
+		if (ChainedEnemies.Count <= _chainCount && IsInstanceValid(PathfindingManager.instance.LevelTilemap) && endPos != TargetPosition.Normalized() * (Stats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f))
 		{
 			Enemy nextEnemy = FindClosestEnemyToTarget(endPos);
 			Dictionary<TowerStat, float> halvedStats = [];

@@ -43,6 +43,7 @@ public partial class TowerUpgradeTree : Node2D
 				
 				// Sets the upgrade display's tower to the temporary tower
 				towerUpgradeDisplay.TowerToDisplayUpgrade = tempTowerToDisplayUpgrade;
+				towerUpgradeDisplay.TowerLevel = i;
 
 				// Add upgrade display to the scene tree
 				_towerUpgradeTreeUI.AddChild(towerUpgradeDisplay);
