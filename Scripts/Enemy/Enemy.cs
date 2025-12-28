@@ -44,11 +44,11 @@ public partial class Enemy : CharacterBody2D
 		{
 			_currentStatusEffects.Add(status, 0f);
 
-			if (StatusEffectsData.GetStatusEffectDuration(status) != -1f)
+			if (StatusEffectsData.DoesStatusEfectDecay(status))
 			{
 				Timer timer = new()
 				{
-					WaitTime = StatusEffectsData.GetStatusEffectDuration(status),
+					WaitTime = StatusEffectsData.GetStatusDecayCooldown(status),
 					OneShot = true
 				};
 				timer.Connect(Timer.SignalName.Timeout, Callable.From(() => AddStatusEffectStacks(status, -1, true)));
@@ -129,7 +129,7 @@ public partial class Enemy : CharacterBody2D
 	// Returns Damage Dealt
 	public virtual float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
 	{
-		if (amount == 0f)
+		if (Mathf.RoundToInt(amount * 100) == 0)
 			return amount;
 
 		if (!_isDead)
@@ -202,13 +202,27 @@ public partial class Enemy : CharacterBody2D
 
 	public void TickStatusEffect(StatusEffect status)
 	{
-		if (_currentStatusEffects[status] > 0 && StatusEffectsData.IsStatusEfectTicking(status))
+		if (_currentStatusEffects[status] > 0f && StatusEffectsData.IsStatusEfectTicking(status))
 		{
 			_currentStatusEffectTickTimers[status].Start();
 			switch (status)
 			{
 				case StatusEffect.Poison:
 					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * 0.01f * _currentStatusEffects[status], DamageType.Poison, true);
+					break;
+				case StatusEffect.Burn:
+					int burnExplosionThreshold = (int)(StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn) * Mathf.FloorToInt(_currentStatusEffects[status] / StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn)));
+
+					float burnToConsume = _currentStatusEffects[status] * 0.75f;
+                    TakeDamage(burnToConsume * 0.05f, DamageType.Burn, false);
+					_currentStatusEffects[status] -= burnToConsume;
+
+					if (_currentStatusEffects[status] < burnExplosionThreshold)
+					{
+						burnToConsume = _currentStatusEffects[status] * 0.25f;
+						TakeDamage(burnToConsume * 0.1f, DamageType.Burn, false);
+						_currentStatusEffects[status] -= burnToConsume;
+					}
 					break;
 			}
 		}
@@ -240,8 +254,14 @@ public partial class Enemy : CharacterBody2D
 		if (_currentStatusEffects[StatusEffect.Chill] > 0f)
 			speed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3f, 2f) + 0.35f;
 
+		if (_currentStatusEffects[StatusEffect.Poison] > 0f)
+			speed *= 0.95f;
+
 		if (_currentStatusEffects[StatusEffect.Stun] > 0)
 			speed = 0;
+
+		if (_currentStatusEffects[StatusEffect.Burn] > 0f)
+			speed *= 1.1f;
 
 		CurrentEnemyStats[EnemyStat.Speed] = speed;
 		return speed;

@@ -2,5 +2,6 @@ public enum DamageType
 {
 	Physical,
 	Chill,
-	Poison
+	Poison,
+	Burn
 }

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://08kipvbksfmg"]
+
+[ext_resource type="Texture2D" uid="uid://bps5m4g4xgw80" path="res://Custom Resources/TowerEffects/Burn/BurnEffectIcon.png" id="1_m4nmw"]
+[ext_resource type="Script" uid="uid://bu870jpbxjvq6" path="res://Custom Resources/TowerEffects/Burn/BurnEffect.cs" id="2_5f8ix"]
+
+[resource]
+resource_name = "Burn"
+script = ExtResource("2_5f8ix")
+DamageType = 3
+Tooltip = "Burns enemies
+ticks consume a lot of burn! if consuming enough does even more damage!
+Effect applies 4x damage stat burn stacks
+Firerate 1.2x"
+Icon = ExtResource("1_m4nmw")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 0.8,
+2: 1.0,
+3: 1.2
+})
+PointCost = 0

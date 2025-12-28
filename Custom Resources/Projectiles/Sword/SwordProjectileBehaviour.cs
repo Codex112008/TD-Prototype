@@ -34,9 +34,7 @@ public partial class SwordProjectileBehaviour : Node2D
 	public void OnAnimFinished(StringName animName)
 	{
 		if (animName == "Swing")
-		{
 			QueueFree();
-		}
 	}
 
 	public void OnBodyEntered(Node2D body)
