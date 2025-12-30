@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db7d82fjh7ceo"
-path="res://.godot/imported/SwordProjectileIcon.png-f1bbd1141f871c4cc497c83b2aa17812.ctex"
+uid="uid://cc4d0jme0oo2b"
+path="res://.godot/imported/DaggerProjectileIcon.png-f09c574787cbd527c8bc1aed37d580e4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Custom Resources/Projectiles/Sword/SwordProjectileIcon.png"
-dest_files=["res://.godot/imported/SwordProjectileIcon.png-f1bbd1141f871c4cc497c83b2aa17812.ctex"]
+source_file="res://Custom Resources/Projectiles/Sword/Dagger/DaggerProjectileIcon.png"
+dest_files=["res://.godot/imported/DaggerProjectileIcon.png-f09c574787cbd527c8bc1aed37d580e4.ctex"]
 
 [params]
 

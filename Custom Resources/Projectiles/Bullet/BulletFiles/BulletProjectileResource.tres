@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_dubh1"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_2wxls"]
-[ext_resource type="Texture2D" uid="uid://bnsoaen6emvx" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileIcon.png" id="3_dc0qi"]
+[ext_resource type="Texture2D" uid="uid://bnsoaen6emvx" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileIcon.png" id="3_dc0qi"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_2wxls"]
-[ext_resource type="PackedScene" uid="uid://bcuufp67y4aq3" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileScene.tscn" id="4_smtav"]
-[ext_resource type="Resource" uid="uid://dmeywm8mfc8ht" path="res://Custom Resources/Projectiles/Chain/ChainProjectileResource.tres" id="5_smtav"]
-[ext_resource type="Script" uid="uid://dda7yiaawjumm" path="res://Custom Resources/Projectiles/Bullet/BulletProjectile.cs" id="5_xell5"]
-[ext_resource type="Resource" uid="uid://ds31paw0q7ffx" path="res://Custom Resources/Projectiles/Sniper/SniperProjectileResource.tres" id="6_xell5"]
+[ext_resource type="PackedScene" uid="uid://bcuufp67y4aq3" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileScene.tscn" id="4_smtav"]
+[ext_resource type="Resource" uid="uid://dmeywm8mfc8ht" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileResource.tres" id="5_smtav"]
+[ext_resource type="Script" uid="uid://dda7yiaawjumm" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectile.cs" id="5_xell5"]
+[ext_resource type="Resource" uid="uid://ds31paw0q7ffx" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileResource.tres" id="6_xell5"]
 
 [resource]
 resource_name = "Bullet"

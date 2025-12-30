@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dfk26pq7sbr5h"]
 
-[ext_resource type="Script" uid="uid://bp6v85mmrqiia" path="res://Custom Resources/Projectiles/Chain/ChainProjectileBehaviour.cs" id="1_p682m"]
+[ext_resource type="Script" uid="uid://bp6v85mmrqiia" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileBehaviour.cs" id="1_p682m"]
 
 [node name="ChainProjectileScene" type="RayCast2D" node_paths=PackedStringArray("_raycasts")]
 target_position = Vector2(0, -500)

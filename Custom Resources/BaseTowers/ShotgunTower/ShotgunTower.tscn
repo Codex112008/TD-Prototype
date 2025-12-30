@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_3h0ks"]
 [ext_resource type="Script" uid="uid://b1h0gvnxvj3t8" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.cs" id="2_rnosi"]
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_sacu3"]
-[ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileResource.tres" id="4_5hs5a"]
+[ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileResource.tres" id="4_5hs5a"]
 [ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_6t2gx"]
 [ext_resource type="Texture2D" uid="uid://b7byxvn5jhb0o" path="res://Sprites/Towers/ShotgunTower.png" id="5_8h754"]
 

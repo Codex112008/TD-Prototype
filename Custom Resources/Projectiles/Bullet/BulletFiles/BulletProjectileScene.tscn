@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bcuufp67y4aq3"]
 
-[ext_resource type="Script" uid="uid://dtkhdg3gho1oj" path="res://Custom Resources/Projectiles/Bullet/BulletProjectileBehaviour.cs" id="1_2eq0k"]
+[ext_resource type="Script" uid="uid://dtkhdg3gho1oj" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileBehaviour.cs" id="1_2eq0k"]
 [ext_resource type="Texture2D" uid="uid://dg3m0oms0gtm" path="res://Sprites/TowerComponents/Projectiles/Bullet/Bullet.png" id="2_tii7p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2eq0k"]

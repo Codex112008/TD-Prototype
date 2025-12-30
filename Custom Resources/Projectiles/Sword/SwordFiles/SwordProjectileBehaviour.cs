@@ -4,8 +4,11 @@ using System;
 
 public partial class SwordProjectileBehaviour : Node2D
 {
+	private static int swingCount = 0;
+	
 	[Export] private Line2D _swordTrail;
 	[Export] private Area2D _swordArea;
+	[Export] private AnimationPlayer _animationPlayer;
 	
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public SwordProjectile SwordData;
@@ -13,7 +16,7 @@ public partial class SwordProjectileBehaviour : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		
+		_animationPlayer.Play("Swing" + swingCount);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,11 +29,6 @@ public partial class SwordProjectileBehaviour : Node2D
 			Vector2 newPointVectorPos = swordRelativeRightDirection * 1f + swordRelativeUpDirection * 5f;
 			_swordTrail.AddPoint(newPointVectorPos);
 		}
-		else
-		{
-			Vector2 relativeForwardDirection = -Transform.Y.Normalized();
-			GlobalPosition = GlobalPosition.Lerp(GlobalPosition + relativeForwardDirection, 4f * (float)delta);
-		}
 
 		if (_swordTrail.Points.Length > 100)
 			_swordTrail.RemovePoint(0);
@@ -38,7 +36,8 @@ public partial class SwordProjectileBehaviour : Node2D
 
 	public void OnAnimFinished(StringName animName)
 	{
-		if (animName == "Swing")
+		swingCount = (swingCount + 1) % 2;
+		if (animName.ToString().Contains("Swing"))
 			QueueFree();
 	}
 
