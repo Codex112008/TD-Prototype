@@ -58,24 +58,6 @@ public partial class BasicTower : Tower
         }
     }
 
-    private Enemy FindFirstEnemy()
-    {
-        Enemy firstEnemy = null;
-        foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
-        {
-            if (node is Enemy enemy)
-            {
-                float distanceToEnemy = GetCenteredGlobalPosition().DistanceTo(enemy.GlobalPosition);
-                if ((firstEnemy == null || enemy.PathArray.Count < firstEnemy.PathArray.Count) && distanceToEnemy <= GetRangeInTiles())
-                {
-                    firstEnemy = enemy;
-                }
-            }
-        }
-
-        return firstEnemy;
-    }
-
     protected override void Fire()
     {
         Projectile.InstantiateProjectile(GetFinalTowerStats(), _firePoint);

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=3 format=3 uid="uid://cl76w4sekrrvt"]
+
+[ext_resource type="PackedScene" uid="uid://w6j2umc5xw4h" path="res://Custom Resources/Enemies/SplitterlingEnemy/SplitterlingEnemy.tscn" id="1_yrng1"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_1ys7x"]
+
+[resource]
+script = ExtResource("2_1ys7x")
+EnemyScene = ExtResource("1_yrng1")
+BaseWeight = 1
+MinWave = 0
+MaxWave = 2147483647
+QtyLow = 0
+QtyMean = 0
+QtyHigh = 0
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 0.0
+PairingChoices = Array[ExtResource("2_1ys7x")]([])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

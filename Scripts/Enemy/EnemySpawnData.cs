@@ -5,7 +5,7 @@ using Godot.Collections;
 public partial class EnemySpawnData : Resource
 {
 	[Export] public PackedScene EnemyScene;
-	public int Weight;
+	public int Weight = -1;
 	[Export] public int BaseWeight = 1;
 	[Export] public int MinWave = 0;
 	[Export] public int MaxWave = int.MaxValue;

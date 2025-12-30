@@ -63,24 +63,6 @@ public partial class ShotgunTower : Tower
         }
     }
 
-    private Enemy FindFirstEnemy()
-    {
-        Enemy firstEnemy = null;
-        foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
-        {
-            if (node is Enemy enemy)
-            {
-                float distanceToEnemy = GetCenteredGlobalPosition().DistanceTo(enemy.GlobalPosition);
-                if ((firstEnemy == null || enemy.PathArray.Count < firstEnemy.PathArray.Count) && distanceToEnemy <= GetRangeInTiles())
-                {
-                    firstEnemy = enemy;
-                }
-            }
-        }
-
-        return firstEnemy;
-    }
-
     protected override void Fire()
     {
         foreach (Marker2D firePoint in _firePoints)

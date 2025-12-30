@@ -4,4 +4,4 @@
 
 [resource]
 script = ExtResource("1_bnrpk")
-EffectInterval = 967420.0
+EffectInterval = 5.0

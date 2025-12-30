@@ -29,11 +29,11 @@ public partial class EnemyManager : Node, IManager
 	public int CurrentWave = 0;
 	public bool InLevel = false;
 	public bool InTowerCreator = false;
+	public Array<Vector2> BaseLocations;
 
 	private List<Tuple<EnemySpawnData, bool>> _enemySpawnQueue = []; // Should only be one wave at a time
 	private int _tileSize;
 	private Array<Vector2> _spawnPoints;
-	private Array<Vector2> _baseLocations;
 	private RichTextLabel _waveCounter;
 	private Button _startWaveButton;
 	private RandomNumberGenerator _tempRand = null; // Keep a temp copy of rand so can restore old version if saving in middle of wave for deterministic rng
@@ -67,7 +67,7 @@ public partial class EnemyManager : Node, IManager
 		else if (InTowerCreator && _spawnTimer.IsStopped())
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.TargetPos = _baseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, _baseLocations.Count - 1)];
+			spawnedEnemy.TargetPos = BaseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, BaseLocations.Count - 1)];
 			spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
 
 			EnemyParent.AddChild(spawnedEnemy);
@@ -85,8 +85,8 @@ public partial class EnemyManager : Node, IManager
 		_enemySpawnQueue = [];
 
 		_spawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
-		_baseLocations = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Base")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
-		foreach (Vector2 location in _baseLocations)
+		BaseLocations = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Base")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
+		foreach (Vector2 location in BaseLocations)
 		{
 			Node2D baseInstance = _baseScene.Instantiate<Node2D>();
 			baseInstance.GlobalPosition = location;
@@ -120,7 +120,7 @@ public partial class EnemyManager : Node, IManager
 	{
 		CurrentWave++;
 
-		if (TowerSlotUnlockWave.Where(wave => CurrentWave == wave).Any())
+		if (TowerSlotUnlockWave.Any(wave => CurrentWave == wave))
 			BuildingManager.instance.UpdateTowerSelectionButtons();
 
 		if (_tempRand != null)
@@ -133,18 +133,16 @@ public partial class EnemyManager : Node, IManager
 		};
 
 		_enemySpawnQueue = GenerateDynamicWave(EnemiesToSpawnData);
-		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2 ? 0.5f : 1f);
+		_spawnTimer.WaitTime = _enemySpawnQueue[0].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2 ? 0.75f : 1f);
 		_spawnTimer.Start();
 	}
 
 	private void SpawnQueuedEnemy()
 	{
-		// Orders the wave based on 'difficulty' (maybe add a dedicated spawnorder/difficulty value to spawn data)
-		_enemySpawnQueue = [.. _enemySpawnQueue.OrderBy(spawnData => spawnData.Item1.MinWave)];
+		// Orders the wave based on speed which is usually infered from spawn delay (maybe add a dedicated spawnorder/difficulty value to spawn data)
+		_enemySpawnQueue = [.. _enemySpawnQueue.OrderByDescending(spawnData => spawnData.Item1.BaseSpawnDelay)];
 
-		EnemySpawnData enemyToSpawn = _enemySpawnQueue[0].Item1;
-		if (_enemySpawnQueue.Count > 1)
-			_spawnTimer.WaitTime = _enemySpawnQueue[1].Item1.BaseSpawnDelay * (_enemySpawnQueue[0].Item2 ? 0.5f : 1f);
+		Tuple<EnemySpawnData, bool> enemyToSpawn = _enemySpawnQueue[0];
 
 		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
 		_enemySpawnQueue.RemoveAt(0);
@@ -152,9 +150,14 @@ public partial class EnemyManager : Node, IManager
 		{
 			_startWaveButton.Disabled = false;
 		}
+		else if (_enemySpawnQueue[0].Item1.EnemyScene.ResourcePath != enemyToSpawn.Item1.EnemyScene.ResourcePath)
+		{
+			_spawnTimer.WaitTime += enemyToSpawn.Item1.BaseSpawnDelay;
+		}
+		_spawnTimer.WaitTime = enemyToSpawn.Item1.BaseSpawnDelay * (enemyToSpawn.Item2 ? 0.75f : 1f);
 
-		Enemy spawnedEnemy = enemyToSpawn.EnemyScene.Instantiate<Enemy>();
-		spawnedEnemy.TargetPos = _baseLocations[_tempRand.RandiRange(0, _baseLocations.Count - 1)];
+		Enemy spawnedEnemy = enemyToSpawn.Item1.EnemyScene.Instantiate<Enemy>();
+		spawnedEnemy.TargetPos = BaseLocations[_tempRand.RandiRange(0, BaseLocations.Count - 1)];
 		spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
 		spawnedEnemy.SpawnedWave = CurrentWave;
 
@@ -187,7 +190,7 @@ public partial class EnemyManager : Node, IManager
 				enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyLow, -triangular);
 
 			// Scales enemy count based on wave number
-			float waveScaling = 1.25f + 0.00416667f * (Mathf.Min(CurrentWave - selectedEnemy.MinWave, 240) - 120);
+			float waveScaling = 1.25f + 0.00416667f * (Mathf.Min(CurrentWave - selectedEnemy.MinWave, 240f) - 120);
 			enemyCount *= waveScaling;
 
 			// Apply segment scaling (divided by segment count)
@@ -207,7 +210,7 @@ public partial class EnemyManager : Node, IManager
 			int enemyCountInt = Mathf.Clamp(Mathf.FloorToInt(enemyCount), selectedEnemy.QtyMin, selectedEnemy.QtyMax);
 
 			// Add enemies to wave
-			generatedWave.InsertRange(0, [.. Enumerable.Range(0, enemyCountInt).Select(i => new Tuple<EnemySpawnData, bool>(selectedEnemy, condensedWave))]);
+			generatedWave.AddRange([.. Enumerable.Range(0, enemyCountInt).Select(i => new Tuple<EnemySpawnData, bool>(selectedEnemy, condensedWave))]);
 		}
 
 		return generatedWave;
@@ -215,7 +218,7 @@ public partial class EnemyManager : Node, IManager
 
 	public EnemySpawnData WeightedEnemyChoice(Array<EnemySpawnData> enemiesToSpawnData)
 	{
-		Array<EnemySpawnData> enemySpawnData = [.. enemiesToSpawnData.Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
+		Array<EnemySpawnData> enemySpawnData = [.. new Array<EnemySpawnData>(enemiesToSpawnData).Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
 
 		int totalWeight = enemySpawnData.Sum(spawnData => spawnData.Weight);
 		int randomChoice = _tempRand.RandiRange(1, totalWeight);

@@ -26,6 +26,11 @@ public partial class SwordProjectileBehaviour : Node2D
 			Vector2 newPointVectorPos = swordRelativeRightDirection * 1f + swordRelativeUpDirection * 5f;
 			_swordTrail.AddPoint(newPointVectorPos);
 		}
+		else
+		{
+			Vector2 relativeForwardDirection = -Transform.Y.Normalized();
+			GlobalPosition = GlobalPosition.Lerp(GlobalPosition + relativeForwardDirection, 4f * (float)delta);
+		}
 
 		if (_swordTrail.Points.Length > 100)
 			_swordTrail.RemovePoint(0);

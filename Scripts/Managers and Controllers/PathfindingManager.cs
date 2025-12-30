@@ -62,6 +62,16 @@ public partial class PathfindingManager : Node2D, IManager
 		return (Vector2I)(GetGlobalMousePosition() / TileSize);
 	}
 
+	public Vector2 GlobalToCenteredGlobalTilePos(Vector2 globalPos)
+	{
+		return (GlobalToTilePos(globalPos) * TileSize) + (Vector2.One * (TileSize / 2));
+	}
+
+	public Vector2I GlobalToTilePos(Vector2 globalPos)
+	{
+		return (Vector2I)(globalPos / TileSize);
+	}
+
 	private void SetUpAStarGrid()
 	{
 		_aStarGrid = new()

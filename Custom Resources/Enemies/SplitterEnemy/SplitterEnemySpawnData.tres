@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=3 format=3 uid="uid://bo3sktptr4qre"]
+
+[ext_resource type="PackedScene" uid="uid://cjes6fv8fkpv2" path="res://Custom Resources/Enemies/SplitterEnemy/SplitterEnemy.tscn" id="1_lwmod"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_tuicj"]
+
+[resource]
+script = ExtResource("2_tuicj")
+EnemyScene = ExtResource("1_lwmod")
+BaseWeight = 2
+MinWave = 10
+MaxWave = 2147483647
+QtyLow = 4
+QtyMean = 5
+QtyHigh = 6
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 0.7
+PairingChoices = Array[ExtResource("2_tuicj")]([])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

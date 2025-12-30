@@ -105,11 +105,11 @@ public abstract partial class Tower : Sprite2D
         {
             if (_rangeOverlay.Scale == Vector2.Zero && _rangeOverlay.Visible != false)
                 _rangeOverlay.Visible = false;
-            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
+            _rangeOverlay.Scale = _rangeOverlay.Scale.Lerp(new Vector2(0.001f, 0.001f), 20f * (float)delta);
 
             if (_selectedUI.Scale == Vector2.Zero && _selectedUI.Visible != false)
                 _selectedUI.Visible = false;
-            _selectedUI.Scale = _selectedUI.Scale.Lerp(Vector2.Zero, 20f * (float)delta);
+            _selectedUI.Scale = _selectedUI.Scale.Lerp(new Vector2(0.001f, 0.001f), 20f * (float)delta);
         }
 
         if (SelectedTower == this)
@@ -300,6 +300,25 @@ public abstract partial class Tower : Sprite2D
     protected Vector2 GetCenteredGlobalPosition()
     {
         return GlobalPosition + PathfindingManager.instance.LevelTilemap.TileSet.TileSize / 2;
+    }
+
+    // Placeholder, change to actual targetting system later
+    protected Enemy FindFirstEnemy()
+    {
+        Enemy firstEnemy = null;
+        foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
+        {
+            if (node is Enemy enemy)
+            {
+                float distanceToEnemy = GetCenteredGlobalPosition().DistanceTo(enemy.GlobalPosition);
+                if (((firstEnemy == null) || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && distanceToEnemy <= GetRangeInTiles())
+                {
+                    firstEnemy = enemy;
+                }
+            }
+        }
+
+        return firstEnemy;
     }
 
     protected abstract void Fire();

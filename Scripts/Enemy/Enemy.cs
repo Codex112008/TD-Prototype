@@ -1,4 +1,4 @@
- using System;
+using System;
 using System.Linq;
 using Godot;
 using Godot.Collections;
@@ -6,7 +6,7 @@ using Godot.Collections;
 [GlobalClass]
 public partial class Enemy : CharacterBody2D
 {
-	[Export] public Dictionary<EnemyEffectTrigger, EnemyEffect> Effects = [];
+	[Export] public Dictionary<EnemyEffectTrigger, Array<EnemyEffect>> Effects = [];
 	[Export] private Dictionary<EnemyStat, int> _baseEnemyStats = [];
 	[Export] private float _acceleration = 5f;
 	[Export] private float _deceleration = 10f;
@@ -37,7 +37,12 @@ public partial class Enemy : CharacterBody2D
 			GetChild<RichTextLabel>(2).Text = _baseEnemyStats[EnemyStat.MaxHealth].ToString() + '/' + _baseEnemyStats[EnemyStat.MaxHealth];
 		}
 
-		Effects.Add(EnemyEffectTrigger.OnDeath, new RewardEffect());
+		// Add effect that gives player money on death
+		if (Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
+            onDeathEffects.Add(new RewardEffect());
+		else
+			Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
+			
 
 		// Initialises status efects dictionary
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
@@ -77,20 +82,16 @@ public partial class Enemy : CharacterBody2D
 
 		TriggerEffects(EnemyEffectTrigger.OnSpawn);
 
-		if (Effects.ContainsKey(EnemyEffectTrigger.OnTimer))
+		if (Effects.TryGetValue(EnemyEffectTrigger.OnTimer, out Array<EnemyEffect> onTimerEffects) && onTimerEffects.Count > 0)
 		{
-			foreach ((EnemyEffectTrigger trigger, EnemyEffect effect) in Effects)
+			foreach (EnemyEffect effect in onTimerEffects)
 			{
-				if (trigger == EnemyEffectTrigger.OnTimer)
-				{
-					Timer timer = new();
-					AddChild(timer);
-
-					timer.WaitTime = effect.EffectInterval;
-					timer.Timeout += () => effect.ApplyEffect(this);
-
-					AddChild(timer);
-				}
+                Timer timer = new()
+                {
+                    WaitTime = effect.EffectInterval
+                };
+                timer.Timeout += () => effect.ApplyEffect(this);
+				AddChild(timer);
 			}
 		}
 
@@ -160,7 +161,7 @@ public partial class Enemy : CharacterBody2D
 	public void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
 	{
 		// If status effect applied start decay timer of it if timer exists
-		if (!decay && _currentStatusEffects[status] <= 0 && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
+		if (!decay && _currentStatusEffects[status] <= 0f && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
             decayTimer.Start();
 
 		// Apply status effects stacks
@@ -179,10 +180,14 @@ public partial class Enemy : CharacterBody2D
 		switch (status)
 		{
 			case StatusEffect.Chill: // If chill reaches max value convert it all to stun and recolor enemy slightly for a brief period
+				// Cant chill enemies that are frozen
+				if (Modulate == new Color(0.17f, 1f, 1f, 1f))
+					_currentStatusEffects[status] -= statusStacks;
+
 				if (_currentStatusEffects[status] >= StatusEffectsData.GetMaxStatusEffectValue(status))
 				{
-					_currentStatusEffects[StatusEffect.Stun] += _currentStatusEffects[status];
-
+					AddStatusEffectStacks(StatusEffect.Stun, _currentStatusEffects[status]);
+					
 					Modulate = new Color(0.17f, 1f, 1f, 1f);
 					Timer timer = new()
 					{
@@ -228,6 +233,14 @@ public partial class Enemy : CharacterBody2D
 		}
 	}
 
+	public float GetCurrentEnemyStatusEffectStacks(StatusEffect status)
+	{
+		if (_currentStatusEffects.TryGetValue(status, out float value))
+			return value;
+		else
+			return 0f;
+	}
+
 	protected virtual void MoveToNextPathPoint(float delta, float speedMult = 1f)
 	{
 		Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
@@ -269,15 +282,10 @@ public partial class Enemy : CharacterBody2D
 
 	protected void TriggerEffects(EnemyEffectTrigger triggerEvent)
 	{
-		if (Effects != null && Effects.Count != 0)
+		if (Effects.TryGetValue(triggerEvent, out Array<EnemyEffect> effects) && effects.Count > 0)
 		{
-			foreach ((EnemyEffectTrigger trigger, EnemyEffect effect) in Effects)
-			{
-				if (trigger == triggerEvent)
-				{
-					effect.ApplyEffect(this);
-				}
-			}
+			foreach (EnemyEffect effect in effects)
+				effect.ApplyEffect(this);
 		}
 	}
 
