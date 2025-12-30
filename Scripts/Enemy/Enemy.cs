@@ -17,10 +17,12 @@ public partial class Enemy : CharacterBody2D
 	public Array<Vector2> PathArray = [];
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
 	public int SpawnedWave;
+	public bool PausedToPerformEffect = false;
 
 	private Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
+	private Array<Timer> _timerEffectTimers = [];
 	private Sprite2D _sprite;
 	private float _currentHealth;
 	private RandomNumberGenerator _rand = new();
@@ -88,9 +90,11 @@ public partial class Enemy : CharacterBody2D
 			{
                 Timer timer = new()
                 {
-                    WaitTime = effect.EffectInterval
+                    WaitTime = effect.EffectInterval,
+					Autostart = true
                 };
                 timer.Timeout += () => effect.ApplyEffect(this);
+				_timerEffectTimers.Add(timer);
 				AddChild(timer);
 			}
 		}
@@ -202,6 +206,24 @@ public partial class Enemy : CharacterBody2D
 					_currentStatusEffects[status] = 0f;
 				}
 				break;
+			case StatusEffect.Stun: // Effects that run on the timer pause while stunned, like summoning enemies
+				if (_currentStatusEffects[status] > 0)
+				{
+					foreach (Timer timer in _timerEffectTimers)
+					{
+						if (!timer.IsStopped())
+							timer.Paused = true;
+					}
+				}
+				else
+				{
+					foreach (Timer timer in _timerEffectTimers)
+					{
+						if (timer.IsStopped())
+							timer.Paused = false;
+					}
+				}
+				break;
 		}
 	}
 
@@ -270,7 +292,7 @@ public partial class Enemy : CharacterBody2D
 		if (_currentStatusEffects[StatusEffect.Poison] > 0f)
 			speed *= 0.95f;
 
-		if (_currentStatusEffects[StatusEffect.Stun] > 0)
+		if (_currentStatusEffects[StatusEffect.Stun] > 0 || PausedToPerformEffect)
 			speed = 0;
 
 		if (_currentStatusEffects[StatusEffect.Burn] > 0f)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SpawnEffect" load_steps=3 format=3 uid="uid://bib4e6yw8tlhi"]
+
+[ext_resource type="Resource" uid="uid://cl76w4sekrrvt" path="res://Custom Resources/Enemies/SplitterlingEnemy/SplitterlingEnemySpawnData.tres" id="1_4txnm"]
+[ext_resource type="Script" uid="uid://bqpsi6u8ujtu4" path="res://Custom Resources/EnemyEffects/Spawn/SpawnEffect.cs" id="2_nmvlh"]
+
+[resource]
+script = ExtResource("2_nmvlh")
+_enemiesToSpawn = Array[Object]([ExtResource("1_4txnm")])
+_enemiesToSpawnCount = 2
+EffectInterval = 999.0
+metadata/_custom_type_script = "uid://bqpsi6u8ujtu4"

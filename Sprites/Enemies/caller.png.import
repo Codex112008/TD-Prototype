@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvapcuyyr0aq4"
-path="res://.godot/imported/BasicTower1Icon.png-a895ae926b25ebf39314bab8ed3e3b43.ctex"
+uid="uid://cqk6h8ax0n3t6"
+path="res://.godot/imported/caller.png-4b671aa99ac7a24763edeaeed9825f3b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower1Icon.png"
-dest_files=["res://.godot/imported/BasicTower1Icon.png-a895ae926b25ebf39314bab8ed3e3b43.ctex"]
+source_file="res://Sprites/Enemies/caller.png"
+dest_files=["res://.godot/imported/caller.png-4b671aa99ac7a24763edeaeed9825f3b.ctex"]
 
 [params]
 

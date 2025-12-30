@@ -63,6 +63,7 @@ public partial class ChainProjectileBehaviour : RayCast2D
 				Vector2 pointPosition = (directionToEndPos * pointDistance) + new Vector2(rand.RandfRange(-_lineVariation, _lineVariation), rand.RandfRange(-_lineVariation, _lineVariation));
 				_line.AddPoint(pointPosition);
 
+				// Optimize this by moving timer creation outside of loop and reuse same one
 				Timer timer = new() { WaitTime = 0.01f };
 				AddChild(timer);
 				timer.Start();

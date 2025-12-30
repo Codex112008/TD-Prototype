@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SummonAlliesEffect" load_steps=5 format=3 uid="uid://drqhig5xcv3f"]
+
+[ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/BasicEnemy/BasicEnemySpawnData.tres" id="1_i8s3n"]
+[ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/FastEnemy/FastEnemySpawnData.tres" id="2_5w0s7"]
+[ext_resource type="Resource" uid="uid://dwm2npydja82i" path="res://Custom Resources/Enemies/StrongEnemy/StrongEnemySpawnData.tres" id="3_pb2p4"]
+[ext_resource type="Script" uid="uid://bteaehp6g8775" path="res://Custom Resources/EnemyEffects/SummonAllies/SummonAlliesEffect.cs" id="4_v4e02"]
+
+[resource]
+script = ExtResource("4_v4e02")
+_enemiesToSpawn = Array[Object]([ExtResource("1_i8s3n"), ExtResource("2_5w0s7"), ExtResource("3_pb2p4")])
+_enemiesToSpawnCount = 5
+_spawnDelay = 0.1
+EffectInterval = 5.0
+metadata/_custom_type_script = "uid://bteaehp6g8775"

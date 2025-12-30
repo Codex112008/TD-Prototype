@@ -5,21 +5,21 @@ using System;
 [GlobalClass]
 public partial class SpawnEffect : EnemyEffect
 {
-    [Export] public Array<EnemySpawnData> enemiesToSpawn;
-    [Export] public int enemiesToSpawnCount = 1;
+    [Export] public Array<EnemySpawnData> _enemiesToSpawn;
+    [Export] public int _enemiesToSpawnCount = 1;
 
     public override void ApplyEffect(Enemy enemy)
     {
-        foreach (EnemySpawnData spawnData in enemiesToSpawn)
+        foreach (EnemySpawnData spawnData in _enemiesToSpawn)
         {
             if (spawnData.Weight == -1)
                 spawnData.Weight = spawnData.BaseWeight;
         }
 
         RandomNumberGenerator rand = new();
-        for (int i = 0; i < enemiesToSpawnCount; i++)
+        for (int i = 0; i < _enemiesToSpawnCount; i++)
         {
-            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(enemiesToSpawn).EnemyScene.Instantiate<Enemy>();
+            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn).EnemyScene.Instantiate<Enemy>();
             spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
             spawnedEnemy.GlobalPosition = enemy.GlobalPosition;
             EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
