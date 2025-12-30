@@ -17,7 +17,6 @@ public partial class Enemy : CharacterBody2D
 	public Array<Vector2> PathArray = [];
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
 	public int SpawnedWave;
-	public bool PausedToPerformEffect = false;
 
 	private Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
@@ -37,14 +36,7 @@ public partial class Enemy : CharacterBody2D
 		{
 			GetChild<RichTextLabel>(2).Visible = true;
 			GetChild<RichTextLabel>(2).Text = _baseEnemyStats[EnemyStat.MaxHealth].ToString() + '/' + _baseEnemyStats[EnemyStat.MaxHealth];
-		}
-
-		// Add effect that gives player money on death
-		if (Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
-            onDeathEffects.Add(new RewardEffect());
-		else
-			Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
-			
+		}		
 
 		// Initialises status efects dictionary
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
@@ -98,6 +90,12 @@ public partial class Enemy : CharacterBody2D
 				AddChild(timer);
 			}
 		}
+
+		// Add effect that gives player money
+		if (Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
+			onDeathEffects.Add(new RewardEffect());
+		else
+			Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
 
 		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
 		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
@@ -292,7 +290,7 @@ public partial class Enemy : CharacterBody2D
 		if (_currentStatusEffects[StatusEffect.Poison] > 0f)
 			speed *= 0.95f;
 
-		if (_currentStatusEffects[StatusEffect.Stun] > 0 || PausedToPerformEffect)
+		if (_currentStatusEffects[StatusEffect.Stun] > 0)
 			speed = 0;
 
 		if (_currentStatusEffects[StatusEffect.Burn] > 0f)

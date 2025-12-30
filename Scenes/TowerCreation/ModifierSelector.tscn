@@ -41,5 +41,5 @@ auto_width = true
 auto_height = true
 icon_scale = 2.0
 
-[connection signal="pressed" from="HBoxContainer/TextureButton" to="." method="OnButtonPressed"]
-[connection signal="item_selected" from="ModifierList" to="." method="OnItemSelected"]
+[connection signal="pressed" from="HBoxContainer/TextureButton" to="." method="ToggleVisibility"]
+[connection signal="item_selected" from="ModifierList" to="." method="OnItemSelectedSignal"]

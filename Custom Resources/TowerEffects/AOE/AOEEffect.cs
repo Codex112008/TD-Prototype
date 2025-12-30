@@ -11,6 +11,6 @@ public partial class AOEEffect : TowerEffect
         aoeScene.AOECollider.Scale = Vector2.One * _finalStats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 400f;
         aoeScene.GlobalPosition = target.GlobalPosition;
         aoeScene.Stats = _finalStats;
-        BuildingManager.instance.InstancedNodesParent.AddChild(aoeScene);
+        BuildingManager.instance.InstancedNodesParent.CallDeferred("add_child", aoeScene);
     }
 }

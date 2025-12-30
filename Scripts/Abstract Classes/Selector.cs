@@ -9,6 +9,10 @@ public abstract partial class Selector : VBoxContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		if (ItemList.ItemCount == 1)
+		{
+			DisableSelector();
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -16,30 +20,41 @@ public abstract partial class Selector : VBoxContainer
 	{
 	}
 
-	public void OnButtonPressed()
-	{
-		ItemList.Visible = !ItemList.Visible;
-	}
-
 	public virtual void OnItemSelected(int index)
 	{
-		ItemList.Visible = !ItemList.Visible;
+		ToggleVisibility();
 
 		// TODO: Change _selectedModifierButton's texture to icon
 		_selectedItemButton.TextureNormal = ItemList.GetItemIcon(index);
 		_selectedItemButton.TexturePressed = ItemList.GetItemIcon(index);
+	}
+
+	public void OnItemSelectedSignal(int index)
+	{
+		OnItemSelected(index);
 
 		TowerCreatorController.instance.UpdateTowerPreview();
 	}
 
+	public void ToggleVisibility()
+	{
+		ItemList.Visible = !ItemList.Visible;
+	}
+
 	public int GetIndexFromText(string text)
 	{
-		for (int i = 0; i < ItemList.GetItemCount(); i++)
+		for (int i = 0; i < ItemList.ItemCount; i++)
 		{
 			if (Utils.RemoveWhitespaces(ItemList.GetItemText(i)) == Utils.RemoveWhitespaces(text))
 				return i;
 		}
 		return -1;
+	}
+
+	public void DisableSelector()
+	{
+		_selectedItemButton.MouseFilter = MouseFilterEnum.Ignore;
+		_selectedItemButton.FocusMode = FocusModeEnum.None;
 	}
 
 	public abstract void UpdateSelector();

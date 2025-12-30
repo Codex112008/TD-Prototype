@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Linq;
 
 [GlobalClass]
 public partial class SpawnEffect : EnemyEffect
@@ -22,7 +23,15 @@ public partial class SpawnEffect : EnemyEffect
             Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn).EnemyScene.Instantiate<Enemy>();
             spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
             spawnedEnemy.GlobalPosition = enemy.GlobalPosition;
+
             EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
+
+            if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
+            {
+                EnemyEffect rewardEffect = onDeathEffects.FirstOrDefault(effect => effect is RewardEffect);
+                if (rewardEffect != null)
+                    spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath].Remove(rewardEffect);
+            }
         }
     }
 }

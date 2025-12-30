@@ -80,7 +80,7 @@ public partial class ChainProjectileBehaviour : RayCast2D
 			Dictionary<TowerStat, float> halvedStats = [];
 			foreach ((TowerStat stat, float value) in Stats)
 				halvedStats[stat] = value / 2f;
-			if (halvedStats[TowerStat.Damage] > 0.1f)
+			if (halvedStats[TowerStat.Damage] > 0.1f && nextEnemy != null)
 				ChainData.InstantiateProjectile(halvedStats, _hitEnemyPosition, _hitEnemyPosition.DirectionTo(nextEnemy.GlobalPosition).Angle() + Mathf.Pi / 2f, ChainedEnemies);
 		}
 	}

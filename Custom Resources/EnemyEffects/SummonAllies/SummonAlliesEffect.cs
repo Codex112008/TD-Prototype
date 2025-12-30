@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Linq;
 
 [GlobalClass]
 public partial class SummonAlliesEffect : EnemyEffect
@@ -9,10 +10,9 @@ public partial class SummonAlliesEffect : EnemyEffect
     [Export] private int _enemiesToSpawnCount;
     [Export] private float _spawnDelay = 0.1f;
 
-    // Maybe change to stun enemy while doing effect rather than boolean, so that the timer doesnt tick while summoning
     public async override void ApplyEffect(Enemy enemy)
     {
-        enemy.PausedToPerformEffect = true;
+        enemy.AddStatusEffectStacks(StatusEffect.Stun, 1.5f + _spawnDelay * (_enemiesToSpawnCount - 1));
 
         foreach (EnemySpawnData spawnData in _enemiesToSpawn)
         {
@@ -51,6 +51,13 @@ public partial class SummonAlliesEffect : EnemyEffect
             spawnedEnemy.GetChild<Sprite2D>(0).Rotation = directionToTargetTile.Angle();
 
             EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
+            
+            if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
+            {
+                EnemyEffect rewardEffect = onDeathEffects.FirstOrDefault(effect => effect is RewardEffect);
+                if (rewardEffect != null)
+                    spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath].Remove(rewardEffect);
+            }
 
             if (i == _enemiesToSpawnCount - 1)
                 timer.WaitTime = 1f;
@@ -60,7 +67,5 @@ public partial class SummonAlliesEffect : EnemyEffect
         }
 
         timer.QueueFree();
-
-        enemy.PausedToPerformEffect = false;
     }
 }

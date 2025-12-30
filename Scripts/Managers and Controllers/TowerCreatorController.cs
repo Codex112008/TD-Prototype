@@ -78,6 +78,8 @@ public partial class TowerCreatorController : Node2D
 		_towerSelector.UpdateSelector();
 		if (_isUpgrading)
 		{
+			_towerSelector.DisableSelector();
+
 			int index = _towerSelector.GetIndexFromText(_towerToCreatePreview.GetType().Name);
 			_towerSelector.ItemList.Select(index);
 			_towerSelector.OnItemSelected(index);
@@ -186,6 +188,7 @@ public partial class TowerCreatorController : Node2D
 					towerComponent = ProjectileOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
 				else
 					towerComponent = EffectOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
+					
 
 				if (towerComponent is Projectile projectile)
 					_towerToCreatePreview.Projectile = projectile;
@@ -302,33 +305,60 @@ public partial class TowerCreatorController : Node2D
 
 		if (!IsProjectile) // If has a number then its an effect
 		{
-			modifierSelector.ItemLabel.Text = "Effect " + (number + 1);
+			modifierSelector.ItemLabel.Text = modifierSelectorLabelName + " " + (number + 1);
 			modifierSelector.ModifiersToDisplay = [.. EffectOptions.Cast<TowerComponent>()];
 		}
 		else
 		{
-			modifierSelector.ItemLabel.Text = "Projectile";
+			modifierSelector.ItemLabel.Text = modifierSelectorLabelName;
+			
+			// If upgrading limit projectiles to the upgrades, and if none exist disable the picker and if not upgrading then just keep defaults
+			if (_isUpgrading)
+			{
+				if (_baseTowerInstance.Projectile.NextTierProjectiles.Count == 0)
+					ProjectileOptions = [_baseTowerInstance.Projectile];
+				else
+					ProjectileOptions = _baseTowerInstance.Projectile.NextTierProjectiles;
+			}
+
 			modifierSelector.ModifiersToDisplay = [.. ProjectileOptions.Cast<TowerComponent>()];
 		}
 
 		modifierSelector.UpdateSelector();
 
-		if (IsProjectile && _towerToCreatePreview.Projectile != null)
+		// Disables effects that are use in previous tower levels
+		if (IsProjectile && _towerToCreatePreview.Projectile != null && !_isUpgrading)
 		{
 			int index = modifierSelector.GetIndexFromText(modifierSelector.ModifiersToDisplay.FirstOrDefault(modifier => modifier.ResourceName == _towerToCreatePreview.Projectile.ResourceName).ResourceName);
 			modifierSelector.ItemList.Select(index);
 			modifierSelector.OnItemSelected(index);
 		}
-		else if (modifierSelectorLabelName.Contains("Effect") && _towerToCreatePreview.Projectile.Effects.Count > number)
+		else if (!IsProjectile && _isUpgrading && number < _towerLevel)
 		{
-			int index = modifierSelector.GetIndexFromText(modifierSelector.ModifiersToDisplay.FirstOrDefault(modifier => modifier.ResourceName == _towerToCreatePreview.Projectile.Effects[number].ResourceName).ResourceName);
+			// Cant modify old effects
+			modifierSelector.DisableSelector();
+
+			int index = modifierSelector.GetIndexFromText(_baseTowerInstance.Projectile.Effects[number].ResourceName);
 			modifierSelector.ItemList.Select(index);
 			modifierSelector.OnItemSelected(index);
 		}
 		else
 		{
-			modifierSelector.ItemList.Select(0);
-			modifierSelector.OnItemSelected(0);
+			if (!IsProjectile && _isUpgrading)
+			{
+				foreach (TowerEffect effect in _baseTowerInstance.Projectile.Effects)
+					modifierSelector.ItemList.SetItemDisabled(modifierSelector.GetIndexFromText(effect.ResourceName), true);
+			}
+
+			for (int i = 0; i < modifierSelector.ItemList.ItemCount; i++)
+			{
+				if (!modifierSelector.ItemList.IsItemDisabled(i))
+				{
+					modifierSelector.ItemList.Select(i);
+					modifierSelector.OnItemSelected(i);
+					break;
+				}
+			}
 		}
 
 		_towerCreatorUI.AddChild(modifierSelector);
