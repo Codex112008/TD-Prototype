@@ -182,6 +182,8 @@ public partial class EnemyManager : Node, IManager
 
 			// Select random enemy based on weights
 			EnemySpawnData selectedEnemy = WeightedEnemyChoice(enemyPoolDatas);
+			if (selectedEnemy == null)
+				return [];
 
 			// Distribue enemy count between the high, mean and low values
 			float triangular = _tempRand.Randf() - _tempRand.Randf();
@@ -200,8 +202,12 @@ public partial class EnemyManager : Node, IManager
 			float partnerWaveMultiplier = 0.65f;
 			if (selectedEnemy.PairingChoices.Count > 0 && _tempRand.Randf() < _chanceForPartnerWave && enemyPoolDatas == EnemiesToSpawnData)
 			{
-				enemyCount *= partnerWaveMultiplier;
-				generatedWave.AddRange(GenerateDynamicWave(selectedEnemy.PairingChoices));
+				List<Tuple<EnemySpawnData, bool>> partnerEnemies = GenerateDynamicWave(selectedEnemy.PairingChoices);
+				if (partnerEnemies.Count > 0f)
+				{
+					enemyCount *= partnerWaveMultiplier;
+					generatedWave.AddRange(partnerEnemies);
+				}
 			}
 			else if (enemyPoolDatas != EnemiesToSpawnData)
 				enemyCount *= 1f - partnerWaveMultiplier;

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="SpawnEffect" load_steps=3 format=3 uid="uid://bib4e6yw8tlhi"]
 
-[ext_resource type="Resource" uid="uid://cl76w4sekrrvt" path="res://Custom Resources/Enemies/SplitterlingEnemy/SplitterlingEnemySpawnData.tres" id="1_4txnm"]
+[ext_resource type="Resource" uid="uid://cl76w4sekrrvt" path="res://Custom Resources/Enemies/BreakerClones/SplitterlingEnemy/SplitterlingEnemySpawnData.tres" id="1_4txnm"]
 [ext_resource type="Script" uid="uid://bqpsi6u8ujtu4" path="res://Custom Resources/EnemyEffects/Spawn/SpawnEffect.cs" id="2_nmvlh"]
 
 [resource]

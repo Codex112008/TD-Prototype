@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://con8ugnh36iys"]
+
+[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_58ibh"]
+[ext_resource type="Resource" uid="uid://rhr6scowalxs" path="res://Custom Resources/Enemies/BreakerClones/CarrierEnemy/SpawnSplittersEffectResource.tres" id="2_v48fm"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_02re0"]
+[ext_resource type="Texture2D" uid="uid://bae5rlev537nl" path="res://Sprites/Enemies/carrier.png" id="4_h3svw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(12, 12)
+
+[node name="CarrierEnemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_58ibh")
+Effects = Dictionary[int, Array]({
+1: [ExtResource("2_v48fm")]
+})
+_baseEnemyStats = Dictionary[int, int]({
+0: 125,
+1: 100,
+2: 34,
+3: 1,
+4: 7
+})
+_offsetMargin = 0.55
+_damageNumberScene = ExtResource("3_02re0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_h3svw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

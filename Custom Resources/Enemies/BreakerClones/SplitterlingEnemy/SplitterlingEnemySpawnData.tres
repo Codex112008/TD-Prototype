@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EnemySpawnData" load_steps=3 format=3 uid="uid://cl76w4sekrrvt"]
 
-[ext_resource type="PackedScene" uid="uid://w6j2umc5xw4h" path="res://Custom Resources/Enemies/SplitterlingEnemy/SplitterlingEnemy.tscn" id="1_yrng1"]
+[ext_resource type="PackedScene" uid="uid://w6j2umc5xw4h" path="res://Custom Resources/Enemies/BreakerClones/SplitterlingEnemy/SplitterlingEnemy.tscn" id="1_yrng1"]
 [ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_1ys7x"]
 
 [resource]

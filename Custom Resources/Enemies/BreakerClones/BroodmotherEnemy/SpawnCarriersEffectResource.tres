@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SpawnEffect" load_steps=3 format=3 uid="uid://dy3kyjahi7nfb"]
+
+[ext_resource type="Resource" uid="uid://danojg6cxpy12" path="res://Custom Resources/Enemies/BreakerClones/CarrierEnemy/CarrierEnemySpawnData.tres" id="1_cy204"]
+[ext_resource type="Script" uid="uid://bqpsi6u8ujtu4" path="res://Custom Resources/EnemyEffects/Spawn/SpawnEffect.cs" id="2_ptkrd"]
+
+[resource]
+script = ExtResource("2_ptkrd")
+_enemiesToSpawn = Array[Object]([ExtResource("1_cy204")])
+_enemiesToSpawnCount = 4
+EffectInterval = 999.0
+metadata/_custom_type_script = "uid://bqpsi6u8ujtu4"
