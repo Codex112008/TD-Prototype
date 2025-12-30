@@ -22,7 +22,7 @@ Icon = ExtResource("3_5p4n7")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 1.1,
-2: 0.2,
+2: 0.5,
 3: 0.5
 })
 PointCost = 25

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c00fdoqvi8y2m"
-path="res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"
+uid="uid://bpkjblosht4mp"
+path="res://.godot/imported/PenatratorProjectileIcon.png-04f1bb11d46053a0a2898ae66ce18404.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower0Icon.png"
-dest_files=["res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"]
+source_file="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileIcon.png"
+dest_files=["res://.godot/imported/PenatratorProjectileIcon.png-04f1bb11d46053a0a2898ae66ce18404.ctex"]
 
 [params]
 

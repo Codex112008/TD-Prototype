@@ -19,7 +19,7 @@ Icon = ExtResource("3_gupmc")
 StatMultipliers = Dictionary[int, float]({
 0: 1.2,
 1: 1.2,
-2: 0.3,
+2: 0.6,
 3: 0.6
 })
 PointCost = 25
