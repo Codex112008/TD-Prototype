@@ -5,13 +5,15 @@ using System;
 public partial class SwordProjectileBehaviour : Node2D
 {
 	private static int swingCount = 0;
-	
+
 	[Export] private Line2D _swordTrail;
 	[Export] private Area2D _swordArea;
 	[Export] private AnimationPlayer _animationPlayer;
 	
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public SwordProjectile SwordData;
+
+	private int _hitCount = 0;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -43,10 +45,11 @@ public partial class SwordProjectileBehaviour : Node2D
 
 	public void OnBodyEntered(Node2D body)
 	{
-		if (body.IsInGroup("Enemy"))
+		if (body.IsInGroup("Enemy") && _hitCount < SwordData.Pierce)
 		{
 			foreach (TowerEffect effect in SwordData.Effects)
 				effect.ApplyEffect(Stats, (Enemy)body);
+			_hitCount++;
 		}
 	}
 }

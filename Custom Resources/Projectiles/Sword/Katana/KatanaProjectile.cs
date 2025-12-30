@@ -3,16 +3,15 @@ using Godot.Collections;
 using System;
 using System.Linq;
 
-public partial class SwordProjectile : Projectile
+public partial class KatanaProjectile : Projectile
 {
-    [Export] public int Pierce = 3;
-    public override SwordProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
+    public override KatanaProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
     {
-        SwordProjectileBehaviour sword = ProjectileScene.Instantiate<SwordProjectileBehaviour>();
+        KatanaProjectileBehaviour sword = ProjectileScene.Instantiate<KatanaProjectileBehaviour>();
         sword.GlobalPosition = firePoint.GlobalPosition;
         sword.Rotation = firePoint.GlobalRotation;
         sword.Stats = towerStats;
-        sword.SwordData = this;
+        sword.KatanaData = this;
 
         sword.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 

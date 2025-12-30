@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clb2twusijy1n"
-path="res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"
+uid="uid://bdadggbmxg3r3"
+path="res://.godot/imported/KatanaProjectileIcon.png-6f74074044ce3a2f7c9f34066ec0f957.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower0Icon.png"
-dest_files=["res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"]
+source_file="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.png"
+dest_files=["res://.godot/imported/KatanaProjectileIcon.png-6f74074044ce3a2f7c9f34066ec0f957.ctex"]
 
 [params]
 

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://2ulw61eoy6kc"]
+
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_poack"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_jpf0n"]
+[ext_resource type="Texture2D" uid="uid://db7d82fjh7ceo" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.png" id="3_gupmc"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_nk32a"]
+[ext_resource type="PackedScene" uid="uid://6nm2qdhy5al6" path="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileScene.tscn" id="5_npaiv"]
+[ext_resource type="Script" uid="uid://de8ilijurynp2" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectile.cs" id="8_isst8"]
+
+[resource]
+resource_name = "Saber"
+script = ExtResource("8_isst8")
+Pierce = 6
+ProjectileScene = ExtResource("5_npaiv")
+Effects = Array[ExtResource("1_poack")]([ExtResource("2_jpf0n")])
+NextTierProjectiles = Array[ExtResource("4_nk32a")]([])
+Tooltip = "light!"
+Icon = ExtResource("3_gupmc")
+StatMultipliers = Dictionary[int, float]({
+0: 1.2,
+1: 1.2,
+2: 0.3,
+3: 0.6
+})
+PointCost = 25

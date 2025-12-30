@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clb2twusijy1n"
-path="res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"
+uid="uid://dm4pqioybatm"
+path="res://.godot/imported/SaberProjectileIcon.png-b1c3d1d1c5d88693a7e4f81fe1dc5683.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower0Icon.png"
-dest_files=["res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"]
+source_file="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileIcon.png"
+dest_files=["res://.godot/imported/SaberProjectileIcon.png-b1c3d1d1c5d88693a7e4f81fe1dc5683.ctex"]
 
 [params]
 

@@ -17,9 +17,9 @@ NextTierProjectiles = Array[ExtResource("4_u68l0")]([])
 Tooltip = "Shanker!"
 Icon = ExtResource("3_da5l6")
 StatMultipliers = Dictionary[int, float]({
-0: 1.0,
-1: 1.0,
-2: 1.0,
-3: 2.0
+0: 0.7,
+1: 0.4,
+2: 0.7,
+3: 1.5
 })
 PointCost = 25
