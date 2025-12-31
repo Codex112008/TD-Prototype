@@ -1,9 +1,8 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://bsjvrp5crwmhs"]
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://bsjvrp5crwmhs"]
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_f8yvk"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_j1enh"]
 [ext_resource type="Texture2D" uid="uid://cc4d0jme0oo2b" path="res://Custom Resources/Projectiles/Sword/Dagger/DaggerProjectileIcon.png" id="3_da5l6"]
-[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_u68l0"]
 [ext_resource type="PackedScene" uid="uid://cbu2ghng7tley" path="res://Custom Resources/Projectiles/Sword/Dagger/DaggerProjectileScene.tscn" id="5_rjde2"]
 [ext_resource type="Script" uid="uid://vvl2xbsy8xuy" path="res://Custom Resources/Projectiles/Sword/Dagger/DaggerProjectile.cs" id="6_8sass"]
 
@@ -13,8 +12,12 @@ script = ExtResource("6_8sass")
 FireForce = 600.0
 ProjectileScene = ExtResource("5_rjde2")
 Effects = Array[ExtResource("1_f8yvk")]([ExtResource("2_j1enh")])
-NextTierProjectiles = Array[ExtResource("4_u68l0")]([])
-Tooltip = "Shanker!"
+NextTierProjectiles = []
+Tooltip = "Swift weapon that swaps between a weaker ranged projectile and stronger melee if target is in range
+Cost 0.7x
+Damage 0.4x
+Range 0.9x
+Firerate 1.5x"
 Icon = ExtResource("3_da5l6")
 StatMultipliers = Dictionary[int, float]({
 0: 0.7,

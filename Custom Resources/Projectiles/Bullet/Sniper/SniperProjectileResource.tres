@@ -1,9 +1,8 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://ds31paw0q7ffx"]
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://ds31paw0q7ffx"]
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_6jukb"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_ywoa0"]
 [ext_resource type="Texture2D" uid="uid://b6gwb45e55rl4" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileIcon.png" id="3_fn4ev"]
-[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_g6lcm"]
 [ext_resource type="PackedScene" uid="uid://dxeutwyglujug" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileScene.tscn" id="4_r8uir"]
 [ext_resource type="Script" uid="uid://c83flq2q3u2yx" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectile.cs" id="5_t7ucb"]
 
@@ -12,7 +11,7 @@ resource_name = "Sniper"
 script = ExtResource("5_t7ucb")
 ProjectileScene = ExtResource("4_r8uir")
 Effects = Array[ExtResource("1_6jukb")]([ExtResource("2_ywoa0")])
-NextTierProjectiles = Array[ExtResource("4_g6lcm")]([])
+NextTierProjectiles = []
 Tooltip = "Damage 5x
 Range 2.5x
 Fire Rate 0.25x"

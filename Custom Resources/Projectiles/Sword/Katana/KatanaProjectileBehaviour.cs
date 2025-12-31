@@ -9,12 +9,15 @@ public partial class KatanaProjectileBehaviour : CharacterBody2D
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public KatanaProjectile KatanaData;
 
+	private Dictionary<TowerStat, float> _originalStats;
 	private float _waveLifetime;
 	private float _realAlpha;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_originalStats = new(Stats);
+
 		_animationPlayer.Play("Swing");
 	}
 
@@ -59,6 +62,9 @@ public partial class KatanaProjectileBehaviour : CharacterBody2D
 			Tween tween = CreateTween();
 			tween.TweenProperty(this, "modulate", new Color(Modulate, Mathf.Max(0f, _realAlpha - (1 / KatanaData.Pierce))), 0.1f);
 			_realAlpha -= 1 / KatanaData.Pierce;
+
+			foreach (TowerStat stat in Stats.Keys)
+				Stats[stat] -= _originalStats[stat] * (1 / KatanaData.Pierce);
 		}
 	}
 

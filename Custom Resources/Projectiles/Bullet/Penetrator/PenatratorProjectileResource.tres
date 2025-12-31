@@ -3,18 +3,20 @@
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_e534y"]
 [ext_resource type="Script" uid="uid://bpv3jacvk66b1" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectile.cs" id="1_ert0g"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_mfk8y"]
-[ext_resource type="Texture2D" uid="uid://bpkjblosht4mp" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileIcon.png" id="3_7s3aa"]
+[ext_resource type="Texture2D" uid="uid://cpx7w5clg1kwx" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileIcon.png" id="3_7s3aa"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_4ho2r"]
 [ext_resource type="PackedScene" uid="uid://cf4br2y1cds13" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileScene.tscn" id="5_kc2mb"]
 
 [resource]
+resource_name = "Penetrator"
 script = ExtResource("1_ert0g")
 FireForce = 400.0
 Pierce = 3
 ProjectileScene = ExtResource("5_kc2mb")
 Effects = Array[ExtResource("1_e534y")]([ExtResource("2_mfk8y")])
 NextTierProjectiles = Array[ExtResource("4_4ho2r")]([])
-Tooltip = "THE BULLET THAT PIERCES THE HEAVENS"
+Tooltip = "THE BULLET THAT PIERCES THE HEAVENS
+Makes bullet pierce 3 enemies"
 Icon = ExtResource("3_7s3aa")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,

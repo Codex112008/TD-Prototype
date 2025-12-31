@@ -17,12 +17,15 @@ Pierce = 3
 ProjectileScene = ExtResource("5_ipf4s")
 Effects = Array[ExtResource("1_5qk4f")]([ExtResource("2_pqs5d")])
 NextTierProjectiles = Array[ExtResource("4_0qv0o")]([ExtResource("5_fg8ae"), ExtResource("5_ttxqc"), ExtResource("6_0e14u")])
-Tooltip = "Sword!"
+Tooltip = "Melee projectile! Dont set range too high or it will miss!
+Damage 1.1x
+Range 0.7x
+Firerate 0.7x"
 Icon = ExtResource("3_5p4n7")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 1.1,
 2: 0.7,
-3: 0.5
+3: 0.7
 })
 PointCost = 25
