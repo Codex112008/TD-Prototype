@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0qoobyl57oln"
-path="res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"
+uid="uid://c38xvdbkw7pbj"
+path="res://.godot/imported/bolt.png-d078f413dd128dcb62db3d0a948640d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower0Icon.png"
-dest_files=["res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"]
+source_file="res://Sprites/Enemies/bolt.png"
+dest_files=["res://.godot/imported/bolt.png-d078f413dd128dcb62db3d0a948640d3.ctex"]
 
 [params]
 

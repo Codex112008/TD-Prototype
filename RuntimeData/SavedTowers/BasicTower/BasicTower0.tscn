@@ -15,7 +15,7 @@
 [ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectile.cs" id="13_buup5"]
 [ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="14_ebdn7"]
 
-[sub_resource type="Resource" id="Resource_jy164"]
+[sub_resource type="Resource" id="Resource_4p7v7"]
 resource_name = "Bullet"
 script = ExtResource("13_buup5")
 FireForce = 300.0
@@ -41,11 +41,17 @@ script = ExtResource("2_aw6c5")
 _firePoint = NodePath("PivotPoint/FirePoint")
 _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
+BaseTowerStats = Dictionary[int, int]({
+0: 1000,
+1: 6,
+2: 25,
+3: 10
+})
 SpritesForIcon = [NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_4bvjf")
 _towerSelectedUIScene = ExtResource("4_o8qbj")
-Projectile = SubResource("Resource_jy164")
+Projectile = SubResource("Resource_4p7v7")
 TowerName = "Basic Tower"
 
 [node name="PivotPoint" type="Marker2D" parent="."]

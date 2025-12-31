@@ -161,6 +161,12 @@ public partial class EnemyManager : Node, IManager
 		spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
 		spawnedEnemy.SpawnedWave = CurrentWave;
 
+		// Adds effect to give cash on death
+		if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
+			spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath] = onDeathEffects + [new RewardEffect()];
+		else
+			spawnedEnemy.Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
+
 		EnemyParent.AddChild(spawnedEnemy);
 
 		_spawnTimer.Start();
@@ -222,9 +228,11 @@ public partial class EnemyManager : Node, IManager
 		return generatedWave;
 	}
 
-	public EnemySpawnData WeightedEnemyChoice(Array<EnemySpawnData> enemiesToSpawnData)
+	public EnemySpawnData WeightedEnemyChoice(Array<EnemySpawnData> enemiesToSpawnData, bool restrictWaves = true)
 	{
-		Array<EnemySpawnData> enemySpawnData = [.. new Array<EnemySpawnData>(enemiesToSpawnData).Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
+		Array<EnemySpawnData> enemySpawnData = [.. enemiesToSpawnData];
+		if (restrictWaves)
+			enemySpawnData = [.. new Array<EnemySpawnData>(enemiesToSpawnData).Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
 
 		int totalWeight = enemySpawnData.Sum(spawnData => spawnData.Weight);
 		int randomChoice = _tempRand.RandiRange(1, totalWeight);

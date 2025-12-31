@@ -91,12 +91,6 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		// Add effect that gives player money
-		if (Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
-			onDeathEffects.Add(new RewardEffect());
-		else
-			Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
-
 		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
 		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
 		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), _rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
@@ -209,7 +203,7 @@ public partial class Enemy : CharacterBody2D
 				{
 					foreach (Timer timer in _timerEffectTimers)
 					{
-						if (!timer.IsStopped())
+						if (!timer.Paused)
 							timer.Paused = true;
 					}
 				}
@@ -217,7 +211,7 @@ public partial class Enemy : CharacterBody2D
 				{
 					foreach (Timer timer in _timerEffectTimers)
 					{
-						if (timer.IsStopped())
+						if (timer.Paused)
 							timer.Paused = false;
 					}
 				}

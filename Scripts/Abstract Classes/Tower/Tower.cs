@@ -294,7 +294,12 @@ public abstract partial class Tower : Sprite2D
 
     protected float GetRangeInTiles()
     {
-        return GetFinalTowerStats()[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f;
+        return ConvertTowerRangeToTiles(GetFinalTowerStats()[TowerStat.Range]);
+    }
+
+    public static float ConvertTowerRangeToTiles(float rangeStat)
+    {
+        return rangeStat * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f;
     }
 
     protected Vector2 GetCenteredGlobalPosition()

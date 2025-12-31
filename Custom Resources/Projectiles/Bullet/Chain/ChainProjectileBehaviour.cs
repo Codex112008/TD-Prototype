@@ -93,7 +93,7 @@ public partial class ChainProjectileBehaviour : RayCast2D
             if (node is Enemy enemy)
             {
 				float distanceToEnemy = ToGlobal(targetPos).DistanceTo(enemy.GlobalPosition);
-                if ((closestEnemy == null || distanceToEnemy < ToGlobal(targetPos).DistanceTo(closestEnemy.GlobalPosition)) && !ChainedEnemies.Contains(enemy))
+                if ((closestEnemy == null || distanceToEnemy < ToGlobal(targetPos).DistanceTo(closestEnemy.GlobalPosition)) && !ChainedEnemies.Contains(enemy) && ToGlobal(targetPos).DistanceTo(enemy.GlobalPosition) < ChainData.MaxChainDistance)
                 {
                     closestEnemy = enemy;
                 }

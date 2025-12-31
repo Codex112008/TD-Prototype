@@ -4,6 +4,8 @@ using System.Linq;
 
 public partial class ChainProjectile : Projectile
 {
+    [Export] public float MaxChainDistance = 30f;
+
     public override ChainProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
     {
         ChainProjectileBehaviour projectile = ProjectileScene.Instantiate<ChainProjectileBehaviour>();

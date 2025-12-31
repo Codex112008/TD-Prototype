@@ -5,6 +5,10 @@ using System.Linq;
 
 public partial class KatanaProjectile : Projectile
 {
+    [Export] public float WaveMaxSpeed = 600f;
+    [Export] public float WaveInitialSpeed = 50f;
+    [Export] public int Pierce = 3;
+
     public override KatanaProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
     {
         KatanaProjectileBehaviour sword = ProjectileScene.Instantiate<KatanaProjectileBehaviour>();

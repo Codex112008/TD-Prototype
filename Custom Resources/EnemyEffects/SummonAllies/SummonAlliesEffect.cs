@@ -12,7 +12,8 @@ public partial class SummonAlliesEffect : EnemyEffect
 
     public async override void ApplyEffect(Enemy enemy)
     {
-        enemy.AddStatusEffectStacks(StatusEffect.Stun, 1.5f + _spawnDelay * (_enemiesToSpawnCount - 1));
+        GD.Print("Calling...");
+        enemy.AddStatusEffectStacks(StatusEffect.Stun, (1.5f + _spawnDelay * (_enemiesToSpawnCount - 1)) * 10);
 
         foreach (EnemySpawnData spawnData in _enemiesToSpawn)
         {
@@ -35,11 +36,11 @@ public partial class SummonAlliesEffect : EnemyEffect
         RandomNumberGenerator rand = new();
         for (int i = 0; i < _enemiesToSpawnCount; i++)
         {
-            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn).EnemyScene.Instantiate<Enemy>();
+            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false).EnemyScene.Instantiate<Enemy>();
             spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
 
             Vector2 centeredTileGlobalPos = PathfindingManager.instance.GlobalToCenteredGlobalTilePos(enemy.GlobalPosition);
-            Vector2 centeredTileTargetPos = PathfindingManager.instance.GlobalToCenteredGlobalTilePos(-enemy.Transform.Y * 8f);
+            Vector2 centeredTileTargetPos = PathfindingManager.instance.GlobalToCenteredGlobalTilePos(-enemy.Transform.Y.Normalized() * 8f);
             if (enemy.PathArray.Count > 0)
                 centeredTileTargetPos = PathfindingManager.instance.GlobalToCenteredGlobalTilePos(enemy.PathArray[1]);
             float distanceToTargetTile = Mathf.Min(centeredTileGlobalPos.DistanceTo(centeredTileTargetPos), 16f);
@@ -52,13 +53,6 @@ public partial class SummonAlliesEffect : EnemyEffect
 
             EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
             
-            if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
-            {
-                EnemyEffect rewardEffect = onDeathEffects.FirstOrDefault(effect => effect is RewardEffect);
-                if (rewardEffect != null)
-                    spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath].Remove(rewardEffect);
-            }
-
             if (i == _enemiesToSpawnCount - 1)
                 timer.WaitTime = 1f;
 
@@ -67,5 +61,7 @@ public partial class SummonAlliesEffect : EnemyEffect
         }
 
         timer.QueueFree();
+
+        GD.Print("Calling done!");
     }
 }

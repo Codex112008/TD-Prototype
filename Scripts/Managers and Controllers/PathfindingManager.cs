@@ -72,6 +72,11 @@ public partial class PathfindingManager : Node2D, IManager
 		return (Vector2I)(globalPos / TileSize);
 	}
 
+	public Vector2 GetTileToGlobalPos(Vector2I tilePos)
+	{
+		return tilePos * TileSize;
+	}
+
 	private void SetUpAStarGrid()
 	{
 		_aStarGrid = new()

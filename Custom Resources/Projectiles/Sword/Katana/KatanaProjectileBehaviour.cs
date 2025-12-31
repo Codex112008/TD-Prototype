@@ -2,39 +2,68 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public partial class KatanaProjectileBehaviour : Area2D
+public partial class KatanaProjectileBehaviour : CharacterBody2D
 {
 	[Export] private AnimationPlayer _animationPlayer;
 	
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public KatanaProjectile KatanaData;
-	
-	private Array<Enemy> _hitEnemies = [];
+
+	private float _waveLifetime;
+	private float _realAlpha;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_animationPlayer.Play("Slash");
+		_animationPlayer.Play("Swing");
 	}
 
-	public void OnBodyEntered(Node2D body)
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _PhysicsProcess(double delta)
 	{
-		if (body is Enemy enemy)
-		{
-			_hitEnemies.Add(enemy);
-			enemy.AddStatusEffectStacks(StatusEffect.Stun, Mathf.Floor((float)((_animationPlayer.CurrentAnimationLength - _animationPlayer.CurrentAnimationPosition) * 10f)));
-		}
+		if (Modulate.A == 0)
+			QueueFree();
+
+		MoveAndSlide();
 	}
 
 	public void OnAnimFinished(StringName animName)
 	{
-		foreach (Enemy enemy in _hitEnemies)
+		Velocity = -Transform.Y.Normalized() * KatanaData.WaveInitialSpeed;
+
+		VisibleOnScreenNotifier2D notifier = new();
+		AddChild(notifier);
+		notifier.ScreenExited += OnScreenExited;
+
+		_waveLifetime = Tower.ConvertTowerRangeToTiles(Stats[TowerStat.Range]) / KatanaData.WaveMaxSpeed * 2f;
+		Timer timer = new()
+		{
+			WaitTime = _waveLifetime,
+			Autostart = true,
+			OneShot = true
+		};
+		timer.Connect(Timer.SignalName.Timeout, Callable.From(QueueFree));
+		AddChild(timer);
+
+		Tween tween = CreateTween();
+		tween.TweenProperty(this, "velocity", -Transform.Y.Normalized() * KatanaData.WaveMaxSpeed, 0.5f).SetTrans(Tween.TransitionType.Expo);
+	}
+
+	public void OnBodyEntered(Node2D body)
+	{
+		if (body.IsInGroup("Enemy"))
 		{
 			foreach (TowerEffect effect in KatanaData.Effects)
-				effect.ApplyEffect(Stats, enemy);
-		}
+				effect.ApplyEffect(Stats, (Enemy)body);
 
-		if (animName.ToString().Contains("Slash"))
-			QueueFree();
+			Tween tween = CreateTween();
+			tween.TweenProperty(this, "modulate", new Color(Modulate, Mathf.Max(0f, _realAlpha - (1 / KatanaData.Pierce))), 0.1f);
+			_realAlpha -= 1 / KatanaData.Pierce;
+		}
 	}
+
+	private void OnScreenExited()
+    {
+		QueueFree();
+    }
 }

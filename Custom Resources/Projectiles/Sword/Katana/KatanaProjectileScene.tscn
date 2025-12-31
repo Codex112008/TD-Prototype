@@ -1,193 +1,159 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctho7p1gaayew"]
+[gd_scene load_steps=8 format=3 uid="uid://ctho7p1gaayew"]
 
 [ext_resource type="Script" uid="uid://cml3ud8vk1tw8" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileBehaviour.cs" id="1_xy37g"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jgplm"]
-size = Vector2(6, 0)
+size = Vector2(1, 1)
 
-[sub_resource type="Curve" id="Curve_616ea"]
-_data = [Vector2(0.00529101, 0.0087719), 0.0, 1.76951, 0, 0, Vector2(0.732804, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.78403, 0.0, 0, 0]
+[sub_resource type="Curve" id="Curve_xy37g"]
+_data = [Vector2(0, 0), 0.0, 3.48996, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(0.989316, 0.00723851), -3.48643, 0.0, 0, 0]
 point_count = 3
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_616ea"]
+size = Vector2(20, 4)
+
+[sub_resource type="Animation" id="Animation_rx226"]
+resource_name = "Swing"
+length = 0.2
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Polygon2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.785398, 1.1781, -3.92699]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Line2D:points")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0647812, 0.1082),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [PackedVector2Array(10, -1), PackedVector2Array(10, -1, 9.24554, -1.60357, 8.41978, -2.26418, 7.5, -3, 6.25341, -3.49863, 5, -4, 3.6876, -4.39372, 2.5, -4.75, 1.20106, -4.87989, 0, -5, -1.3048, -4.86952, -2.5, -4.75, -3.80397, -4.35881, -5, -4, -6.24506, -3.50198, -7.5, -3, -8.4206, -2.26352, -9.24468, -1.60426, -10, -1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Area2D:monitoring")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Polygon2D:color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.14, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_og761"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Line2D:points")
+tracks/0/path = NodePath("Polygon2D:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [PackedVector2Array(0, 0, 0, -1.85183, 1.45519e-11, -3.75, 0, -5.55191, 1.45519e-11, -7.5, 0, -9.12441, 0, -11.0893, 0, -13.0478, 0, -15, 0, -16.9711, 0, -18.8722, 0, -20.6074, 1.45519e-11, -22.5, 0, -24.5308, 1.45519e-11, -26.25, 0, -28.1607, 0, -30)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Polygon2D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Polygon2D:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [0.0]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Polygon2D:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("CollisionShape2D:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -15)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:shape:size")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(6, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_rx226"]
-resource_name = "Slash"
-length = 0.2
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Line2D:points")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [PackedVector2Array(0, 0, 0, -1.85183), PackedVector2Array(0, 0, 0, -1.85183, 1.45519e-11, -3.75, 0, -5.55191, 1.45519e-11, -7.5, 0, -9.12441, 0, -11.0893, 0, -13.0478, 0, -15, 0, -16.9711, 0, -18.8722, 0, -20.6074, 1.45519e-11, -22.5, 0, -24.5308, 1.45519e-11, -26.25, 0, -28.1607, 0, -30), PackedVector2Array(0, -28.1607, 0, -30)]
-}
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Polygon2D:position")
+tracks/1/path = NodePath("Line2D:points")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.02),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [Vector2(-8, 1), Vector2(-8, -29)]
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [PackedVector2Array(10, -1, 9.24554, -1.60357, 8.41978, -2.26418, 7.5, -3, 6.25341, -3.49863, 5, -4, 3.6876, -4.39372, 2.5, -4.75, 1.20106, -4.87989, 0, -5, -1.3048, -4.86952, -2.5, -4.75, -3.80397, -4.35881, -5, -4, -6.23317, -3.50673, -7.5, -3, -8.4206, -2.26352, -9.24468, -1.60426, -10, -1)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Polygon2D:rotation")
+tracks/2/path = NodePath("Area2D:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.41546]
+"update": 1,
+"values": [false]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Polygon2D:visible")
+tracks/3/path = NodePath("Polygon2D:color")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("CollisionShape2D:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.01),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0, -15)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:shape:size")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.01),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(6, 0), Vector2(6, 30)]
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_m8f5k"]
 _data = {
 &"RESET": SubResource("Animation_og761"),
-&"Slash": SubResource("Animation_rx226")
+&"Swing": SubResource("Animation_rx226")
 }
 
-[node name="KatanaProjectileScene" type="Area2D" node_paths=PackedStringArray("_animationPlayer")]
+[node name="KatanaProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("_animationPlayer")]
 collision_layer = 2
+collision_mask = 0
 script = ExtResource("1_xy37g")
 _animationPlayer = NodePath("AnimationPlayer")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_jgplm")
 
-[node name="Line2D" type="Line2D" parent="."]
-points = PackedVector2Array(0, 0, 0, -1.85183, 1.45519e-11, -3.75, 0, -5.55191, 1.45519e-11, -7.5, 0, -9.12441, 0, -11.0893, 0, -13.0478, 0, -15, 0, -16.9711, 0, -18.8722, 0, -20.6074, 1.45519e-11, -22.5, 0, -24.5308, 1.45519e-11, -26.25, 0, -28.1607, 0, -30)
-width = 7.0
-width_curve = SubResource("Curve_616ea")
-
 [node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(1.45519e-11, 1.45519e-11)
 polygon = PackedVector2Array(-1, 0, 1, 0, 1, -2, 2, -2, 2, -3, 1, -3, 1, -15, -1, -13, -1, -3, -2, -3, -2, -2, -1, -2)
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(1.45519e-11, -10)
+points = PackedVector2Array(10, -1, 9.24554, -1.60357, 8.41978, -2.26418, 7.5, -3, 6.25341, -3.49863, 5, -4, 3.6876, -4.39372, 2.5, -4.75, 1.20106, -4.87989, 0, -5, -1.3048, -4.86952, -2.5, -4.75, -3.80397, -4.35881, -5, -4, -6.23317, -3.50673, -7.5, -3, -8.4206, -2.26352, -9.24468, -1.60426, -10, -1)
+width = 1.5
+width_curve = SubResource("Curve_xy37g")
+joint_mode = 2
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -3.5)
+shape = SubResource("RectangleShape2D_616ea")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_m8f5k")
 }
 
-[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="OnAnimFinished"]

@@ -10,6 +10,9 @@
 [resource]
 resource_name = "Katana"
 script = ExtResource("6_mjup5")
+WaveMaxSpeed = 600.0
+WaveInitialSpeed = 100.0
+Pierce = 3
 ProjectileScene = ExtResource("5_t452s")
 Effects = Array[ExtResource("1_jorxp")]([ExtResource("2_0d2nn")])
 NextTierProjectiles = Array[ExtResource("4_hosw5")]([])

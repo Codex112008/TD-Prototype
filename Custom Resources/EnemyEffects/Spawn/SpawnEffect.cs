@@ -20,18 +20,11 @@ public partial class SpawnEffect : EnemyEffect
         RandomNumberGenerator rand = new();
         for (int i = 0; i < _enemiesToSpawnCount; i++)
         {
-            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn).EnemyScene.Instantiate<Enemy>();
+            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false).EnemyScene.Instantiate<Enemy>();
             spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
             spawnedEnemy.GlobalPosition = enemy.GlobalPosition;
 
             EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
-
-            if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
-            {
-                EnemyEffect rewardEffect = onDeathEffects.FirstOrDefault(effect => effect is RewardEffect);
-                if (rewardEffect != null)
-                    spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath].Remove(rewardEffect);
-            }
         }
     }
 }
