@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_memxc"]
 [ext_resource type="Script" uid="uid://bf8giyrob4xtd" path="res://Scripts/Tower/TowerSelectedUI.cs" id="2_jdetb"]
 
-[node name="TowerSelectedUI" type="VBoxContainer" node_paths=PackedStringArray("UpgradeButton", "_upgradeUI")]
+[node name="TowerSelectedUI" type="VBoxContainer" node_paths=PackedStringArray("UpgradeButton", "SellButton", "_upgradeUI")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -19,6 +19,7 @@ scale = Vector2(0.1, 0.1)
 theme = ExtResource("1_memxc")
 script = ExtResource("2_jdetb")
 UpgradeButton = NodePath("PanelContainer/VBoxContainer/Upgrade")
+SellButton = NodePath("PanelContainer/VBoxContainer/Sell")
 _upgradeUI = NodePath("PanelContainer")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]

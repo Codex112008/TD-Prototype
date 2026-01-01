@@ -4,6 +4,7 @@ using System;
 public partial class TowerSelectedUI : VBoxContainer
 {
 	[Export] public Button UpgradeButton;
+	[Export] public Button SellButton;
 	
 	[Export] private Control _upgradeUI;
 

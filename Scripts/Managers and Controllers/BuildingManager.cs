@@ -98,13 +98,15 @@ public partial class BuildingManager : Node2D, IManager
 			}
 		}
 
-		if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Escape)
+		if (@event is InputEventKey eventKey && eventKey.Pressed)
 		{
-			if (IsInstanceValid(TowerPreview))
+			if (eventKey.Keycode == Key.Escape)
 			{
 				SetSelectedTower();
-
-				TowerPreview.QueueFree();
+			}
+			else if (eventKey.Keycode == Key.Backspace)
+			{
+				DeleteSelectedTowerFromFilesystem();
 			}
 		}
 	}
@@ -138,7 +140,6 @@ public partial class BuildingManager : Node2D, IManager
             _selectedTower = null;
 			_sameTowerSelectedCounter = 0;
         }
-
 		else if (_towersToBuild[index] != _selectedTower)
 		{
 			_selectedTower = _towersToBuild[index];
@@ -173,11 +174,12 @@ public partial class BuildingManager : Node2D, IManager
 			TextureButton towerSelectionButton = TowerSelectionButtonContainer.GetChild<TextureButton>(i);
 			if (i < GetOpenTowerSlots())
 			{
+				RichTextLabel costLabel = towerSelectionButton.GetChild<RichTextLabel>(0);
+
 				if (i < _towersToBuild.Count)
 				{
 					Tower tempTower = _towersToBuild[i].Instantiate<Tower>();
-					RichTextLabel costLabel = towerSelectionButton.GetChild<RichTextLabel>(0);
-
+					
 					// Change button textures to saved tower icon
 					string iconFilePath = _towersToBuild[i].ResourcePath[6.._towersToBuild[i].ResourcePath.LastIndexOf('.')] + "Icon.png";
 					iconFilePath = Utils.AddCorrectDirectoryToPath(iconFilePath);
@@ -191,7 +193,7 @@ public partial class BuildingManager : Node2D, IManager
 					if (costLabel.Size.X > towerSelectionButton.Size.X)
 						towerSelectionButton.Size = new(costLabel.Size.X, 0);
 
-					towerSelectionButton.TooltipText = tempTower.TowerName + " - Select and click 'W' to design upgrade!";
+					towerSelectionButton.TooltipText = tempTower.TowerName + " - Select and click 'W' to design upgrade, 'Backspace' to delete\nWARNING: Deleting leaves unsellable instances of tower";
 
 					tempTower.QueueFree();
 				}
@@ -201,6 +203,8 @@ public partial class BuildingManager : Node2D, IManager
 					towerSelectionButton.TexturePressed = _openTowerSlotIcon;
 					towerSelectionButton.TextureHover = _openTowerSlotIcon;
 					towerSelectionButton.TooltipText = "Empty Slot! Click 'W' to make your tower!";
+
+					costLabel.Text = "";
 				}
 
 				towerSelectionButton.Disabled = false;
@@ -237,6 +241,14 @@ public partial class BuildingManager : Node2D, IManager
 		_playerCurrencyTween.TweenProperty(this, "_playerCurrencyToDisplay", PlayerCurrency, 1f).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.In);
 	}
 
+	public void DeleteSelectedTowerFromFilesystem()
+	{
+		Utils.RemoveDirRecursive(_pathToSavedTowers + Utils.RemoveWhitespaces(TowerPreview.TowerName));
+		SetSelectedTower();
+
+		Init(); // Remake tower selection buttons
+	}
+
 	public void Deload()
 	{
 		instance = null;
@@ -269,6 +281,6 @@ public partial class BuildingManager : Node2D, IManager
 
 	private int GetOpenTowerSlots()
 	{
-		return EnemyManager.instance.TowerSlotUnlockWave.Where(wave => wave <= EnemyManager.instance.CurrentWave).Count() + _startingTowerSlots;
+		return EnemyManager.instance.TowerSlotUnlockWave.Count(wave => wave <= EnemyManager.instance.CurrentWave) + _startingTowerSlots;
 	}
 }

@@ -31,6 +31,8 @@ public partial class TowerCreatorController : Node2D
 	private TowerColorPickerButton _towerColorPickerButton;
 	private TowerSelector _towerSelector;
 	private Tower _towerToCreatePreview;
+	private Button _saveButton;
+	private Timer _saveButtonTimer;
 
 	// Used for tower upgrading
 	[Export] public PackedScene BaseTowerScene;
@@ -136,17 +138,25 @@ public partial class TowerCreatorController : Node2D
 		};
 		_towerCreatorUI.AddChild(_totalTowerCostLabel);
 
-		Button saveButton = _towerCreatorUI.GetChild<Button>(0);
-		_towerCreatorUI.MoveChild(saveButton, -1); // Moves the save button to the last index, so appears last in container
+		_saveButton = _towerCreatorUI.GetChild<Button>(0);
+		_towerCreatorUI.MoveChild(_saveButton, -1); // Moves the save button to the last index, so appears last in container
 
 		UpdateTowerPreview();
 
 		// If no tower slots available, disable save button and display message on screen "No tower slots available, edit existing towers"
-		if (BuildingManager.instance.IsMaxTowersCreated())
+		if (BuildingManager.instance.IsMaxTowersCreated() && !_isUpgrading)
 		{
-			saveButton.Disabled = true;
-			saveButton.Text = "No tower slots available";
+			_saveButton.Disabled = true;
+			_saveButton.Text = "No tower slots available";
 		}
+
+		_saveButtonTimer = new()
+		{
+			WaitTime = 1f,
+			OneShot = true
+		};
+		_saveButtonTimer.Connect(Timer.SignalName.Timeout, Callable.From(ResetSaveButtonText));
+		AddChild(_saveButtonTimer);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -164,6 +174,9 @@ public partial class TowerCreatorController : Node2D
 		bool newTowerType = false;
 		if (_towerToCreatePreview.GetType().Name != _towerSelector.SelectedTowerTypeName())
 		{
+			if (_towerNameInput.Text == Utils.SplitIntoPascalCase(_towerToCreatePreview.GetType().Name))
+				_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerSelector.SelectedTowerTypeName());
+
 			_towerToCreatePreview.QueueFree();
 			InstantiateTowerPreview(_towerSelector.SelectedTowerType, false);
 			newTowerType = true;
@@ -243,13 +256,14 @@ public partial class TowerCreatorController : Node2D
 		// Only allow tower creation if valid point allocation
 		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
-			GD.Print("Successfully created tower!");
+			_saveButton.Text = "Saved " + _towerNameInput.Text + " Successfully!";
 		}
 		else
 		{
-			GD.Print("Tower is too strong");
+			_saveButton.Text = _towerNameInput.Text + " is too strong!";
 			return;
 		}
+		_saveButtonTimer.Start();
 
 		// Duplicates the tower preview to save temporaily so can change variables without changing the preview
 		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();
@@ -382,6 +396,11 @@ public partial class TowerCreatorController : Node2D
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		if (addToScene)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);
+	}
+
+	private void ResetSaveButtonText()
+	{
+		_saveButton.Text = "Save";
 	}
 
 	private int CalculateCurrentTotalPointsAllocated()

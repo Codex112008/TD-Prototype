@@ -54,6 +54,7 @@ public abstract partial class Tower : Sprite2D
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
+    private bool _inDisrepair = false;
 
     public override void _Ready()
     {        
@@ -88,6 +89,12 @@ public abstract partial class Tower : Sprite2D
 
     public override void _Process(double delta)
     {
+        if (_inDisrepair)
+            Modulate = new Color("#393f47");
+
+        if (!_inDisrepair && !FileAccess.FileExists(SceneFilePath))
+            _inDisrepair = true;
+
         if (PathfindingManager.instance.GetMouseGlobalTilemapPos() == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview || SelectedTower == this)
         {
             if (_rangeOverlay.Visible == false)
@@ -99,6 +106,12 @@ public abstract partial class Tower : Sprite2D
                 if (_selectedUI.Visible == false)
                     _selectedUI.Visible = true;
                 _selectedUI.Scale = _selectedUI.Scale.Lerp(Vector2.One * 0.1f, 12.5f * (float)delta);
+
+                if (_inDisrepair) // Changes button texts if doesnt meet req to sell
+                {
+                    _selectedUI.SellButton.Text = "Cant Sell!";
+                    _selectedUI.UpgradeButton.Text = "Cant Upgrade!";
+                }
             }
         }
         else
@@ -124,7 +137,7 @@ public abstract partial class Tower : Sprite2D
         {
             Vector2I mousePos = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 
-            if (mousePos == (Vector2I)GlobalPosition)
+            if (mousePos == (Vector2I)GlobalPosition && !_inDisrepair)
             {
                 if (SelectedTower != this)
                     SelectedTower = this;
@@ -224,6 +237,9 @@ public abstract partial class Tower : Sprite2D
             {
                 foreach (TowerEffect effect in Projectile.Effects)
                     finalTowerStats[stat] *= effect.StatMultipliers[stat];
+
+                if (stat == TowerStat.Range && _inDisrepair)
+                    finalTowerStats[stat] *= 0f;
             }
         }
         return finalTowerStats;
@@ -231,34 +247,40 @@ public abstract partial class Tower : Sprite2D
 
     public void Upgrade()
     {
-        if (DoesUpgradeExist())
+        if (!_inDisrepair) 
         {
-            // Spawn upgraded tower
-            Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
-            Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
-            upgradedTower.GlobalPosition = GlobalPosition;
-            BuildingManager.instance.TowerParent.AddChild(upgradedTower);
+            if (DoesUpgradeExist())
+            {
+                // Spawn upgraded tower
+                Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
+                Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
+                upgradedTower.GlobalPosition = GlobalPosition;
+                BuildingManager.instance.TowerParent.AddChild(upgradedTower);
 
-            // Deduct player currency by difference in cost stats
-            BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] - upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
+                // Deduct player currency by difference in cost stats
+                BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] - upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
 
-            // Delete current tower
-            QueueFree();
+                // Delete current tower
+                QueueFree();
+            }
+            else // If no upgrade exists send to upgrade creator
+                RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, GD.Load<PackedScene>(SceneFilePath));
         }
-        else // If no upgrade exists send to upgrade creator
-            RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, GD.Load<PackedScene>(SceneFilePath));
     }
 
     public void Sell()
     {
-        // Give back some amount of money
-        BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] * SellPercentage));
+        if (!_inDisrepair)
+        {
+            // Give back some amount of money
+            BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] * SellPercentage));
 
-        // Make tile buildable again
-        PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize)] = true;
+            // Make tile buildable again
+            PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize)] = true;
 
-        // Delete current tower
-        QueueFree();
+            // Delete current tower
+            QueueFree();
+        }
     }
 
     protected bool DoesUpgradeExist()
@@ -299,7 +321,10 @@ public abstract partial class Tower : Sprite2D
 
     public static float ConvertTowerRangeToTiles(float rangeStat)
     {
-        return rangeStat * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f;
+        if (IsInstanceValid(PathfindingManager.instance.LevelTilemap))
+            return rangeStat * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 10f;
+        else
+            return rangeStat * 3.2f; // shouldnt do anything cuz only nulls if im swapping scenes where its irrelevant
     }
 
     protected Vector2 GetCenteredGlobalPosition()
