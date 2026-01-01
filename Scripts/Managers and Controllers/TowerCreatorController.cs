@@ -66,7 +66,10 @@ public partial class TowerCreatorController : Node2D
 		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
 		_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerToCreatePreview.Name);
 		if (_isUpgrading) // Cant change name if its an upgraded tower
+		{
 			_towerNameInput.Editable = false;
+			_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerToCreatePreview.TowerName);
+		}
 
 		// Sets default color
 		_towerColorPickerButton = _towerCreatorUI.GetChild<TowerColorPickerButton>(2);
@@ -266,13 +269,21 @@ public partial class TowerCreatorController : Node2D
 		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
 			_saveButton.Text = "Saved " + _towerNameInput.Text + " Successfully!";
+			_saveButtonTimer.Start();
 		}
 		else
 		{
 			_saveButton.Text = _towerNameInput.Text + " is too strong!";
+			_saveButtonTimer.Start();
 			return;
 		}
-		_saveButtonTimer.Start();
+		// Cant make tower if name already used
+		if (DirAccess.DirExistsAbsolute(_savedTowerFilePath + Utils.RemoveWhitespaces(_towerNameInput.Text)))
+		{
+			_saveButton.Text = "Tower named " + _towerNameInput.Text + " already exists!";
+			_saveButtonTimer.Start();
+			return;
+		}
 
 		// Duplicates the tower preview to save temporaily so can change variables without changing the preview
 		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();

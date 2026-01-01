@@ -66,6 +66,7 @@ alignment = 1
 layout_mode = 2
 theme = ExtResource("5_bk7jn")
 text = "Save"
+autowrap_mode = 3
 
 [node name="NameInput" type="LineEdit" parent="UI/TowerCreatorUIPanel/TowerCreatorUI"]
 custom_minimum_size = Vector2(0, 44)

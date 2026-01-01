@@ -72,6 +72,15 @@ public partial class RunController : Node2D
 		}
 	}
 
+	public override void _Notification(int what)
+	{
+		if (what == NotificationWMCloseRequest)
+		{
+			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
+				SaveLevel();
+		}
+	}
+
 	public async void SwapScene(PackedScene scene, Key direction, PackedScene towerDataToSendToScene = null)
 	{
 		if (scene == TowerUpgradeTreeViewerScene && towerDataToSendToScene == null)
