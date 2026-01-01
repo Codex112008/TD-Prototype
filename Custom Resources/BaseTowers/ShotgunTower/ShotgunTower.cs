@@ -74,7 +74,7 @@ public partial class ShotgunTower : Tower
 
     protected override int GetPointCostFromDamage()
     {
-        return BaseTowerStats[TowerStat.Damage] * 75;
+        return BaseTowerStats[TowerStat.Damage] * 125;
     }
 
     protected override int GetPointCostFromRange()
@@ -84,6 +84,6 @@ public partial class ShotgunTower : Tower
     
     protected override int GetPointCostFromFireRate()
     {
-        return BaseTowerStats[TowerStat.FireRate] * 50;
+        return BaseTowerStats[TowerStat.FireRate] * 100;
     }
 }

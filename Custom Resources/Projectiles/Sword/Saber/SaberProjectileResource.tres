@@ -25,4 +25,4 @@ StatMultipliers = Dictionary[int, float]({
 2: 0.9,
 3: 0.8
 })
-PointCost = 25
+PointCost = 75

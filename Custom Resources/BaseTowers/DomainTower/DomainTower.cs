@@ -52,4 +52,19 @@ public partial class DomainTower : Tower
 
 		Projectile.InstantiateProjectile(GetFinalTowerStats(), _firePoint);
     }
+
+	protected override int GetPointCostFromDamage()
+    {
+        return BaseTowerStats[TowerStat.Damage] * 50;
+    }
+
+	protected override int GetPointCostFromRange()
+    {
+        return BaseTowerStats[TowerStat.Range] * -1;
+    }
+
+	protected override int GetPointCostFromFireRate()
+    {
+        return BaseTowerStats[TowerStat.FireRate] * 50;
+    }
 }

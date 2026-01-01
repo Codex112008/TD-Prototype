@@ -13,7 +13,7 @@ config_version=5
 config/name="TD-Prototype"
 run/main_scene="uid://caojnjbhas8t5"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
-config/icon="res://Sprites/icon.svg"
+config/icon="uid://3t6ry881quig"
 
 [autoload]
 
@@ -23,6 +23,7 @@ Utils="*res://Scripts/Autoloads/Utils.cs"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/size/mode=3
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
