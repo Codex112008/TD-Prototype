@@ -8,12 +8,13 @@ resource_name = "Stun"
 script = ExtResource("2_or5c1")
 DamageType = 0
 Tooltip = "Stuns enemies
-Stops them for 0.5x damage seconds
+Stun length scales off damage
+Damage 0.2x
 Firerate 0.5x"
 Icon = ExtResource("1_dmcdo")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 1.0,
+1: 0.2,
 2: 1.0,
 3: 0.5
 })
