@@ -49,6 +49,7 @@ public abstract partial class Tower : Sprite2D
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
+    public bool RequireEnemy = true;
     [Export] public string TowerName;
     public float SellPercentage = 0.8f;
 
@@ -332,20 +333,35 @@ public abstract partial class Tower : Sprite2D
         return GlobalPosition + PathfindingManager.instance.LevelTilemap.TileSet.TileSize / 2;
     }
 
+    protected bool VectorInRange(Vector2 pos)
+    {
+        return GlobalPosition.DistanceTo(pos) <= GetRangeInTiles();
+    }
+
     // Placeholder, change to actual targetting system later
-    protected Enemy FindFirstEnemy()
+    protected CharacterBody2D FindFirstEnemy()
     {
         Enemy firstEnemy = null;
         foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
         {
             if (node is Enemy enemy)
             {
-                float distanceToEnemy = GetCenteredGlobalPosition().DistanceTo(enemy.GlobalPosition);
-                if (((firstEnemy == null) || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && distanceToEnemy <= GetRangeInTiles())
+                if (((firstEnemy == null) || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && VectorInRange(enemy.GlobalPosition))
                 {
                     firstEnemy = enemy;
                 }
             }
+        }
+
+        if (firstEnemy == null && !RequireEnemy)
+        {
+            RandomNumberGenerator rand = new();
+            CharacterBody2D dummyBody = new()
+            {
+                GlobalPosition = new Vector2(rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()), rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()))
+            };
+            AddChild(dummyBody);
+            return dummyBody;
         }
 
         return firstEnemy;

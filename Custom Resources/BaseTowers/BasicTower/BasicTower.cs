@@ -7,7 +7,7 @@ public partial class BasicTower : Tower
     [Export] private float _rotateSpeed;
 
     private Timer _fireTimer;
-    private Enemy _target = null;
+    private CharacterBody2D _target = null;
 
     public override void _Ready()
     {
@@ -33,16 +33,13 @@ public partial class BasicTower : Tower
                 _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
             }
 
-            if (GetTree().GetNodeCountInGroup("Enemy") > 0)
+            if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !RequireEnemy)
             {
-                Enemy firstEnemy = FindFirstEnemy();
-                if (_target != firstEnemy)
+                if (IsInstanceValid(_target))
                 {
-                    _target = firstEnemy;
-                }
+                    if (!VectorInRange(_target.GlobalPosition))
+                        _target = FindFirstEnemy();
 
-                if (_target != null)
-                {
                     Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / 250f));
                     float targetAngle = dir.Angle() + Mathf.Pi / 2f;
                     _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, targetAngle, _rotateSpeed * (float)delta);
@@ -52,8 +49,13 @@ public partial class BasicTower : Tower
                         _pivotPoint.Rotation = targetAngle;
                         Fire();
                         _fireTimer.Start();
+
+                        if (_target.GetParent() == this)
+                            _target.QueueFree();
                     }
                 }
+                else
+                    _target = FindFirstEnemy();
             }
         }
     }

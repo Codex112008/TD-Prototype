@@ -21,7 +21,7 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] private Texture2D _openTowerSlotIcon;
 
 	public Tower TowerPreview = null;
-	public int PlayerCurrency = 30000;
+	public int PlayerCurrency = 300;
 	private int _playerCurrencyToDisplay = 0;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
