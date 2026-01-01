@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cc4d0jme0oo2b"
-path="res://.godot/imported/DaggerProjectileIcon.png-f09c574787cbd527c8bc1aed37d580e4.ctex"
+uid="uid://biacqpks63uax"
+path="res://.godot/imported/BurnEffectIconAlt.png-0ffca142cb81804ea48645f7c698672a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Custom Resources/Projectiles/Sword/Dagger/DaggerProjectileIcon.png"
-dest_files=["res://.godot/imported/DaggerProjectileIcon.png-f09c574787cbd527c8bc1aed37d580e4.ctex"]
+source_file="res://Custom Resources/TowerEffects/Burn/BurnEffectIconAlt.png"
+dest_files=["res://.godot/imported/BurnEffectIconAlt.png-0ffca142cb81804ea48645f7c698672a.ctex"]
 
 [params]
 

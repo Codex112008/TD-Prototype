@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=3 format=3 uid="uid://jahoctuj4y7s"]
 
-[ext_resource type="Texture2D" uid="uid://chk2jm1sg4ia2" path="res://Custom Resources/TowerEffects/Poison/PoisonEffectIcon.png" id="1_h2g1i"]
+[ext_resource type="Texture2D" uid="uid://hhw5bovwbcga" path="res://Custom Resources/TowerEffects/Poison/PoisonEffectIcon.png" id="1_h2g1i"]
 [ext_resource type="Script" uid="uid://cjkq4jeps5m2b" path="res://Custom Resources/TowerEffects/Poison/PoisonEffect.cs" id="2_1fq8o"]
 
 [resource]

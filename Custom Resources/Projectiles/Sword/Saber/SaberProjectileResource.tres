@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_poack"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_jpf0n"]
-[ext_resource type="Texture2D" uid="uid://db7d82fjh7ceo" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.png" id="3_gupmc"]
+[ext_resource type="Texture2D" uid="uid://dek28asj0ivir" path="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileIcon.tres" id="3_jt38a"]
 [ext_resource type="PackedScene" uid="uid://6nm2qdhy5al6" path="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileScene.tscn" id="5_npaiv"]
 [ext_resource type="Script" uid="uid://de8ilijurynp2" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectile.cs" id="8_isst8"]
 
@@ -18,7 +18,7 @@ Cost 1.2x
 Damage 2x
 Range 0.9x
 Firerate 0.6x"
-Icon = ExtResource("3_gupmc")
+Icon = ExtResource("3_jt38a")
 StatMultipliers = Dictionary[int, float]({
 0: 1.2,
 1: 2.0,

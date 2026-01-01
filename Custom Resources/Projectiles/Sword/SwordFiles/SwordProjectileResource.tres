@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_5qk4f"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_pqs5d"]
-[ext_resource type="Texture2D" uid="uid://db7d82fjh7ceo" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.png" id="3_5p4n7"]
+[ext_resource type="Texture2D" uid="uid://ugkntt4wqhie" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.tres" id="3_fg8ae"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_0qv0o"]
 [ext_resource type="Resource" uid="uid://2ulw61eoy6kc" path="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileResource.tres" id="5_fg8ae"]
 [ext_resource type="PackedScene" uid="uid://c2bcy2dgu5oty" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileScene.tscn" id="5_ipf4s"]
@@ -21,7 +21,7 @@ Tooltip = "Melee projectile! Dont set range too high or it will miss!
 Damage 1.1x
 Range 0.7x
 Firerate 0.7x"
-Icon = ExtResource("3_5p4n7")
+Icon = ExtResource("3_fg8ae")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 1.1,

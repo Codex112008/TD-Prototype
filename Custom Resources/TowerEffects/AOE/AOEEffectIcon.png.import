@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://du7erba07fv82"
-path="res://.godot/imported/BasicTower1Icon.png-a895ae926b25ebf39314bab8ed3e3b43.ctex"
+uid="uid://bh6g4krb8oba8"
+path="res://.godot/imported/AOEEffectIcon.png-a04489392062cac80697fe6ebdae0c60.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower1Icon.png"
-dest_files=["res://.godot/imported/BasicTower1Icon.png-a895ae926b25ebf39314bab8ed3e3b43.ctex"]
+source_file="res://Custom Resources/TowerEffects/AOE/AOEEffectIcon.png"
+dest_files=["res://.godot/imported/AOEEffectIcon.png-a04489392062cac80697fe6ebdae0c60.ctex"]
 
 [params]
 

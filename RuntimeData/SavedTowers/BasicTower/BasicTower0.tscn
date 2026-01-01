@@ -6,30 +6,32 @@
 [ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_o8qbj"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_6dswb"]
 [ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="6_wogk0"]
-[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileIcon.png" id="7_n47li"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.tres" id="7_n47li"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="8_3farx"]
-[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileResource.tres" id="9_dmyd1"]
-[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileResource.tres" id="10_efxsp"]
-[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileResource.tres" id="11_2q8sh"]
-[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileScene.tscn" id="12_hlapn"]
-[ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectile.cs" id="13_buup5"]
+[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileResource.tres" id="9_dmyd1"]
+[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Sword/Dagger/DaggerProjectileResource.tres" id="10_efxsp"]
+[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileResource.tres" id="11_2q8sh"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileScene.tscn" id="12_hlapn"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectile.cs" id="13_buup5"]
 [ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="14_ebdn7"]
 
-[sub_resource type="Resource" id="Resource_4p7v7"]
-resource_name = "Bullet"
+[sub_resource type="Resource" id="Resource_jy164"]
+resource_name = "Sword"
 script = ExtResource("13_buup5")
-FireForce = 300.0
+Pierce = 3
 ProjectileScene = ExtResource("12_hlapn")
 Effects = Array[ExtResource("5_6dswb")]([ExtResource("6_wogk0")])
 NextTierProjectiles = Array[ExtResource("8_3farx")]([ExtResource("9_dmyd1"), ExtResource("10_efxsp"), ExtResource("11_2q8sh")])
-Tooltip = "Shoot a bullet
-Nothing Special"
+Tooltip = "Melee projectile! Dont set range too high or it will miss!
+Damage 1.1x
+Range 0.7x
+Firerate 0.7x"
 Icon = ExtResource("7_n47li")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 1.0,
-2: 1.0,
-3: 1.0
+1: 1.1,
+2: 0.7,
+3: 0.7
 })
 PointCost = 25
 
@@ -41,17 +43,11 @@ script = ExtResource("2_aw6c5")
 _firePoint = NodePath("PivotPoint/FirePoint")
 _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
-BaseTowerStats = Dictionary[int, int]({
-0: 1000,
-1: 6,
-2: 25,
-3: 10
-})
 SpritesForIcon = [NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
 _rangeOverlayTexture = ExtResource("3_4bvjf")
 _towerSelectedUIScene = ExtResource("4_o8qbj")
-Projectile = SubResource("Resource_4p7v7")
+Projectile = SubResource("Resource_jy164")
 TowerName = "Basic Tower"
 
 [node name="PivotPoint" type="Marker2D" parent="."]
