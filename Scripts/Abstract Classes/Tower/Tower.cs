@@ -92,7 +92,7 @@ public abstract partial class Tower : Sprite2D
         if (_inDisrepair)
             Modulate = new Color("#393f47");
 
-        if (!_inDisrepair && !FileAccess.FileExists(SceneFilePath))
+        if (!_inDisrepair && !FileAccess.FileExists(SceneFilePath) && !RangeAlwaysVisible)
             _inDisrepair = true;
 
         if (PathfindingManager.instance.GetMouseGlobalTilemapPos() == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview || SelectedTower == this)

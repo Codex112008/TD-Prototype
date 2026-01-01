@@ -27,9 +27,8 @@ public partial class NewRunButton : Button
 		string towerDataSaveFilePath = "RuntimeData/SavedTowers/";
 		towerDataSaveFilePath = Utils.AddCorrectDirectoryToPath(towerDataSaveFilePath);
 		dirAccess.ChangeDir(towerDataSaveFilePath);
-		if (!DirAccess.DirExistsAbsolute(towerDataSaveFilePath))
-			DirAccess.MakeDirRecursiveAbsolute(towerDataSaveFilePath);
 		Utils.RemoveDirRecursive(towerDataSaveFilePath);
+		DirAccess.MakeDirRecursiveAbsolute(towerDataSaveFilePath);
 
 		GetTree().ChangeSceneToFile(_runControllerScene.ResourcePath);
 	}

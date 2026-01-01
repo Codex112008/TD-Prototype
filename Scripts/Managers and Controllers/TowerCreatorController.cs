@@ -105,10 +105,10 @@ public partial class TowerCreatorController : Node2D
 			switch (stat)
 			{
 				case TowerStat.Cost:
-					statPickerSpinBox.Step = 25;
 					statPickerSpinBox.MaxValue = 1000;
 					if (_isUpgrading)
 						statPickerSpinBox.MinValue = 50;
+					statPickerSpinBox.Editable = false;
 					break;
 				case TowerStat.Range:
 					statPickerSpinBox.Step = 5;
@@ -182,6 +182,7 @@ public partial class TowerCreatorController : Node2D
 			newTowerType = true;
 		}
 
+		StatSelector costSelector = null;
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
 		{
@@ -191,7 +192,8 @@ public partial class TowerCreatorController : Node2D
 				// Updates stat picker text and sets it on the preview
 				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text));
 				UpdateTowerPreviewStat(statSelector, stat);
-
+				if (stat == TowerStat.Cost)
+					costSelector = statSelector;
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
@@ -224,6 +226,13 @@ public partial class TowerCreatorController : Node2D
 
 		// Change name of the node
 		_towerToCreatePreview.TowerName = _towerNameInput.Text;
+
+		// Auto sets cost spinbox TODO: Remove point usage text
+		if (costSelector != null)
+		{
+			costSelector.StatSpinBox.Value = CalculateCurrentTotalPointsAllocated();
+			UpdateTowerPreviewStat(costSelector, TowerStat.Cost);
+		}
 
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)
