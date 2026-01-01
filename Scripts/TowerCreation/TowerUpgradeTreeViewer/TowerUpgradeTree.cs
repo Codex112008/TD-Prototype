@@ -54,6 +54,8 @@ public partial class TowerUpgradeTree : Node2D
 
 		Button addUpgradeButton = _towerUpgradeTreeUI.GetChild<Button>(0);
 		_towerUpgradeTreeUI.MoveChild(addUpgradeButton, -1); // Moves the add upgrade button to the last index, so appears last in container
+
+		ChangeTowerPreview(0);
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -63,8 +65,7 @@ public partial class TowerUpgradeTree : Node2D
 
 	public void ChangeTowerPreview(int towerLevelToDisplay)
     {
-		if (_towerPreview != null)
-			_towerPreview.QueueFree();
+		_towerPreview?.QueueFree();
         _towerPreview = GD.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + towerLevelToDisplay + ".tscn").Instantiate<Tower>();
 		_towerPreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
 		_towerPreview.RangeAlwaysVisible = true;
