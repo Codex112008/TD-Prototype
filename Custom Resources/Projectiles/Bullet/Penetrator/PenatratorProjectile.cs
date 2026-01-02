@@ -17,7 +17,8 @@ public partial class PenatratorProjectile : Projectile
 
         bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        tower.InstancedProjectiles.AddChild(bullet);
+        if (IsInstanceValid(tower.InstancedProjectiles))
+            tower.InstancedProjectiles.AddChild(bullet);
 
         return bullet;
     }

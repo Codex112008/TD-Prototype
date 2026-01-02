@@ -70,7 +70,8 @@ public partial class ShotgunTower : Tower
         foreach (Marker2D firePoint in _firePoints)
         {
             firePoint.RotationDegrees = _rand.RandfRange(-_shotSpread, _shotSpread);
-            Projectile.InstantiateProjectile(this, firePoint, _target.GlobalPosition);
+            
+            Projectile.InstantiateProjectile(this, firePoint, Utils.RotateVectorAroundPoint(_target.GlobalPosition, GlobalPosition, firePoint.Rotation));
         }
     }
 

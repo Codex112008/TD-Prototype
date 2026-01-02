@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public partial class DomainTower : Tower
@@ -47,12 +48,17 @@ public partial class DomainTower : Tower
 		// Randomises firepoint pos and rotation
 		float distance;
 		float angle;
-		do
+        if (Projectile.RequireEnemy)
         {
             distance = _rand.RandfRange(0f, GetRangeInTiles());
             angle = _rand.RandfRange(0f, Mathf.Tau);
             _firePoint.Position = distance * Vector2.FromAngle(angle);
-        } while (!PathfindingManager.instance.IsTileAtGlobalPosSolid(_firePoint.GlobalPosition) && !Projectile.RequireEnemy);
+        }
+        else
+        {
+            Array<Vector2I> walkableTilesInRange = GetWalkableTilesInRange();
+            _firePoint.GlobalPosition = PathfindingManager.instance.GetTileToGlobalPos(walkableTilesInRange[_rand.RandiRange(0, walkableTilesInRange.Count - 1)]) + new Vector2(_rand.RandfRange(6f, 10f), _rand.RandfRange(6f, 10f));
+        }
 		_firePoint.Rotation = _rand.RandfRange(0f, Mathf.Tau);
 
 		Projectile.InstantiateProjectile(this, _firePoint, _firePoint.GlobalPosition);

@@ -16,7 +16,8 @@ public partial class SwordProjectile : Projectile
 
         sword.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        tower.InstancedProjectiles.AddChild(sword);
+        if (IsInstanceValid(tower.InstancedProjectiles))
+            tower.InstancedProjectiles.AddChild(sword);
 
         return sword;
     }

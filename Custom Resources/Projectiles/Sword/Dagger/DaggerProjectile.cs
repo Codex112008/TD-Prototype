@@ -17,7 +17,8 @@ public partial class DaggerProjectile : Projectile
 
         dagger.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        tower.InstancedProjectiles.AddChild(dagger);
+        if (IsInstanceValid(tower.InstancedProjectiles))
+            tower.InstancedProjectiles.AddChild(dagger);
 
         return dagger;
     }

@@ -32,6 +32,7 @@ public partial class AOEEffectBehaviour : Area2D
 			{
 				if (body is Enemy enemy)
 				{
+					GD.Print(Stats[TowerStat.Damage]);
 					_aoeEffect.ApplyEffect(Stats, enemy);
 				}
 			}

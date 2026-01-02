@@ -11,18 +11,19 @@ public partial class SpikeProjectile : Projectile
     {
         if (IsInstanceValid(tower.InstancedProjectiles) && tower.InstancedProjectiles.GetChildCount() < MaxSpawns)
         {
-            SpikeProjectileBehaviour bullet = ProjectileScene.Instantiate<SpikeProjectileBehaviour>();
-            bullet.GlobalPosition = firePoint.GlobalPosition;
-            bullet.Rotation = firePoint.GlobalRotation;
-            bullet.Stats = tower.GetFinalTowerStats();
-            bullet.TargetPos = targetGlobalPos;
-            bullet.SpikeData = this;
+            SpikeProjectileBehaviour spike = ProjectileScene.Instantiate<SpikeProjectileBehaviour>();
+            spike.GlobalPosition = firePoint.GlobalPosition;
+            spike.Rotation = firePoint.GlobalRotation;
+            spike.Stats = tower.GetFinalTowerStats();
+            spike.TargetPos = targetGlobalPos;
+            spike.SpikeData = this;
 
-            bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
+            spike.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-            tower.InstancedProjectiles.AddChild(bullet);
+            if (IsInstanceValid(tower.InstancedProjectiles))
+                tower.InstancedProjectiles.AddChild(spike);
 
-            return bullet;
+            return spike;
         }
         else
             return null;

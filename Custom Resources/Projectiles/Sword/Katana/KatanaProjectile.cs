@@ -11,16 +11,17 @@ public partial class KatanaProjectile : Projectile
 
     public override KatanaProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)
     {
-        KatanaProjectileBehaviour sword = ProjectileScene.Instantiate<KatanaProjectileBehaviour>();
-        sword.GlobalPosition = firePoint.GlobalPosition;
-        sword.Rotation = firePoint.GlobalRotation;
-        sword.Stats = tower.GetFinalTowerStats();
-        sword.KatanaData = this;
+        KatanaProjectileBehaviour katana = ProjectileScene.Instantiate<KatanaProjectileBehaviour>();
+        katana.GlobalPosition = firePoint.GlobalPosition;
+        katana.Rotation = firePoint.GlobalRotation;
+        katana.Stats = tower.GetFinalTowerStats();
+        katana.KatanaData = this;
 
-        sword.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
+        katana.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        tower.InstancedProjectiles.AddChild(sword);
+        if (IsInstanceValid(tower.InstancedProjectiles))
+            tower.InstancedProjectiles.AddChild(katana);
 
-        return sword;
+        return katana;
     }
 }

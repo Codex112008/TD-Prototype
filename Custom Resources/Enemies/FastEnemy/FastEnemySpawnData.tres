@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1_8rycm")
 EnemyScene = ExtResource("1_pmos3")
-BaseWeight = 3
+BaseWeight = 2
 MinWave = 4
 MaxWave = 20
 QtyLow = 6

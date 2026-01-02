@@ -19,13 +19,13 @@ Effects = Array[ExtResource("1_hd3nc")]([ExtResource("2_2c2mt")])
 NextTierProjectiles = Array[ExtResource("4_vbifc")]([])
 RequireEnemy = false
 Tooltip = "Send out suicide drones! 5 drones max
-Damage 7.5x
-Firerate 0.35x"
+Damage 5x
+Firerate 0.3x"
 Icon = ExtResource("3_hd3nc")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 7.5,
+1: 5.0,
 2: 1.0,
-3: 0.35
+3: 0.3
 })
 PointCost = 75

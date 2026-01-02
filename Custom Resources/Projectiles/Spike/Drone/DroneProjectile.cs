@@ -13,17 +13,18 @@ public partial class DroneProjectile : Projectile
     {
         if (IsInstanceValid(tower.InstancedProjectiles) && tower.InstancedProjectiles.GetChildCount() < MaxSpawns)
         {
-            DroneProjectileBehaviour bullet = ProjectileScene.Instantiate<DroneProjectileBehaviour>();
-            bullet.GlobalPosition = firePoint.GlobalPosition;
-            bullet.Rotation = firePoint.GlobalRotation;
-            bullet.Stats = tower.GetFinalTowerStats();
-            bullet.DroneData = this;
+            DroneProjectileBehaviour drone = ProjectileScene.Instantiate<DroneProjectileBehaviour>();
+            drone.GlobalPosition = firePoint.GlobalPosition;
+            drone.Rotation = firePoint.GlobalRotation;
+            drone.Stats = tower.GetFinalTowerStats();
+            drone.DroneData = this;
 
-            bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
+            drone.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-            tower.InstancedProjectiles.AddChild(bullet);
+            if (IsInstanceValid(tower.InstancedProjectiles))
+                tower.InstancedProjectiles.AddChild(drone);
 
-            return bullet;
+            return drone;
         }
         else
             return null;

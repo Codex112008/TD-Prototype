@@ -15,7 +15,8 @@ public partial class SniperProjectile : Projectile
         // Colors the line
         projectile.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        tower.InstancedProjectiles.AddChild(projectile);
+        if (IsInstanceValid(tower.InstancedProjectiles))
+            tower.InstancedProjectiles.AddChild(projectile);
 
         return projectile;
     }

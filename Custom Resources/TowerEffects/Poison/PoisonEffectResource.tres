@@ -8,7 +8,7 @@ resource_name = "Poison"
 script = ExtResource("2_1fq8o")
 DamageType = 2
 Tooltip = "Poisons enemies
-Does 0.1% max hp every second per stack
+Does 0.01% max hp every second per stack
 Firerate 0.75x"
 Icon = ExtResource("1_h2g1i")
 StatMultipliers = Dictionary[int, float]({

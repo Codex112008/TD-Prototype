@@ -123,4 +123,16 @@ public partial class Utils : Node
 		
 		return new Tuple<string, int>(inputString[..(lastNonDigitIndex + 1)], int.Parse(inputString[(lastNonDigitIndex + 1)..]));
     }
+
+	public static Vector2 RotateVectorAroundPoint(Vector2 point, Vector2 center, float angleRadians)
+	{
+		// Get relative position
+		Vector2 relative = point - center;
+		
+		// Rotate relative vector
+		Vector2 rotatedRelative = relative.Rotated(angleRadians);
+		
+		// Convert back to absolute position
+		return rotatedRelative + center;
+	}
 }

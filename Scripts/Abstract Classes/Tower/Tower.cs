@@ -374,7 +374,7 @@ public abstract partial class Tower : Sprite2D
 
         if (firstEnemy == null && !Projectile.RequireEnemy)
         {
-            Array<Vector2I> walkableTilesInRange = GetWalkableTileInRange();
+            Array<Vector2I> walkableTilesInRange = GetWalkableTilesInRange();
             if (walkableTilesInRange.Count > 0)
             {
                 RandomNumberGenerator rand = new();
@@ -385,6 +385,7 @@ public abstract partial class Tower : Sprite2D
 
                 CharacterBody2D dummyBody = new();
                 AddChild(dummyBody);
+                //dummyBody.AddChild(new Sprite2D(){Texture = _projectile.Icon});
                 dummyBody.GlobalPosition = randomPos;
                 return dummyBody;
             }
@@ -393,7 +394,7 @@ public abstract partial class Tower : Sprite2D
         return firstEnemy;
     }
 
-    private Array<Vector2I> GetWalkableTileInRange()
+    protected Array<Vector2I> GetWalkableTilesInRange()
     {
         TileMapLayer tilemap = PathfindingManager.instance.LevelTilemap;
         Array<Vector2I> tilePosArray = [.. tilemap.GetUsedCells().Select(tile => PathfindingManager.instance.GlobalToCenteredGlobalTilePos(PathfindingManager.instance.GetTileToGlobalPos(tile))).Where(VectorInRange).Select(PathfindingManager.instance.GlobalToTilePos).Where(tile => (int)tilemap.GetCellTileData(tile).GetCustomData("MovementCost") < 10)];
