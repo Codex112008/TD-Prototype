@@ -1,0 +1,70 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_a46hj"]
+[ext_resource type="Script" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_crkna"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_6lp06"]
+[ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_bi53j"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_3v23r"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/AOE/AOEEffectResource.tres" id="6_063yo"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Burn/BurnEffectResource.tres" id="7_ug8se"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="8_qqoec"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectileIcon.png" id="9_xckk6"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="10_srqtb"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectileScene.tscn" id="11_q14j6"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectile.cs" id="12_w41ea"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="13_vqlh2"]
+
+[sub_resource type="Resource" id="Resource_3l8cp"]
+resource_name = "Drone"
+script = ExtResource("12_w41ea")
+FireSpeed = 200.0
+MaxSpawns = 5
+SummonSpeed = 30.0
+SummonAcceleration = 5.0
+ProjectileScene = ExtResource("11_q14j6")
+Effects = Array[ExtResource("5_3v23r")]([ExtResource("6_063yo"), ExtResource("7_ug8se"), ExtResource("8_qqoec")])
+NextTierProjectiles = Array[ExtResource("10_srqtb")]([])
+RequireEnemy = false
+Tooltip = "Send out suicide drones! 5 drones max
+Damage 5x
+Firerate 0.3x"
+Icon = ExtResource("9_xckk6")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 5.0,
+2: 1.0,
+3: 0.3
+})
+PointCost = 75
+
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_a46hj")
+centered = false
+script = ExtResource("2_crkna")
+_firePoint = NodePath("PivotPoint/FirePoint")
+_pivotPoint = NodePath("PivotPoint")
+_rotateSpeed = 20.0
+BaseTowerStats = Dictionary[int, int]({
+0: 4995,
+1: 176,
+2: 10,
+3: 5
+})
+SpritesForIcon = [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
+SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+_rangeOverlayTexture = ExtResource("3_6lp06")
+_towerSelectedUIScene = ExtResource("4_bi53j")
+Projectile = SubResource("Resource_3l8cp")
+TowerName = "Basic     Tower"
+
+[node name="PivotPoint" type="Marker2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
+self_modulate = Color(0.133333, 0.505882, 1, 1)
+position = Vector2(0, -2)
+texture = ExtResource("13_vqlh2")
+
+[node name="FirePoint" type="Marker2D" parent="PivotPoint"]
+position = Vector2(0, -6)

@@ -21,6 +21,9 @@ public partial class AOEEffectBehaviour : Area2D
 		_tween.TweenProperty(_aoeSprite, "scale", Vector2.One * Stats[TowerStat.Range] * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 400f, 0.05f);
 		_tween.TweenProperty(_aoeSprite, "scale", Vector2.Zero, 0.075f).SetDelay(0.05f);
 		_tween.TweenCallback(Callable.From(QueueFree));
+
+		foreach (TowerStat stat in Stats.Keys)
+			Stats[stat] = Mathf.Max(Stats[stat], 0f);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,7 +35,6 @@ public partial class AOEEffectBehaviour : Area2D
 			{
 				if (body is Enemy enemy)
 				{
-					GD.Print(Stats[TowerStat.Damage]);
 					_aoeEffect.ApplyEffect(Stats, enemy);
 				}
 			}

@@ -218,7 +218,7 @@ public partial class RunController : Node2D
 			{ "CurrentWave", EnemyManager.instance.CurrentWave }
 
 		};
-		if (EnemyManager.instance.EnemyParent.GetChildCount() > 0)
+		if (EnemyManager.instance.EnemyParent.GetChildren().Count(child => child is Enemy enemy && enemy.SpawnedWave > 0) > 0)
 			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy enemy && enemy.SpawnedWave > 0).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
 		saveFile.StoreLine(Json.Stringify(gameData));
 
