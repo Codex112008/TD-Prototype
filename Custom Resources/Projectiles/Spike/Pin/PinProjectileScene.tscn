@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://bktxjpkbhlk4o"]
+
+[ext_resource type="Script" uid="uid://dolqklrygupqv" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileBehaviour.cs" id="1_ca57v"]
+[ext_resource type="Texture2D" uid="uid://c3yp3t54mvxqt" path="res://Custom Resources/Projectiles/Spike/Pin/PinProjectileIcon.png" id="2_cay5v"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rb7fd"]
+size = Vector2(2, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j7mya"]
+size = Vector2(10, 10)
+
+[node name="PinProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("_sprite")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_ca57v")
+_sprite = NodePath("Sprite2D")
+_friction = 20.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_rb7fd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_cay5v")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_j7mya")
+
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]

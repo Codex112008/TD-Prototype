@@ -27,7 +27,6 @@ public partial class Enemy : CharacterBody2D
 	private RandomNumberGenerator _rand = new();
 	private bool _isDead = false;
 	private Timer _reachedBaseFreeTimer = null;
-
 	private bool _showMaxHp = true;
 
 	public override void _Ready()
@@ -93,7 +92,7 @@ public partial class Enemy : CharacterBody2D
 
 		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
 		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
-		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2, offsetMargin / 2), _rand.RandfRange(-offsetMargin / 2, offsetMargin / 2));
+		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f), _rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f));
 		for (int i = 1; i < PathArray.Count - 1; i++)
 			PathArray[i] += offset;
 	}

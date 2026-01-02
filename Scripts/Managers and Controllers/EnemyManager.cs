@@ -30,10 +30,10 @@ public partial class EnemyManager : Node, IManager
 	public bool InLevel = false;
 	public bool InTowerCreator = false;
 	public Array<Vector2> BaseLocations;
+	public Array<Vector2> SpawnPoints;
 
 	private List<Tuple<EnemySpawnData, bool>> _enemySpawnQueue = []; // Should only be one wave at a time
 	private int _tileSize;
-	private Array<Vector2> _spawnPoints;
 	private RichTextLabel _waveCounter;
 	private Button _startWaveButton;
 	private RandomNumberGenerator _tempRand = null; // Keep a temp copy of rand so can restore old version if saving in middle of wave for deterministic rng
@@ -68,7 +68,7 @@ public partial class EnemyManager : Node, IManager
 		{
 			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
 			spawnedEnemy.TargetPos = BaseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, BaseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = _spawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, _spawnPoints.Count - 1)];
+			spawnedEnemy.GlobalPosition = SpawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, SpawnPoints.Count - 1)];
 
 			EnemyParent.AddChild(spawnedEnemy);
 
@@ -84,7 +84,7 @@ public partial class EnemyManager : Node, IManager
 
 		_enemySpawnQueue = [];
 
-		_spawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
+		SpawnPoints = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Spawn")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
 		BaseLocations = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Where(tilePos => (bool)PathfindingManager.instance.LevelTilemap.GetCellTileData(tilePos).GetCustomData("Base")).Select(PathfindingManager.instance.LevelTilemap.MapToLocal)];
 		foreach (Vector2 location in BaseLocations)
 		{
@@ -158,7 +158,7 @@ public partial class EnemyManager : Node, IManager
 
 		Enemy spawnedEnemy = enemyToSpawn.Item1.EnemyScene.Instantiate<Enemy>();
 		spawnedEnemy.TargetPos = BaseLocations[_tempRand.RandiRange(0, BaseLocations.Count - 1)];
-		spawnedEnemy.GlobalPosition = _spawnPoints[_tempRand.RandiRange(0, _spawnPoints.Count - 1)];
+		spawnedEnemy.GlobalPosition = SpawnPoints[_tempRand.RandiRange(0, SpawnPoints.Count - 1)];
 		spawnedEnemy.SpawnedWave = CurrentWave;
 
 		// Adds effect to give cash on death

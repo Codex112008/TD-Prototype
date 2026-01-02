@@ -176,6 +176,12 @@ public partial class TowerCreatorController : Node2D
 			newTowerType = true;
 		}
 
+		if (IsInstanceValid(_towerToCreatePreview.InstancedProjectiles))
+		{
+			foreach(Node node in _towerToCreatePreview.InstancedProjectiles.GetChildren())
+				node.QueueFree();
+		}
+
 		StatSelector costSelector = null;
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)

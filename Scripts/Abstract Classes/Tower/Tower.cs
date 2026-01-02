@@ -88,11 +88,14 @@ public abstract partial class Tower : Sprite2D
         AddChild(_selectedUI);
         _selectedUI.Position = rectSize;
 
-        InstancedProjectiles = new Node()
+        if (!IsInstanceValid(InstancedProjectiles))
         {
-            Name = "Projectiles"
-        };
-        AddChild(InstancedProjectiles);
+            InstancedProjectiles = new Node()
+            {
+                Name = "Projectiles"
+            };
+            AddChild(InstancedProjectiles);
+        }
     }
 
     public override void _Process(double delta)
@@ -259,11 +262,11 @@ public abstract partial class Tower : Sprite2D
         {
             if (DoesUpgradeExist())
             {
-                if (Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost]) <= BuildingManager.instance.PlayerCurrency)
+                // Spawn upgraded tower
+                Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
+                Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
+                if (Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - GetFinalTowerStats()[TowerStat.Cost]) <= BuildingManager.instance.PlayerCurrency)
                 {
-                    // Spawn upgraded tower
-                    Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
-                    Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
                     upgradedTower.GlobalPosition = GlobalPosition;
                     BuildingManager.instance.TowerParent.AddChild(upgradedTower);
 
@@ -277,6 +280,7 @@ public abstract partial class Tower : Sprite2D
                 {
                     GetTree().CreateTimer(1f).Connect(Timer.SignalName.Timeout, Callable.From(_selectedUI.ResetUpgradeButtonText));
                     _selectedUI.UpgradeButton.Text = "Need Money!";
+                    upgradedTower.QueueFree();
                 }
             }
             else // If no upgrade exists send to upgrade creator
@@ -350,7 +354,7 @@ public abstract partial class Tower : Sprite2D
 
     protected bool VectorInRange(Vector2 pos)
     {
-        return GlobalPosition.DistanceTo(pos) <= GetRangeInTiles();
+        return (GlobalPosition + (Vector2.One * 8f)).DistanceTo(pos) <= GetRangeInTiles();
     }
 
     // Placeholder, change to actual targetting system later
@@ -368,7 +372,7 @@ public abstract partial class Tower : Sprite2D
             }
         }
 
-        if (firstEnemy == null && !Projectile.RequireEnemy)
+        if (firstEnemy == null && !Projectile.RequireEnemy && IsWalkableTileInRange())
         {
             RandomNumberGenerator rand = new();
             Vector2 randomPos;
@@ -376,15 +380,25 @@ public abstract partial class Tower : Sprite2D
                 randomPos = new Vector2(rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()), rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()));
             while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
 
-            CharacterBody2D dummyBody = new()
-            {
-                GlobalPosition = randomPos
-            };
+            CharacterBody2D dummyBody = new();
             AddChild(dummyBody);
+            dummyBody.Position = randomPos + Vector2.One * 8f;
             return dummyBody;
         }
 
         return firstEnemy;
+    }
+
+    private bool IsWalkableTileInRange()
+    {
+        Array<Vector2I> tilemap = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Select(tile => PathfindingManager.instance.GlobalToCenteredGlobalTilePos(PathfindingManager.instance.GetTileToGlobalPos(tile))).Where(VectorInRange).Select(PathfindingManager.instance.GlobalToTilePos)];
+        foreach (Vector2I tile in tilemap)
+        {
+            TileData tileData = PathfindingManager.instance.LevelTilemap.GetCellTileData(tile);
+            if ((int)tileData.GetCustomData("MovementCost") < 10)
+                return true;
+        }
+        return false;
     }
 
     protected abstract void Fire();

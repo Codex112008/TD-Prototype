@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=3 format=3 uid="uid://08kipvbksfmg"]
 
-[ext_resource type="Texture2D" uid="uid://ln2m4e10mfud" path="res://Custom Resources/TowerEffects/Burn/BurnEffectIcon.png" id="1_m4nmw"]
+[ext_resource type="Texture2D" uid="uid://biacqpks63uax" path="res://Custom Resources/TowerEffects/Burn/BurnEffectIconAlt.png" id="1_m4nmw"]
 [ext_resource type="Script" uid="uid://bu870jpbxjvq6" path="res://Custom Resources/TowerEffects/Burn/BurnEffect.cs" id="2_5f8ix"]
 
 [resource]

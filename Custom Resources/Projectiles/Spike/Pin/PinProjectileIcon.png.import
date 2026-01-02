@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0mfihyew3wi1"
-path="res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"
+uid="uid://c3yp3t54mvxqt"
+path="res://.godot/imported/PinProjectileIcon.png-22e15ad7d382fdaa7b9fb6fd859d84f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower0Icon.png"
-dest_files=["res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"]
+source_file="res://Custom Resources/Projectiles/Spike/Pin/PinProjectileIcon.png"
+dest_files=["res://.godot/imported/PinProjectileIcon.png-22e15ad7d382fdaa7b9fb6fd859d84f7.ctex"]
 
 [params]
 

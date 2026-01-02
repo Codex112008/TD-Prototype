@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0x0bwxjtp7ht"
-path="res://.godot/imported/ImpalerProjectileIcon.png-60d1a66926ab9875d995d82078a49280.ctex"
+uid="uid://cxpldl2gx5sha"
+path="res://.godot/imported/DroneProjectileIcon.png-6d12fe5f695ce37f7162159977365174.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Custom Resources/Projectiles/Spike/ImpalerFiles/ImpalerProjectileIcon.png"
-dest_files=["res://.godot/imported/ImpalerProjectileIcon.png-60d1a66926ab9875d995d82078a49280.ctex"]
+source_file="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectileIcon.png"
+dest_files=["res://.godot/imported/DroneProjectileIcon.png-6d12fe5f695ce37f7162159977365174.ctex"]
 
 [params]
 

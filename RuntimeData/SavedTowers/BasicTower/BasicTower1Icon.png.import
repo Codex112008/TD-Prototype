@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0x7pnewaa0rd"
-path="res://.godot/imported/Basicballs0Icon.png-d68f756f93f515ff3e20f5b7e22827d0.ctex"
+uid="uid://cw567xytx0peu"
+path="res://.godot/imported/BasicTower1Icon.png-a895ae926b25ebf39314bab8ed3e3b43.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/Basicballs/Basicballs0Icon.png"
-dest_files=["res://.godot/imported/Basicballs0Icon.png-d68f756f93f515ff3e20f5b7e22827d0.ctex"]
+source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower1Icon.png"
+dest_files=["res://.godot/imported/BasicTower1Icon.png-a895ae926b25ebf39314bab8ed3e3b43.ctex"]
 
 [params]
 

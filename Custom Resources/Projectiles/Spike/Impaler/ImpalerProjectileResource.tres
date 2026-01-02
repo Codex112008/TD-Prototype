@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://dtnnf61nrq76o"]
+
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_22wh3"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_jav1n"]
+[ext_resource type="Texture2D" uid="uid://c0x0bwxjtp7ht" path="res://Custom Resources/Projectiles/Spike/Impaler/ImpalerProjectileIcon.png" id="3_3qxh0"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_365nt"]
+[ext_resource type="PackedScene" uid="uid://5bv8ovr38p3m" path="res://Custom Resources/Projectiles/Spike/Impaler/ImpalerProjectileScene.tscn" id="5_xeuc6"]
+[ext_resource type="Script" uid="uid://xlewu2y8qnfw" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectile.cs" id="6_wsuik"]
+
+[resource]
+resource_name = "Impaler"
+script = ExtResource("6_wsuik")
+Speed = 200.0
+MaxSpawns = 5
+ProjectileScene = ExtResource("5_xeuc6")
+Effects = Array[ExtResource("1_22wh3")]([ExtResource("2_jav1n")])
+NextTierProjectiles = Array[ExtResource("4_365nt")]([])
+RequireEnemy = false
+Tooltip = "Spiker spikes, 5 spikes max
+Damge 20x
+Firerate 0.1x"
+Icon = ExtResource("3_3qxh0")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 20.0,
+2: 1.0,
+3: 0.1
+})
+PointCost = 75

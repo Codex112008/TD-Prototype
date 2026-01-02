@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://dhnj5x43pktwn"]
+
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_hv8yh"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_1uskx"]
+[ext_resource type="Texture2D" uid="uid://c3yp3t54mvxqt" path="res://Custom Resources/Projectiles/Spike/Pin/PinProjectileIcon.png" id="3_xf3dr"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_pfcrd"]
+[ext_resource type="PackedScene" uid="uid://bktxjpkbhlk4o" path="res://Custom Resources/Projectiles/Spike/Pin/PinProjectileScene.tscn" id="5_xf3dr"]
+[ext_resource type="Script" uid="uid://xlewu2y8qnfw" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectile.cs" id="6_o1wjo"]
+
+[resource]
+resource_name = "Pin"
+script = ExtResource("6_o1wjo")
+Speed = 200.0
+MaxSpawns = 20
+ProjectileScene = ExtResource("5_xf3dr")
+Effects = Array[ExtResource("1_hv8yh")]([ExtResource("2_1uskx")])
+NextTierProjectiles = Array[ExtResource("4_pfcrd")]([])
+RequireEnemy = false
+Tooltip = "Tiny spikes, 20 spikes max
+Damge 0.5x
+Firerate 2x"
+Icon = ExtResource("3_xf3dr")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 0.5,
+2: 1.0,
+3: 2.0
+})
+PointCost = 75
