@@ -22,7 +22,7 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] private Texture2D _openTowerSlotIcon;
 
 	public Tower TowerPreview = null;
-	public int PlayerCurrency = 300;
+	public int PlayerCurrency = 600;
 	public Dictionary<int, int> CurrencyAtWaveRecord = [];
 	private int _playerHealth = 10;
 	private PackedScene _selectedTower = null;

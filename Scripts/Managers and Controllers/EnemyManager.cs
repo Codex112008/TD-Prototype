@@ -118,7 +118,8 @@ public partial class EnemyManager : Node, IManager
 
 	private void StartWave()
 	{
-		BuildingManager.instance.CurrencyAtWaveRecord.Add(CurrentWave, BuildingManager.instance.PlayerCurrency);
+		if (!BuildingManager.instance.CurrencyAtWaveRecord.ContainsKey(CurrentWave))
+			BuildingManager.instance.CurrencyAtWaveRecord.Add(CurrentWave, BuildingManager.instance.PlayerCurrency);
 		
 		CurrentWave++;
 

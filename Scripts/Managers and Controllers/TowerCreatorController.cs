@@ -206,7 +206,6 @@ public partial class TowerCreatorController : Node2D
 					towerComponent = ProjectileOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
 				else
 					towerComponent = EffectOptions[modifierPicker.ItemList.GetSelectedItems()[0]];
-					
 
 				if (towerComponent is Projectile projectile)
 					_towerToCreatePreview.Projectile = projectile;
