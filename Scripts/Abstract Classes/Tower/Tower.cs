@@ -49,9 +49,9 @@ public abstract partial class Tower : Sprite2D
 
     public bool IsBuildingPreview = false;
     public bool RangeAlwaysVisible = false;
-    public bool RequireEnemy = true;
     [Export] public string TowerName;
     public float SellPercentage = 0.8f;
+    public Node InstancedProjectiles;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
@@ -80,12 +80,19 @@ public abstract partial class Tower : Sprite2D
             Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
             Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
             _selectedUI.UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - GetFinalTowerStats()[TowerStat.Cost]);
+            upgradedTower.QueueFree();
         }
         else
             _selectedUI.UpgradeButton.Text = "Create an upgrade!";
             
         AddChild(_selectedUI);
         _selectedUI.Position = rectSize;
+
+        InstancedProjectiles = new Node()
+        {
+            Name = "Projectiles"
+        };
+        AddChild(InstancedProjectiles);
     }
 
     public override void _Process(double delta)
@@ -252,17 +259,25 @@ public abstract partial class Tower : Sprite2D
         {
             if (DoesUpgradeExist())
             {
-                // Spawn upgraded tower
-                Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
-                Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
-                upgradedTower.GlobalPosition = GlobalPosition;
-                BuildingManager.instance.TowerParent.AddChild(upgradedTower);
+                if (Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost]) <= BuildingManager.instance.PlayerCurrency)
+                {
+                    // Spawn upgraded tower
+                    Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
+                    Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
+                    upgradedTower.GlobalPosition = GlobalPosition;
+                    BuildingManager.instance.TowerParent.AddChild(upgradedTower);
 
-                // Deduct player currency by difference in cost stats
-                BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] - upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
+                    // Deduct player currency by difference in cost stats
+                    BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] - upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
 
-                // Delete current tower
-                QueueFree();
+                    // Delete current tower
+                    QueueFree();
+                }
+                else
+                {
+                    GetTree().CreateTimer(1f).Connect(Timer.SignalName.Timeout, Callable.From(_selectedUI.ResetUpgradeButtonText));
+                    _selectedUI.UpgradeButton.Text = "Need Money!";
+                }
             }
             else // If no upgrade exists send to upgrade creator
                 RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, GD.Load<PackedScene>(SceneFilePath));
@@ -353,12 +368,17 @@ public abstract partial class Tower : Sprite2D
             }
         }
 
-        if (firstEnemy == null && !RequireEnemy)
+        if (firstEnemy == null && !Projectile.RequireEnemy)
         {
             RandomNumberGenerator rand = new();
+            Vector2 randomPos;
+            do
+                randomPos = new Vector2(rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()), rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()));
+            while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
+
             CharacterBody2D dummyBody = new()
             {
-                GlobalPosition = new Vector2(rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()), rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()))
+                GlobalPosition = randomPos
             };
             AddChild(dummyBody);
             return dummyBody;

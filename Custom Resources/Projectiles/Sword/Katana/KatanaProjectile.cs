@@ -9,17 +9,17 @@ public partial class KatanaProjectile : Projectile
     [Export] public float WaveInitialSpeed = 50f;
     [Export] public int Pierce = 3;
 
-    public override KatanaProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
+    public override KatanaProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
     {
         KatanaProjectileBehaviour sword = ProjectileScene.Instantiate<KatanaProjectileBehaviour>();
         sword.GlobalPosition = firePoint.GlobalPosition;
         sword.Rotation = firePoint.GlobalRotation;
-        sword.Stats = towerStats;
+        sword.Stats = tower.GetFinalTowerStats();
         sword.KatanaData = this;
 
         sword.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        BuildingManager.instance.InstancedNodesParent.AddChild(sword);
+        tower.InstancedProjectiles.AddChild(sword);
 
         return sword;
     }

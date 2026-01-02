@@ -38,7 +38,7 @@ public partial class ShotgunTower : Tower
                 _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
             }
 
-            if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !RequireEnemy)
+            if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
                 if (_target != null)
                 {
@@ -70,7 +70,7 @@ public partial class ShotgunTower : Tower
         foreach (Marker2D firePoint in _firePoints)
         {
             firePoint.RotationDegrees = _rand.RandfRange(-_shotSpread, _shotSpread);
-            Projectile.InstantiateProjectile(GetFinalTowerStats(), firePoint);
+            Projectile.InstantiateProjectile(this, firePoint);
         }
     }
 

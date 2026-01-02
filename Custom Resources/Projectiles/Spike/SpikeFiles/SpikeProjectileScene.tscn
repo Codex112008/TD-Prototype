@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwlpo4h5j18uu"]
+
+[ext_resource type="Script" uid="uid://dolqklrygupqv" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileBehaviour.cs" id="1_j7mya"]
+[ext_resource type="Texture2D" uid="uid://dg3m0oms0gtm" path="res://Sprites/TowerComponents/Projectiles/Bullet/Bullet.png" id="1_k3cel"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rb7fd"]
+size = Vector2(2, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j7mya"]
+size = Vector2(6, 6)
+
+[node name="SpikeProjectileScene" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_j7mya")
+_friction = 35.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_rb7fd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_k3cel")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_j7mya")
+
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]

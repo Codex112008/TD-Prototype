@@ -6,18 +6,18 @@ public partial class ChainProjectile : Projectile
 {
     [Export] public float MaxChainDistance = 30f;
 
-    public override ChainProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
+    public override ChainProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
     {
         ChainProjectileBehaviour projectile = ProjectileScene.Instantiate<ChainProjectileBehaviour>();
         projectile.GlobalPosition = firePoint.GlobalPosition;
         projectile.Rotation = firePoint.GlobalRotation;
-        projectile.Stats = towerStats;
+        projectile.Stats = tower.GetFinalTowerStats();
         projectile.ChainData = this;
 
         // Colors the line
         projectile.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        BuildingManager.instance.InstancedNodesParent.AddChild(projectile);
+        tower.InstancedProjectiles.AddChild(projectile);
 
         return projectile;
     }

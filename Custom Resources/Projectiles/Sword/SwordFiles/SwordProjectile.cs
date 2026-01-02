@@ -6,17 +6,17 @@ using System.Linq;
 public partial class SwordProjectile : Projectile
 {
     [Export] public int Pierce = 3;
-    public override SwordProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
+    public override SwordProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
     {
         SwordProjectileBehaviour sword = ProjectileScene.Instantiate<SwordProjectileBehaviour>();
         sword.GlobalPosition = firePoint.GlobalPosition;
         sword.Rotation = firePoint.GlobalRotation;
-        sword.Stats = towerStats;
+        sword.Stats = tower.GetFinalTowerStats();
         sword.SwordData = this;
 
         sword.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        BuildingManager.instance.InstancedNodesParent.AddChild(sword);
+        tower.InstancedProjectiles.AddChild(sword);
 
         return sword;
     }

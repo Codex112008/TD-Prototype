@@ -22,12 +22,10 @@ public partial class BuildingManager : Node2D, IManager
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 300;
-	private int _playerCurrencyToDisplay = 0;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
 	private int _currentTowerSlots;
-	private Tween _playerCurrencyTween;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -37,9 +35,6 @@ public partial class BuildingManager : Node2D, IManager
 			DirAccess.MakeDirRecursiveAbsolute(_pathToSavedTowers);
 		
 		GenerateTowerSelectionButtons();
-
-		_playerCurrencyTween = CreateTween();
-		_playerCurrencyTween.TweenProperty(this, "_playerCurrencyToDisplay", PlayerCurrency, 1f).SetTrans(Tween.TransitionType.Expo);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -67,9 +62,6 @@ public partial class BuildingManager : Node2D, IManager
 								   && /*IsInstanceValid(TowerPreview)*/ TowerPreview != null
 								   && Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]) <= PlayerCurrency;
 		}
-
-		if (!_currentCurrencyLabel.Text.Contains(PlayerCurrency.ToString()))
-			_currentCurrencyLabel.Text = '$' + _playerCurrencyToDisplay.ToString();
     }
 
 	public void Init()
@@ -81,7 +73,7 @@ public partial class BuildingManager : Node2D, IManager
 			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn"));
 		}
 
-		//_currentCurrencyLabel.Text = '$' + _playerCurrencyToDisplay.ToString();
+		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 
 		UpdateTowerSelectionButtons();
 	}
@@ -234,11 +226,13 @@ public partial class BuildingManager : Node2D, IManager
 	public void AddPlayerCurrency(int amount)
 	{
 		PlayerCurrency += amount;
-		//_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
+		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 
+		/*
 		_playerCurrencyTween.Kill();
 		_playerCurrencyTween = CreateTween();
 		_playerCurrencyTween.TweenProperty(this, "_playerCurrencyToDisplay", PlayerCurrency, 1f).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.In);
+		*/
 	}
 
 	public void DeleteSelectedTowerFromFilesystem()

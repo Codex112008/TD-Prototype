@@ -255,6 +255,11 @@ public partial class Enemy : CharacterBody2D
 			return 0f;
 	}
 
+	public float GetCurrentHealth()
+	{
+		return _currentHealth;
+	}
+
 	protected virtual void MoveToNextPathPoint(float delta, float speedMult = 1f)
 	{
 		Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);

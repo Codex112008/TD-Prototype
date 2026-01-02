@@ -9,6 +9,7 @@ public partial class TowerSelectedUI : VBoxContainer
 	[Export] private Control _upgradeUI;
 
 	private Tower _tower;
+	private Timer _upgradeButtonTimer;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -36,5 +37,13 @@ public partial class TowerSelectedUI : VBoxContainer
 	public void OnSellButtonClicked()
 	{
 		_tower.Sell();
+	}
+
+	public void ResetUpgradeButtonText()
+	{	
+		Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(_tower.SceneFilePath[.._tower.SceneFilePath.LastIndexOf('.')]);
+		Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
+        UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - _tower.GetFinalTowerStats()[TowerStat.Cost]);
+        upgradedTower.QueueFree();
 	}
 }

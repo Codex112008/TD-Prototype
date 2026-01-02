@@ -33,7 +33,7 @@ public partial class BasicTower : Tower
                 _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
             }
 
-            if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !RequireEnemy)
+            if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
                 if (IsInstanceValid(_target))
                 {
@@ -62,6 +62,6 @@ public partial class BasicTower : Tower
 
     protected override void Fire()
     {
-        Projectile.InstantiateProjectile(GetFinalTowerStats(), _firePoint);
+        Projectile.InstantiateProjectile(this, _firePoint);
     }
 }

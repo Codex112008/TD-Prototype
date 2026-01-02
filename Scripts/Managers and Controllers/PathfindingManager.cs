@@ -121,6 +121,15 @@ public partial class PathfindingManager : Node2D, IManager
 
 		return pathArray;
 	}
+
+	public bool IsTileAtGlobalPosSolid(Vector2 pos)
+	{
+		TileData cellTileData = LevelTilemap.GetCellTileData(GlobalToTilePos(pos));
+		if (cellTileData != null)
+			return (int)cellTileData.GetCustomData("MovementCost") >= 10;
+		else
+			return false;
+	}
 	
 	public void Deload()
     {

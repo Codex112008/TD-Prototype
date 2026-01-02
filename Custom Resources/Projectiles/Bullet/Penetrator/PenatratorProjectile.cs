@@ -7,17 +7,17 @@ public partial class PenatratorProjectile : Projectile
     [Export] public float FireForce;
     [Export] public int Pierce;
 
-    public override PenatratorProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Marker2D firePoint)
+    public override PenatratorProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
     {
         PenatratorProjectileBehaviour bullet = ProjectileScene.Instantiate<PenatratorProjectileBehaviour>();
         bullet.GlobalPosition = firePoint.GlobalPosition;
         bullet.Rotation = firePoint.GlobalRotation;
-        bullet.Stats = towerStats;
+        bullet.Stats = tower.GetFinalTowerStats();
         bullet.PenatratorData = this;
 
         bullet.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        BuildingManager.instance.InstancedNodesParent.AddChild(bullet);
+        tower.InstancedProjectiles.AddChild(bullet);
 
         return bullet;
     }

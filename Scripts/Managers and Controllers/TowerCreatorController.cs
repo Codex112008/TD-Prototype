@@ -32,7 +32,6 @@ public partial class TowerCreatorController : Node2D
 	private TowerSelector _towerSelector;
 	private Tower _towerToCreatePreview;
 	private Button _saveButton;
-	private Timer _saveButtonTimer;
 
 	// Used for tower upgrading
 	[Export] public PackedScene BaseTowerScene;
@@ -152,14 +151,6 @@ public partial class TowerCreatorController : Node2D
 			_saveButton.Disabled = true;
 			_saveButton.Text = "No tower slots available";
 		}
-
-		_saveButtonTimer = new()
-		{
-			WaitTime = 1f,
-			OneShot = true
-		};
-		_saveButtonTimer.Connect(Timer.SignalName.Timeout, Callable.From(ResetSaveButtonText));
-		AddChild(_saveButtonTimer);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -269,19 +260,19 @@ public partial class TowerCreatorController : Node2D
 		if (_towerToCreatePreview.HasValidPointAllocation())
 		{
 			_saveButton.Text = "Saved " + _towerNameInput.Text + " Successfully!";
-			_saveButtonTimer.Start();
+			GetTree().CreateTimer(1f).Connect(Timer.SignalName.Timeout, Callable.From(ResetSaveButtonText));
 		}
 		else
 		{
 			_saveButton.Text = _towerNameInput.Text + " is too strong!";
-			_saveButtonTimer.Start();
+			GetTree().CreateTimer(1f).Connect(Timer.SignalName.Timeout, Callable.From(ResetSaveButtonText));
 			return;
 		}
 		// Cant make tower if name already used
-		if (DirAccess.DirExistsAbsolute(_savedTowerFilePath + Utils.RemoveWhitespaces(_towerNameInput.Text)))
+		if (FileAccess.FileExists(_savedTowerFilePath + Utils.RemoveWhitespaces(_towerNameInput.Text) + '/' + Utils.RemoveWhitespaces(_towerNameInput.Text) + _towerLevel + ".tscn"))
 		{
 			_saveButton.Text = "Tower named " + _towerNameInput.Text + " already exists!";
-			_saveButtonTimer.Start();
+			GetTree().CreateTimer(1f).Connect(Timer.SignalName.Timeout, Callable.From(ResetSaveButtonText));
 			return;
 		}
 

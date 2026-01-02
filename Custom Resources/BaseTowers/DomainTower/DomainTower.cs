@@ -50,7 +50,7 @@ public partial class DomainTower : Tower
 		_firePoint.Position = distance * Vector2.FromAngle(angle);
 		_firePoint.Rotation = _rand.RandfRange(0f, Mathf.Tau);
 
-		Projectile.InstantiateProjectile(GetFinalTowerStats(), _firePoint);
+		Projectile.InstantiateProjectile(this, _firePoint);
     }
 
 	protected override int GetPointCostFromDamage()
