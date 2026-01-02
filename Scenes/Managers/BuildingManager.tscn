@@ -1,15 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://gtxproojnjj7"]
+[gd_scene load_steps=6 format=3 uid="uid://gtxproojnjj7"]
 
 [ext_resource type="Script" uid="uid://c0xc6gyo8i8u1" path="res://Scripts/Managers and Controllers/BuildingManager.cs" id="1_7ei00"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="2_5jbqv"]
 [ext_resource type="PackedScene" uid="uid://bebxmlgevi2um" path="res://Scenes/Tower/TowerSelectionButton.tscn" id="2_l101v"]
 [ext_resource type="Texture2D" uid="uid://do7va0rsuyyun" path="res://Sprites/TowerSlotIcons/Empty.png" id="3_b5dgg"]
+[ext_resource type="Texture2D" uid="uid://m5tavfsnps4q" path="res://Custom Resources/TowerEffects/Damage/DamageEffectIcon.png" id="5_pm5mx"]
 
-[node name="BuildingManager" type="Node2D" node_paths=PackedStringArray("TowerSelectionButtonContainer", "_currentCurrencyLabel")]
+[node name="BuildingManager" type="Node2D" node_paths=PackedStringArray("TowerSelectionButtonContainer", "_currentCurrencyLabel", "_currentHealthLabel")]
 script = ExtResource("1_7ei00")
 TowerSelectionButtonScene = ExtResource("2_l101v")
 TowerSelectionButtonContainer = NodePath("UI/TowerButtonContainer/VBoxContainer")
 _currentCurrencyLabel = NodePath("UI/CurrentCurrencyLabel")
+_currentHealthLabel = NodePath("UI/HealthLabel")
 _openTowerSlotIcon = ExtResource("3_b5dgg")
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -33,8 +35,8 @@ custom_minimum_size = Vector2(1.45519e-11, 64)
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -145.0
-offset_right = -100.0
+offset_left = -216.0
+offset_right = -141.0
 offset_bottom = 64.0
 grow_horizontal = 0
 theme = ExtResource("2_5jbqv")
@@ -43,5 +45,28 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="HealthLabel" type="RichTextLabel" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -103.0
+offset_right = -58.0
+offset_bottom = 64.0
+grow_horizontal = 0
+text = "10"
+vertical_alignment = 1
+
+[node name="HealthIcon" type="TextureRect" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -133.0
+offset_top = 21.0
+offset_right = -69.0
+offset_bottom = 85.0
+grow_horizontal = 0
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_pm5mx")
 
 [connection signal="mouse_exited" from="UI/TowerButtonContainer" to="." method="OnMouseExited"]

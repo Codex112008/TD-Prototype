@@ -8,6 +8,13 @@ public partial class NewRunButton : Button
 
 	public void OnPressed()
 	{
+		DeleteExistingSave();
+
+		GetTree().ChangeSceneToFile(_runControllerScene.ResourcePath);
+	}
+
+	public static void DeleteExistingSave()
+	{
 		string levelSaveFilePath = "RuntimeData/LevelSaveFiles/";
 		levelSaveFilePath = Utils.AddCorrectDirectoryToPath(levelSaveFilePath);
 		DirAccess dirAccess = DirAccess.Open(levelSaveFilePath);
@@ -29,7 +36,5 @@ public partial class NewRunButton : Button
 		dirAccess.ChangeDir(towerDataSaveFilePath);
 		Utils.RemoveDirRecursive(towerDataSaveFilePath);
 		DirAccess.MakeDirRecursiveAbsolute(towerDataSaveFilePath);
-
-		GetTree().ChangeSceneToFile(_runControllerScene.ResourcePath);
 	}
 }

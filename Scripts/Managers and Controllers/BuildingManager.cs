@@ -17,11 +17,13 @@ public partial class BuildingManager : Node2D, IManager
 	[Export] public Node TowerParent;
 	[Export] private string _pathToSavedTowers = "RuntimeData/SavedTowers/";
 	[Export] private RichTextLabel _currentCurrencyLabel;
+	[Export] private RichTextLabel _currentHealthLabel;
 	[Export] private int _startingTowerSlots = 2;
 	[Export] private Texture2D _openTowerSlotIcon;
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 300;
+	private int _playerHealth = 10;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
@@ -74,6 +76,7 @@ public partial class BuildingManager : Node2D, IManager
 		}
 
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
+		_currentHealthLabel.Text = _playerHealth.ToString();
 
 		UpdateTowerSelectionButtons();
 	}
@@ -276,5 +279,16 @@ public partial class BuildingManager : Node2D, IManager
 	private int GetOpenTowerSlots()
 	{
 		return EnemyManager.instance.TowerSlotUnlockWave.Count(wave => wave <= EnemyManager.instance.CurrentWave) + _startingTowerSlots;
+	}
+
+	public void TakeDamage(int damage)
+	{
+		_playerHealth -= damage;
+		_currentHealthLabel.Text = _playerHealth.ToString();
+		if (_playerHealth <= 0)
+		{
+			NewRunButton.DeleteExistingSave();
+			GetTree().ChangeSceneToFile("res://Scenes/MainScenes/MainMenu.tscn");
+		}
 	}
 }

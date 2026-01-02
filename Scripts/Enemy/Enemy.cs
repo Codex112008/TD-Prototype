@@ -112,14 +112,19 @@ public partial class Enemy : CharacterBody2D
 			MoveToNextPathPoint((float)delta, Mathf.Lerp(0.4f, 1f, Mathf.Clamp(GlobalPosition.DistanceTo(PathArray[0]) / 16f, 0f, 1f)));
 
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= 0.5f)
+			{
+				if (BuildingManager.instance.IsInsideTree())
+					BuildingManager.instance.TakeDamage(Mathf.FloorToInt(CurrentEnemyStats[EnemyStat.Damage]));
 				QueueFree();
+			}
 		}
 		else
 		{
 			Velocity = Velocity.Lerp(Vector2.Zero, _deceleration * (float)delta);
 		}
 
-		MoveAndSlide();
+		if (IsInsideTree())
+			MoveAndSlide();
 	}
 
 	// Returns Damage Dealt

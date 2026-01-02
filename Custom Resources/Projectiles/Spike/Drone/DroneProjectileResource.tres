@@ -11,21 +11,21 @@
 resource_name = "Drone"
 script = ExtResource("6_hd3nc")
 FireSpeed = 200.0
-MaxSpawns = 10
+MaxSpawns = 5
 SummonSpeed = 30.0
 SummonAcceleration = 5.0
 ProjectileScene = ExtResource("5_7xvpk")
 Effects = Array[ExtResource("1_hd3nc")]([ExtResource("2_2c2mt")])
 NextTierProjectiles = Array[ExtResource("4_vbifc")]([])
 RequireEnemy = false
-Tooltip = "Send out suicide drones! 10 drones max
-Damage 0.8x
-Firerate 0.8x"
+Tooltip = "Send out suicide drones! 5 drones max
+Damage 7.5x
+Firerate 0.35x"
 Icon = ExtResource("3_hd3nc")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 0.8,
+1: 7.5,
 2: 1.0,
-3: 0.8
+3: 0.35
 })
 PointCost = 75
