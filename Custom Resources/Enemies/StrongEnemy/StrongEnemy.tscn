@@ -11,7 +11,7 @@ size = Vector2(10, 10)
 collision_mask = 0
 script = ExtResource("1_sxk7a")
 _baseEnemyStats = Dictionary[int, int]({
-0: 60,
+0: 35,
 1: 50,
 2: 24,
 3: 2,

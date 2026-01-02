@@ -215,11 +215,11 @@ public partial class RunController : Node2D
 
 		// Store current wave
 		Dictionary<string, Variant> gameData = new() {
-			{ "CurrentWave", EnemyManager.instance.CurrentWave },
-			{ "CurrentPlayerCurrency", BuildingManager.instance.PlayerCurrency }
+			{ "CurrentWave", EnemyManager.instance.CurrentWave }
+
 		};
 		if (EnemyManager.instance.EnemyParent.GetChildCount() > 0)
-			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
+			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy enemy && enemy.SpawnedWave > 0).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
 		saveFile.StoreLine(Json.Stringify(gameData));
 
 		// Store random number generator data
@@ -291,7 +291,6 @@ public partial class RunController : Node2D
 				case 1: // Load current wave
 					Dictionary<string, Variant> gameData = (Dictionary<string, Variant>)json.Data;
 					EnemyManager.instance.CurrentWave = (int)gameData["CurrentWave"];
-					BuildingManager.instance.PlayerCurrency = (int)gameData["CurrentPlayerCurrency"];
 					break;
 				case 2: // Load rng data
 					Dictionary<string, Array<string>> rngData = (Dictionary<string, Array<string>>)json.Data;

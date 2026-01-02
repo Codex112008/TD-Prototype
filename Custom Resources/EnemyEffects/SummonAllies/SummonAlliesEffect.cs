@@ -13,7 +13,7 @@ public partial class SummonAlliesEffect : EnemyEffect
     public async override void ApplyEffect(Enemy enemy)
     {
         GD.Print("Calling...");
-        enemy.AddStatusEffectStacks(StatusEffect.Stun, (1.5f + _spawnDelay * (_enemiesToSpawnCount - 1)) * 10);
+        enemy.AddStatusEffectStacks(StatusEffect.Stun, (1.5f + _spawnDelay * (_enemiesToSpawnCount - 1)) * 40);
 
         foreach (EnemySpawnData spawnData in _enemiesToSpawn)
         {

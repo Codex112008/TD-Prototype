@@ -1,8 +1,9 @@
-[gd_resource type="Resource" load_steps=6 format=3 uid="uid://dq11jdi00jgad"]
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://dq11jdi00jgad"]
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_jorxp"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_0d2nn"]
 [ext_resource type="Texture2D" uid="uid://uh0ciac0ev6r" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.tres" id="3_jdlt3"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_jorxp"]
 [ext_resource type="PackedScene" uid="uid://ctho7p1gaayew" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileScene.tscn" id="5_t452s"]
 [ext_resource type="Script" uid="uid://cc81vthf4phhl" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectile.cs" id="6_mjup5"]
 
@@ -14,7 +15,8 @@ WaveInitialSpeed = 100.0
 Pierce = 3
 ProjectileScene = ExtResource("5_t452s")
 Effects = Array[ExtResource("1_jorxp")]([ExtResource("2_0d2nn")])
-NextTierProjectiles = []
+NextTierProjectiles = Array[ExtResource("4_jorxp")]([])
+RequireEnemy = true
 Tooltip = "Fires sword waves that pierce but weaken
 Damage 1.2x
 Firerate 0.7x"

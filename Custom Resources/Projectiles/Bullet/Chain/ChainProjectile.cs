@@ -6,7 +6,7 @@ public partial class ChainProjectile : Projectile
 {
     [Export] public float MaxChainDistance = 30f;
 
-    public override ChainProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
+    public override ChainProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)
     {
         ChainProjectileBehaviour projectile = ProjectileScene.Instantiate<ChainProjectileBehaviour>();
         projectile.GlobalPosition = firePoint.GlobalPosition;

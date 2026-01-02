@@ -23,6 +23,7 @@ public partial class BuildingManager : Node2D, IManager
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 300;
+	public Dictionary<int, int> CurrencyAtWaveRecord = [];
 	private int _playerHealth = 10;
 	private PackedScene _selectedTower = null;
 	private Array<PackedScene> _towersToBuild = [];
@@ -74,6 +75,9 @@ public partial class BuildingManager : Node2D, IManager
 		{
 			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn"));
 		}
+
+		if (CurrencyAtWaveRecord.TryGetValue(EnemyManager.instance.CurrentWave, out int value))
+			PlayerCurrency = value;
 
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 		_currentHealthLabel.Text = _playerHealth.ToString();

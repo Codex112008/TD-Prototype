@@ -9,6 +9,7 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 	
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public SpikeProjectile SpikeData;
+	public Vector2 TargetPos;
 	
 	private float _currentHealth;
 	private float _targetRot;
@@ -29,7 +30,7 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _PhysicsProcess(double delta)
 	{
-		if (!PathfindingManager.instance.IsTileAtGlobalPosSolid(GlobalPosition))
+		if (GlobalPosition.DistanceTo(TargetPos) < 10f)
 			Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 		else
 			Velocity = -Transform.Y.Normalized() * SpikeData.Speed;

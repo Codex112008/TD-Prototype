@@ -7,7 +7,7 @@ public static class StatusEffectsData
 	private static readonly Dictionary<StatusEffect, float> _statusEffectDecayCooldowns = new()
 	{
 		{StatusEffect.Chill, 0.6f},
-		{StatusEffect.Stun, 0.1f},
+		{StatusEffect.Stun, 0.025f},
 	};
 
 	private static readonly Dictionary<StatusEffect, float> _maxStatusEffectValues = new()

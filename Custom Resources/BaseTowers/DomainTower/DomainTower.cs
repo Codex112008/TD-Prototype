@@ -55,7 +55,7 @@ public partial class DomainTower : Tower
         } while (!PathfindingManager.instance.IsTileAtGlobalPosSolid(_firePoint.GlobalPosition) && !Projectile.RequireEnemy);
 		_firePoint.Rotation = _rand.RandfRange(0f, Mathf.Tau);
 
-		Projectile.InstantiateProjectile(this, _firePoint);
+		Projectile.InstantiateProjectile(this, _firePoint, _firePoint.GlobalPosition);
     }
 
 	protected override int GetPointCostFromDamage()

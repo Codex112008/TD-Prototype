@@ -118,6 +118,8 @@ public partial class EnemyManager : Node, IManager
 
 	private void StartWave()
 	{
+		BuildingManager.instance.CurrencyAtWaveRecord.Add(CurrentWave, BuildingManager.instance.PlayerCurrency);
+		
 		CurrentWave++;
 
 		if (TowerSlotUnlockWave.Any(wave => CurrentWave == wave))
@@ -174,6 +176,7 @@ public partial class EnemyManager : Node, IManager
 
 	public List<Tuple<EnemySpawnData, bool>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)
 	{
+
 		List<Tuple<EnemySpawnData, bool>> generatedWave = [];
 
 		// Calculates the amount of enemy segments (each segment rolls a different enemy type, more segments for more types of enemies)

@@ -8,7 +8,7 @@
 
 [node name="TowerUpgradeTreeViewer" type="Node2D" node_paths=PackedStringArray("_towerUpgradeTreeUI", "_towerPreviewArea")]
 script = ExtResource("1_fc4ts")
-_towerUpgradeTreeUI = NodePath("UI/TowerUpgradeTreeUIPanel/TowerUpgradeTreeUI")
+_towerUpgradeTreeUI = NodePath("UI/TowerUpgradeTreeUIPanel/ScrollContainer/TowerUpgradeTreeUI")
 _towerUpgradeDisplayScene = ExtResource("2_nobew")
 _towerPreviewArea = NodePath("TowerPreview")
 
@@ -36,14 +36,17 @@ offset_left = 10.0
 offset_right = 78.0
 grow_vertical = 2
 
-[node name="TowerUpgradeTreeUI" type="VBoxContainer" parent="UI/TowerUpgradeTreeUIPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/TowerUpgradeTreeUIPanel"]
+layout_mode = 2
+
+[node name="TowerUpgradeTreeUI" type="VBoxContainer" parent="UI/TowerUpgradeTreeUIPanel/ScrollContainer"]
 layout_direction = 1
 layout_mode = 2
 theme = ExtResource("3_mp8hr")
 alignment = 1
 
-[node name="AddUpgradeButton" type="Button" parent="UI/TowerUpgradeTreeUIPanel/TowerUpgradeTreeUI"]
+[node name="AddUpgradeButton" type="Button" parent="UI/TowerUpgradeTreeUIPanel/ScrollContainer/TowerUpgradeTreeUI"]
 layout_mode = 2
 text = "Add Upgrade"
 
-[connection signal="pressed" from="UI/TowerUpgradeTreeUIPanel/TowerUpgradeTreeUI/AddUpgradeButton" to="." method="OnAddUpgradeButtonClicked"]
+[connection signal="pressed" from="UI/TowerUpgradeTreeUIPanel/ScrollContainer/TowerUpgradeTreeUI/AddUpgradeButton" to="." method="OnAddUpgradeButtonClicked"]

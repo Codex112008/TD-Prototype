@@ -4,7 +4,7 @@ using System.Linq;
 
 public partial class SniperProjectile : Projectile
 {
-    public override SniperProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
+    public override SniperProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)
     {
         SniperProjectileBehaviour projectile = ProjectileScene.Instantiate<SniperProjectileBehaviour>();
         projectile.GlobalPosition = firePoint.GlobalPosition;

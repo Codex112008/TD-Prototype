@@ -372,33 +372,32 @@ public abstract partial class Tower : Sprite2D
             }
         }
 
-        if (firstEnemy == null && !Projectile.RequireEnemy && IsWalkableTileInRange())
+        if (firstEnemy == null && !Projectile.RequireEnemy)
         {
-            RandomNumberGenerator rand = new();
-            Vector2 randomPos;
-            do
-                randomPos = new Vector2(rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()), rand.RandfRange(-GetRangeInTiles(), GetRangeInTiles()));
-            while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
+            Array<Vector2I> walkableTilesInRange = GetWalkableTileInRange();
+            if (walkableTilesInRange.Count > 0)
+            {
+                RandomNumberGenerator rand = new();
+                Vector2 randomPos;
+                do
+                    randomPos = PathfindingManager.instance.GetTileToGlobalPos(walkableTilesInRange[rand.RandiRange(0, walkableTilesInRange.Count - 1)]) + new Vector2(rand.RandfRange(6f, 10f), rand.RandfRange(6f, 10f));
+                while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
 
-            CharacterBody2D dummyBody = new();
-            AddChild(dummyBody);
-            dummyBody.Position = randomPos + Vector2.One * 8f;
-            return dummyBody;
+                CharacterBody2D dummyBody = new();
+                AddChild(dummyBody);
+                dummyBody.GlobalPosition = randomPos;
+                return dummyBody;
+            }
         }
 
         return firstEnemy;
     }
 
-    private bool IsWalkableTileInRange()
+    private Array<Vector2I> GetWalkableTileInRange()
     {
-        Array<Vector2I> tilemap = [.. PathfindingManager.instance.LevelTilemap.GetUsedCells().Select(tile => PathfindingManager.instance.GlobalToCenteredGlobalTilePos(PathfindingManager.instance.GetTileToGlobalPos(tile))).Where(VectorInRange).Select(PathfindingManager.instance.GlobalToTilePos)];
-        foreach (Vector2I tile in tilemap)
-        {
-            TileData tileData = PathfindingManager.instance.LevelTilemap.GetCellTileData(tile);
-            if ((int)tileData.GetCustomData("MovementCost") < 10)
-                return true;
-        }
-        return false;
+        TileMapLayer tilemap = PathfindingManager.instance.LevelTilemap;
+        Array<Vector2I> tilePosArray = [.. tilemap.GetUsedCells().Select(tile => PathfindingManager.instance.GlobalToCenteredGlobalTilePos(PathfindingManager.instance.GetTileToGlobalPos(tile))).Where(VectorInRange).Select(PathfindingManager.instance.GlobalToTilePos).Where(tile => (int)tilemap.GetCellTileData(tile).GetCustomData("MovementCost") < 10)];
+        return tilePosArray;
     }
 
     protected abstract void Fire();

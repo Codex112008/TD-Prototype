@@ -59,6 +59,6 @@ public partial class BasicTower : Tower
 
     protected override void Fire()
     {
-        Projectile.InstantiateProjectile(this, _firePoint);
+        Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition);
     }
 }

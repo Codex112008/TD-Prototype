@@ -11,5 +11,5 @@ public abstract partial class Projectile : TowerComponent
     [Export] public bool RequireEnemy = true;
 
     // Fire the projectile, SHOULD instantiate ProjectileScene
-    public abstract Node2D InstantiateProjectile(Tower tower, Marker2D firePoint);
+    public abstract Node2D InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos);
 }

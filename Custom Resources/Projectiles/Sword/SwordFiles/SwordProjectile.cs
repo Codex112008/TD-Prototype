@@ -6,7 +6,7 @@ using System.Linq;
 public partial class SwordProjectile : Projectile
 {
     [Export] public int Pierce = 3;
-    public override SwordProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
+    public override SwordProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)
     {
         SwordProjectileBehaviour sword = ProjectileScene.Instantiate<SwordProjectileBehaviour>();
         sword.GlobalPosition = firePoint.GlobalPosition;

@@ -15,6 +15,7 @@ Pierce = 3
 ProjectileScene = ExtResource("5_kc2mb")
 Effects = Array[ExtResource("1_e534y")]([ExtResource("2_mfk8y")])
 NextTierProjectiles = Array[ExtResource("4_4ho2r")]([])
+RequireEnemy = true
 Tooltip = "THE BULLET THAT PIERCES THE HEAVENS
 Makes bullet pierce 3 enemies"
 Icon = ExtResource("3_7s3aa")

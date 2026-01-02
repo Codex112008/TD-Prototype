@@ -9,7 +9,7 @@ public partial class DroneProjectile : Projectile
     [Export] public float SummonSpeed = 30f;
     [Export] public float SummonAcceleration = 5f;
 
-    public override DroneProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
+    public override DroneProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)
     {
         if (IsInstanceValid(tower.InstancedProjectiles) && tower.InstancedProjectiles.GetChildCount() < MaxSpawns)
         {

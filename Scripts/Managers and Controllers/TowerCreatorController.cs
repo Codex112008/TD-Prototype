@@ -127,7 +127,7 @@ public partial class TowerCreatorController : Node2D
 
 		// Creates the Modifier Selectors
 		InstantiateModifierSelector("Projectile");
-		for (int i = 0; i < _towerLevel + 1; i++)
+		for (int i = 0; i < Mathf.Min(_towerLevel + 1, 3); i++)
 			InstantiateModifierSelector("Effect", i);
 
 		// Creates the label showing the total and used cost
@@ -183,6 +183,7 @@ public partial class TowerCreatorController : Node2D
 		}
 
 		StatSelector costSelector = null;
+		Array<StatSelector> otherStatSelectors = [];
 		Array<TowerEffect> effects = [];
 		for (int i = 0; i < _towerCreatorUI.GetChildCount() - 1; i++)
 		{
@@ -194,6 +195,8 @@ public partial class TowerCreatorController : Node2D
 				UpdateTowerPreviewStat(statSelector, stat);
 				if (stat == TowerStat.Cost)
 					costSelector = statSelector;
+				else
+					otherStatSelectors.Add(statSelector);
 			}
 			else if (pickerNodeType is ModifierSelector modifierPicker)
 			{
@@ -210,7 +213,7 @@ public partial class TowerCreatorController : Node2D
 				else if (towerComponent is TowerEffect effect)
 					effects.Add(effect);
 
-				modifierPicker.CostLabel.Text = "Cost: " + towerComponent.PointCost;
+				modifierPicker.CostLabel.Text = towerComponent.ResourceName/*"Cost: " + towerComponent.PointCost*/;
 			}
 		}
 		_towerToCreatePreview.SetEffects(effects);
@@ -234,6 +237,9 @@ public partial class TowerCreatorController : Node2D
 			UpdateTowerPreviewStat(costSelector, TowerStat.Cost);
 		}
 
+		foreach (StatSelector statSelector in otherStatSelectors)
+			statSelector.CostLabel.Text = "(" + _towerToCreatePreview.GetFinalTowerStats()[(TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text))] + ")";
+
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)
 		{
@@ -254,10 +260,10 @@ public partial class TowerCreatorController : Node2D
 			_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statSelector.StatSpinBox.Value);
 
 		int pointCost = CalculatePointCostForStat(stat);
-		if (stat != TowerStat.Cost)
-			statSelector.CostLabel.Text = "Cost: " + pointCost;
-		else
-			statSelector.CostLabel.Text = "Max Points: " + pointCost;
+		// if (stat != TowerStat.Cost)
+		//	statSelector.CostLabel.Text = "(" + _towerToCreatePreview.GetFinalTowerStats()[stat] + ")";
+		// else
+		// 	statSelector.CostLabel.Text = "Max Points: " + pointCost;
 	}
 
 	public void SaveTowerResource()

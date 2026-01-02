@@ -16,7 +16,7 @@ public partial class Enemy : CharacterBody2D
 	public Vector2 TargetPos;
 	public Array<Vector2> PathArray = [];
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
-	public int SpawnedWave;
+	public int SpawnedWave = -1;
 
 	private Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
@@ -231,7 +231,7 @@ public partial class Enemy : CharacterBody2D
 			switch (status)
 			{
 				case StatusEffect.Poison:
-					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * 0.01f * _currentStatusEffects[status], DamageType.Poison, true);
+					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * 0.001f * _currentStatusEffects[status], DamageType.Poison, true);
 					break;
 				case StatusEffect.Burn:
 					int burnExplosionThreshold = (int)(StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn) * Mathf.FloorToInt(_currentStatusEffects[status] / StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn)));
