@@ -1,27 +1,29 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://dpd2e6cdcccvl"]
+[gd_resource type="Resource" load_steps=8 format=3 uid="uid://dpd2e6cdcccvl"]
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_somg1"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_si5te"]
-[ext_resource type="Texture2D" uid="uid://bnsoaen6emvx" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileIcon.png" id="3_u075f"]
+[ext_resource type="Texture2D" uid="uid://da62mrveb7hqd" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileIcon.png" id="3_somg1"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_ad18y"]
 [ext_resource type="PackedScene" uid="uid://bwlpo4h5j18uu" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileScene.tscn" id="5_7wxxt"]
+[ext_resource type="Resource" uid="uid://dtnnf61nrq76o" path="res://Custom Resources/Projectiles/Spike/ImpalerFiles/ImpalerProjectileResource.tres" id="5_si5te"]
 [ext_resource type="Script" uid="uid://xlewu2y8qnfw" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectile.cs" id="6_iqxt3"]
 
 [resource]
 resource_name = "Spike"
 script = ExtResource("6_iqxt3")
-Speed = 400.0
+Speed = 175.0
 MaxSpawns = 3
 ProjectileScene = ExtResource("5_7wxxt")
 Effects = Array[ExtResource("1_somg1")]([ExtResource("2_si5te")])
-NextTierProjectiles = Array[ExtResource("4_ad18y")]([])
+NextTierProjectiles = Array[ExtResource("4_ad18y")]([ExtResource("5_si5te")])
 RequireEnemy = false
-Tooltip = ""
-Icon = ExtResource("3_u075f")
+Tooltip = "Damge 10x
+Firerate 0.15x"
+Icon = ExtResource("3_somg1")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 1.0,
+1: 10.0,
 2: 1.0,
-3: 1.0
+3: 0.15
 })
 PointCost = 25

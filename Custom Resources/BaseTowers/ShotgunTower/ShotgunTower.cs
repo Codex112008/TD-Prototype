@@ -40,7 +40,7 @@ public partial class ShotgunTower : Tower
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
-                if (_target != null)
+                if (IsInstanceValid(_target))
                 {
                     if (!VectorInRange(_target.GlobalPosition))
                         _target = FindFirstEnemy();

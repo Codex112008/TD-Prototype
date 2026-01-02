@@ -277,6 +277,8 @@ public partial class TowerCreatorController : Node2D
 		}
 
 		// Duplicates the tower preview to save temporaily so can change variables without changing the preview
+		if (IsInstanceValid(_towerToCreatePreview.InstancedProjectiles))
+			_towerToCreatePreview.InstancedProjectiles.Free();
 		Tower towerToSave = (Tower)_towerToCreatePreview.Duplicate();
 		AddToGroup("Persist", true);
 		towerToSave.RangeAlwaysVisible = false;

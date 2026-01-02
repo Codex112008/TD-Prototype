@@ -9,7 +9,7 @@ public partial class SpikeProjectile : Projectile
 
     public override SpikeProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint)
     {
-        if (tower.InstancedProjectiles.GetChildCount() < MaxSpawns)
+        if (IsInstanceValid(tower.InstancedProjectiles) && tower.InstancedProjectiles.GetChildCount() < MaxSpawns)
         {
             SpikeProjectileBehaviour bullet = ProjectileScene.Instantiate<SpikeProjectileBehaviour>();
             bullet.GlobalPosition = firePoint.GlobalPosition;

@@ -1,18 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwlpo4h5j18uu"]
+[gd_scene load_steps=5 format=3 uid="uid://5bv8ovr38p3m"]
 
-[ext_resource type="Script" uid="uid://dolqklrygupqv" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileBehaviour.cs" id="1_j7mya"]
-[ext_resource type="Texture2D" uid="uid://da62mrveb7hqd" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileIcon.png" id="2_j7mya"]
+[ext_resource type="Script" uid="uid://dolqklrygupqv" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileBehaviour.cs" id="1_2e4ki"]
+[ext_resource type="Texture2D" uid="uid://c0x0bwxjtp7ht" path="res://Custom Resources/Projectiles/Spike/ImpalerFiles/ImpalerProjectileIcon.png" id="2_17w3c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rb7fd"]
 size = Vector2(2, 2)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7mya"]
-size = Vector2(12, 12)
+size = Vector2(16, 16)
 
-[node name="SpikeProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("_sprite")]
+[node name="ImpalerProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("_sprite")]
 collision_layer = 2
 collision_mask = 0
-script = ExtResource("1_j7mya")
+script = ExtResource("1_2e4ki")
 _sprite = NodePath("Sprite2D")
 _friction = 20.0
 
@@ -20,7 +20,7 @@ _friction = 20.0
 shape = SubResource("RectangleShape2D_rb7fd")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_j7mya")
+texture = ExtResource("2_17w3c")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 2

@@ -4,17 +4,22 @@ using System;
 
 public partial class SpikeProjectileBehaviour : CharacterBody2D
 {
+	[Export] private Sprite2D _sprite;
 	[Export] private float _friction;
 	
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public SpikeProjectile SpikeData;
 	
 	private float _currentHealth;
+	private float _targetRot;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_currentHealth = Stats[TowerStat.Damage];
+
+		RandomNumberGenerator rand = new();
+		_targetRot = rand.RandfRange(Mathf.Pi / 2f, 3f * Mathf.Pi/ 2f);
 
 		VisibleOnScreenNotifier2D notifier = new();
 		AddChild(notifier);
@@ -28,6 +33,9 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 			Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 		else
 			Velocity = -Transform.Y.Normalized() * SpikeData.Speed;
+
+		if (!Velocity.IsZeroApprox())
+			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, _targetRot, Velocity.Length() / 10f * (float)delta);
 
 		MoveAndSlide();
 	}

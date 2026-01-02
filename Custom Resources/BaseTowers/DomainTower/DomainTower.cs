@@ -45,9 +45,14 @@ public partial class DomainTower : Tower
     protected override void Fire()
     {
 		// Randomises firepoint pos and rotation
-		float distance = _rand.RandfRange(0f, GetRangeInTiles());
-		float angle = _rand.RandfRange(0f, Mathf.Tau);
-		_firePoint.Position = distance * Vector2.FromAngle(angle);
+		float distance;
+		float angle;
+		do
+        {
+            distance = _rand.RandfRange(0f, GetRangeInTiles());
+            angle = _rand.RandfRange(0f, Mathf.Tau);
+            _firePoint.Position = distance * Vector2.FromAngle(angle);
+        } while (!PathfindingManager.instance.IsTileAtGlobalPosSolid(_firePoint.GlobalPosition) && !Projectile.RequireEnemy);
 		_firePoint.Rotation = _rand.RandfRange(0f, Mathf.Tau);
 
 		Projectile.InstantiateProjectile(this, _firePoint);
