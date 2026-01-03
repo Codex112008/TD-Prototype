@@ -234,6 +234,7 @@ public partial class TowerCreatorController : Node2D
 		{
 			costSelector.StatSpinBox.Value = CalculateCurrentTotalPointsAllocated();
 			UpdateTowerPreviewStat(costSelector, TowerStat.Cost);
+			costSelector.CostLabel.Text = "($" + _towerToCreatePreview.GetFinalTowerStats()[TowerStat.Cost] + ")";
 		}
 
 		foreach (StatSelector statSelector in otherStatSelectors)
@@ -253,7 +254,7 @@ public partial class TowerCreatorController : Node2D
 
 	public void UpdateTowerPreviewStat(StatSelector statSelector, TowerStat stat)
 	{
-		if (_isUpgrading)
+		if (_isUpgrading && stat != TowerStat.Cost)
 			_towerToCreatePreview.BaseTowerStats[stat] = _baseTowerInstance.BaseTowerStats[stat] + Mathf.RoundToInt(statSelector.StatSpinBox.Value);
 		else
 			_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statSelector.StatSpinBox.Value);
@@ -268,7 +269,7 @@ public partial class TowerCreatorController : Node2D
 	public void SaveTowerResource()
 	{
 		// Only allow tower creation if valid point allocation
-		if (_towerToCreatePreview.HasValidPointAllocation())
+		if (CalculateCurrentTotalPointsAllocated() <= CalculateMaximumPoints())
 		{
 			_saveButton.Text = "Saved " + _towerNameInput.Text + " Successfully!";
 			GetTree().CreateTimer(1f).Connect(Timer.SignalName.Timeout, Callable.From(ResetSaveButtonText));
@@ -437,9 +438,6 @@ public partial class TowerCreatorController : Node2D
 
 	private int CalculateMaximumPoints()
     {
-		if (_isUpgrading)
-			return _towerToCreatePreview.GetMaximumPointsFromCost() - _baseTowerInstance.GetMaximumPointsFromCost();
-
         return _towerToCreatePreview.GetMaximumPointsFromCost();
     }
 

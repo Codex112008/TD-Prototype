@@ -37,7 +37,7 @@ public partial class BasicTower : Tower
             {
                 if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
                 {
-                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / 250f));
+                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
                     float targetAngle = dir.Angle() + Mathf.Pi / 2f;
                     _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, targetAngle, _rotateSpeed * (float)delta);
 

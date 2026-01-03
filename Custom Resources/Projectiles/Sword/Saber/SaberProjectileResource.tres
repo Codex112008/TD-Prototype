@@ -15,6 +15,7 @@ ProjectileScene = ExtResource("5_npaiv")
 Effects = Array[ExtResource("1_poack")]([ExtResource("2_jpf0n")])
 NextTierProjectiles = Array[ExtResource("4_npaiv")]([])
 RequireEnemy = true
+ProjectileSpeed = 100.0
 Tooltip = "Bigger sword, sweeping swings can catch enemies behind as well
 Cost 1.2x
 Damage 2x

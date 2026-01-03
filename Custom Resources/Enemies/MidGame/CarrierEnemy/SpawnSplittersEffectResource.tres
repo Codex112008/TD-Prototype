@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SpawnEffect" load_steps=3 format=3 uid="uid://rhr6scowalxs"]
+
+[ext_resource type="Resource" uid="uid://bo3sktptr4qre" path="res://Custom Resources/Enemies/EarlyGame/SplitterEnemy/SplitterEnemySpawnData.tres" id="1_wm03x"]
+[ext_resource type="Script" uid="uid://bqpsi6u8ujtu4" path="res://Custom Resources/EnemyEffects/Spawn/SpawnEffect.cs" id="2_e55xc"]
+
+[resource]
+script = ExtResource("2_e55xc")
+_enemiesToSpawn = Array[Object]([ExtResource("1_wm03x")])
+_enemiesToSpawnCount = 3
+EffectInterval = 999.0
+metadata/_custom_type_script = "uid://bqpsi6u8ujtu4"

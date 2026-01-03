@@ -48,6 +48,8 @@ public partial class RunController : Node2D
 		DirAccess dirAccess = DirAccess.Open(_levelSaveFilePath);
 		if (dirAccess.GetFiles().Length > 0)
 			LoadLevel();
+		
+		SaveLevel();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -72,15 +74,6 @@ public partial class RunController : Node2D
 		}
 	}
 
-	public override void _Notification(int what)
-	{
-		if (what == NotificationWMCloseRequest)
-		{
-			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
-				SaveLevel();
-		}
-	}
-
 	public async void SwapScene(PackedScene scene, Key direction, PackedScene towerDataToSendToScene = null)
 	{
 		if (scene == TowerUpgradeTreeViewerScene && towerDataToSendToScene == null)
@@ -95,7 +88,6 @@ public partial class RunController : Node2D
 			// Swapping FROM the level
 			if (CurrentScene.SceneFilePath == LevelScene.ResourcePath)
 			{
-				SaveLevel();
 				if (BuildingManager.instance.GetParent() == _managerParent)
                 {
                     BuildingManager.instance.SetSelectedTower();
@@ -215,10 +207,10 @@ public partial class RunController : Node2D
 
 		// Store current wave
 		Dictionary<string, Variant> gameData = new() {
-			{ "CurrentWave", EnemyManager.instance.CurrentWave }
-
+			{ "CurrentWave", EnemyManager.instance.CurrentWave },
+			{ "CurrentPlayerCurrency", BuildingManager.instance.PlayerCurrency }
 		};
-		if (EnemyManager.instance.EnemyParent.GetChildren().Count(child => child is Enemy enemy && enemy.SpawnedWave > 0) > 0)
+		if (EnemyManager.instance.EnemyParent.GetChildren().Any(child => child is Enemy enemy && enemy.SpawnedWave > 0))
 			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy enemy && enemy.SpawnedWave > 0).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
 		saveFile.StoreLine(Json.Stringify(gameData));
 
@@ -291,6 +283,7 @@ public partial class RunController : Node2D
 				case 1: // Load current wave
 					Dictionary<string, Variant> gameData = (Dictionary<string, Variant>)json.Data;
 					EnemyManager.instance.CurrentWave = (int)gameData["CurrentWave"];
+					BuildingManager.instance.PlayerCurrency = (int)gameData["CurrentPlayerCurrency"];
 					break;
 				case 2: // Load rng data
 					Dictionary<string, Array<string>> rngData = (Dictionary<string, Array<string>>)json.Data;

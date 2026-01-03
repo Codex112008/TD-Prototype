@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=5 format=3 uid="uid://kl8a8cjxghhs"]
+
+[ext_resource type="PackedScene" uid="uid://bh245ntkby0c2" path="res://Custom Resources/Enemies/EarlyGame/AggroEnemy/AggroEnemy.tscn" id="1_n1mfa"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_avk5c"]
+[ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/EarlyGame/FastEnemy/FastEnemySpawnData.tres" id="3_s8sws"]
+[ext_resource type="Resource" uid="uid://dvxpythycidpt" path="res://Custom Resources/Enemies/MidGame/BoltEnemy/BoltEnemySpawnData.tres" id="4_d6364"]
+
+[resource]
+script = ExtResource("2_avk5c")
+EnemyScene = ExtResource("1_n1mfa")
+BaseWeight = 2
+MinWave = 7
+MaxWave = 2147483647
+QtyLow = 1
+QtyMean = 1
+QtyHigh = 2
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 1.0
+PairingChoices = Array[ExtResource("2_avk5c")]([ExtResource("3_s8sws"), ExtResource("4_d6364")])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

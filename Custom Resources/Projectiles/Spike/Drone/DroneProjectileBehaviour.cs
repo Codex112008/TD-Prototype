@@ -13,11 +13,19 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 	
 	private float _currentHealth;
 	private bool _landedOnTrack = false;
+	private bool _showMaxHp = true;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_currentHealth = Stats[TowerStat.Damage];
+
+		if (_showMaxHp)
+		{
+			GetChild<RichTextLabel>(3).Visible = true;
+			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + Stats[TowerStat.Damage];
+			GetChild<RichTextLabel>(3).Rotation = -Mathf.Pi / 2f;
+		}
 
 		VisibleOnScreenNotifier2D notifier = new();
 		AddChild(notifier);
@@ -57,7 +65,7 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 			if (!PathfindingManager.instance.IsTileAtGlobalPosSolid(GlobalPosition))
 				Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 			else
-				Velocity = -Transform.Y.Normalized() * DroneData.FireSpeed;
+				Velocity = -Transform.Y.Normalized() * DroneData.ProjectileSpeed;
 
 			if (Velocity.IsZeroApprox())
 				_landedOnTrack = true;;
@@ -84,7 +92,9 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 			foreach (TowerStat stat in statsToUse.Keys)
 				statsToUse[stat] *= statMultiplier;
 
-			_currentHealth -= enemy.GetCurrentHealth();
+			_currentHealth = Mathf.Max(_currentHealth - enemy.GetCurrentHealth(), 0);
+
+			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + Stats[TowerStat.Damage];
 
 			foreach (TowerEffect effect in DroneData.Effects)
 				effect.ApplyEffect(statsToUse, enemy);

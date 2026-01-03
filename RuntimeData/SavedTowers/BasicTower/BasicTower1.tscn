@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_3m7im"]
 [ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_iw1um"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_e4et7"]
-[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/AOE/AOEEffectResource.tres" id="6_kv1mi"]
-[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Burn/BurnEffectResource.tres" id="7_e6slv"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="6_kv1mi"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="7_e6slv"]
 [ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectileIcon.png" id="8_v0g5c"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="9_sw4se"]
 [ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectileScene.tscn" id="10_6626v"]
@@ -16,7 +16,6 @@
 [sub_resource type="Resource" id="Resource_yttp3"]
 resource_name = "Drone"
 script = ExtResource("11_5qd17")
-FireSpeed = 200.0
 MaxSpawns = 5
 SummonSpeed = 30.0
 SummonAcceleration = 5.0
@@ -24,6 +23,7 @@ ProjectileScene = ExtResource("10_6626v")
 Effects = Array[ExtResource("5_e4et7")]([ExtResource("6_kv1mi"), ExtResource("7_e6slv")])
 NextTierProjectiles = Array[ExtResource("9_sw4se")]([])
 RequireEnemy = false
+ProjectileSpeed = 200.0
 Tooltip = "Send out suicide drones! 5 drones max
 Damage 5x
 Firerate 0.3x"
@@ -45,10 +45,10 @@ _firePoint = NodePath("PivotPoint/FirePoint")
 _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
 BaseTowerStats = Dictionary[int, int]({
-0: 1995,
-1: 57,
-2: 10,
-3: 5
+0: 75,
+1: 2,
+2: 25,
+3: 2
 })
 SpritesForIcon = [NodePath("."), NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]

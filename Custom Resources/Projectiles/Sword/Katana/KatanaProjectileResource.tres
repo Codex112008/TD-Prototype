@@ -17,6 +17,7 @@ ProjectileScene = ExtResource("5_t452s")
 Effects = Array[ExtResource("1_jorxp")]([ExtResource("2_0d2nn")])
 NextTierProjectiles = Array[ExtResource("4_jorxp")]([])
 RequireEnemy = true
+ProjectileSpeed = 400.0
 Tooltip = "Fires sword waves that pierce but weaken
 Damage 1.2x
 Firerate 0.7x"

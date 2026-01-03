@@ -9,6 +9,7 @@ public abstract partial class Projectile : TowerComponent
     [Export] public Array<TowerEffect> Effects = [];
     [Export] public Array<Projectile> NextTierProjectiles = [];
     [Export] public bool RequireEnemy = true;
+    [Export] public float ProjectileSpeed = 99999;
 
     // Fire the projectile, SHOULD instantiate ProjectileScene
     public abstract Node2D InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos);

@@ -45,7 +45,7 @@ public partial class ShotgunTower : Tower
                     if (!VectorInRange(_target.GlobalPosition))
                         _target = FindFirstEnemy();
 
-                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / 250f));
+                    Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
                     float targetAngle = dir.Angle() + Mathf.Pi / 2f;
                     _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, targetAngle, _rotateSpeed * (float)delta);
 
@@ -77,16 +77,16 @@ public partial class ShotgunTower : Tower
 
     protected override int GetPointCostFromDamage()
     {
-        return BaseTowerStats[TowerStat.Damage] * 125;
+        return Mathf.FloorToInt(5f * Mathf.Pow(1.8f, BaseTowerStats[TowerStat.Damage] + 4.66f));;
     }
 
     protected override int GetPointCostFromRange()
     {
-        return BaseTowerStats[TowerStat.Range] * 4;
+        return base.GetPointCostFromRange() * 2;
     }
     
     protected override int GetPointCostFromFireRate()
     {
-        return BaseTowerStats[TowerStat.FireRate] * 100;
+        return base.GetPointCostFromFireRate() * 2;
     }
 }

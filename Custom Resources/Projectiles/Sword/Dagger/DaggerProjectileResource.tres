@@ -15,6 +15,7 @@ ProjectileScene = ExtResource("5_rjde2")
 Effects = Array[ExtResource("1_f8yvk")]([ExtResource("2_j1enh")])
 NextTierProjectiles = Array[ExtResource("4_da5l6")]([])
 RequireEnemy = true
+ProjectileSpeed = 600.0
 Tooltip = "Swift weapon that swaps between a weaker ranged projectile and stronger melee if target is in range
 Cost 0.7x
 Damage 0.4x

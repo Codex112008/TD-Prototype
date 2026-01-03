@@ -42,8 +42,8 @@ public partial class TowerSelectedUI : VBoxContainer
 	public void ResetUpgradeButtonText()
 	{	
 		Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(_tower.SceneFilePath[.._tower.SceneFilePath.LastIndexOf('.')]);
-		Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
-        UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - _tower.GetFinalTowerStats()[TowerStat.Cost]);
+		Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
+        UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]);
         upgradedTower.QueueFree();
 	}
 }

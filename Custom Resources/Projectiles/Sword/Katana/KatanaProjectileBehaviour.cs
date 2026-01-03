@@ -58,7 +58,7 @@ public partial class KatanaProjectileBehaviour : CharacterBody2D
 			_realAlpha -= 1f / KatanaData.Pierce;
 
 			foreach (TowerStat stat in Stats.Keys)
-				Stats[stat] -= _originalStats[stat] * (1f / KatanaData.Pierce);
+				Stats[stat] = Mathf.Max(_originalStats[stat] * (1f / KatanaData.Pierce), 0);
 		}
 	}
 

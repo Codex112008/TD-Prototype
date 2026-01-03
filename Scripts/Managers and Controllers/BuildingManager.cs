@@ -23,10 +23,9 @@ public partial class BuildingManager : Node2D, IManager
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 600;
-	public Dictionary<int, int> CurrencyAtWaveRecord = [];
 	private int _playerHealth = 10;
 	private PackedScene _selectedTower = null;
-	private Array<PackedScene> _towersToBuild = [];
+	[Export] private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
 	private int _currentTowerSlots;
 
@@ -69,16 +68,6 @@ public partial class BuildingManager : Node2D, IManager
 
 	public void Init()
 	{
-		Array<string> savedTowers = GetFolderNames(_pathToSavedTowers);
-		_towersToBuild.Clear();
-		for (int i = 0; i < savedTowers.Count; i++)
-		{
-			_towersToBuild.Add(GD.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn"));
-		}
-
-		if (CurrencyAtWaveRecord.TryGetValue(EnemyManager.instance.CurrentWave, out int value))
-			PlayerCurrency = value;
-
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
 		_currentHealthLabel.Text = _playerHealth.ToString();
 
@@ -168,6 +157,13 @@ public partial class BuildingManager : Node2D, IManager
 
 	public void UpdateTowerSelectionButtons()
 	{
+		Array<string> savedTowers = GetFolderNames(_pathToSavedTowers);
+		_towersToBuild = [];
+		for (int i = 0; i < savedTowers.Count; i++)
+		{
+			_towersToBuild.Add(ResourceLoader.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn", "PackedScene", ResourceLoader.CacheMode.Replace));
+		}
+
 		for (int i = 0; i < GetTotalTowerSlots(); i++)
 		{
 			TextureButton towerSelectionButton = TowerSelectionButtonContainer.GetChild<TextureButton>(i);

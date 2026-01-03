@@ -78,8 +78,8 @@ public abstract partial class Tower : Sprite2D
         if (DoesUpgradeExist())
         {
             Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
-            Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
-            _selectedUI.UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - GetFinalTowerStats()[TowerStat.Cost]);
+            Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
+            _selectedUI.UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]);
             upgradedTower.QueueFree();
         }
         else
@@ -175,14 +175,6 @@ public abstract partial class Tower : Sprite2D
             Projectile.Effects = effects;
     }
 
-    public bool HasValidPointAllocation()
-    {
-        if (GetCurrentTotalPointsAllocated() <= GetMaximumPointsFromCost())
-            return true;
-        else
-            return false;
-    }
-
     public int GetCurrentTotalPointsAllocated()
     {
         return Projectile.Effects.Sum(effect => effect.PointCost) + Projectile.PointCost + GetPointCostFromStats();
@@ -264,14 +256,14 @@ public abstract partial class Tower : Sprite2D
             {
                 // Spawn upgraded tower
                 Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
-                Tower upgradedTower = GD.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn").Instantiate<Tower>();
-                if (Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost] - GetFinalTowerStats()[TowerStat.Cost]) <= BuildingManager.instance.PlayerCurrency)
+                Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
+                if (Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]) <= BuildingManager.instance.PlayerCurrency)
                 {
                     upgradedTower.GlobalPosition = GlobalPosition;
                     BuildingManager.instance.TowerParent.AddChild(upgradedTower);
 
                     // Deduct player currency by difference in cost stats
-                    BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] - upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
+                    BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(-upgradedTower.GetFinalTowerStats()[TowerStat.Cost]));
 
                     // Delete current tower
                     QueueFree();
@@ -316,17 +308,17 @@ public abstract partial class Tower : Sprite2D
 
     protected virtual int GetPointCostFromDamage()
     {
-        return BaseTowerStats[TowerStat.Damage] * 25;
+        return Mathf.FloorToInt(Mathf.Pow(1.6f, BaseTowerStats[TowerStat.Damage] + 6.35f));
     }
 
     protected virtual int GetPointCostFromRange()
     {
-        return BaseTowerStats[TowerStat.Range] * 2;
+        return Mathf.FloorToInt(Mathf.Pow(1.032f, BaseTowerStats[TowerStat.Range] + 99.8f));
     }
 
     protected virtual int GetPointCostFromFireRate()
     {
-        return BaseTowerStats[TowerStat.FireRate] * 75;
+        return Mathf.FloorToInt(Mathf.Pow(1.9f, BaseTowerStats[TowerStat.FireRate] + 5.81f));
     }
 
     public virtual int GetMaximumPointsFromCost()

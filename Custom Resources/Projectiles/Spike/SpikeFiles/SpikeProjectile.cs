@@ -4,7 +4,6 @@ using System.Linq;
 
 public partial class SpikeProjectile : Projectile
 {
-	[Export] public float Speed = 400f;
     [Export] public int MaxSpawns = 3;
 
     public override SpikeProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)

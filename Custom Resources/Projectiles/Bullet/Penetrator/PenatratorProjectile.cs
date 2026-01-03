@@ -4,7 +4,6 @@ using System.Linq;
 
 public partial class PenatratorProjectile : Projectile
 {
-    [Export] public float FireForce;
     [Export] public int Pierce;
 
     public override PenatratorProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)

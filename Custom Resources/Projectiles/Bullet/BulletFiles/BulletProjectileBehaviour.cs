@@ -11,7 +11,7 @@ public partial class BulletProjectileBehaviour : CharacterBody2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Velocity = -Transform.Y.Normalized() * BulletData.FireForce;
+		Velocity = -Transform.Y.Normalized() * BulletData.ProjectileSpeed;
 
 		VisibleOnScreenNotifier2D notifier = new();
 		AddChild(notifier);
@@ -21,7 +21,7 @@ public partial class BulletProjectileBehaviour : CharacterBody2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _PhysicsProcess(double delta)
 	{
-		Velocity = Velocity.Lerp(Transform.X * BulletData.FireForce / 2f, _friction * (float)delta);
+		Velocity = Velocity.Lerp(Transform.X * BulletData.ProjectileSpeed / 2f, _friction * (float)delta);
 
 		MoveAndSlide();
 

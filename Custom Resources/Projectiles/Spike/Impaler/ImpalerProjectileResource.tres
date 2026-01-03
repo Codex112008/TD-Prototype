@@ -10,14 +10,14 @@
 [resource]
 resource_name = "Impaler"
 script = ExtResource("6_wsuik")
-Speed = 200.0
 MaxSpawns = 5
 ProjectileScene = ExtResource("5_xeuc6")
 Effects = Array[ExtResource("1_22wh3")]([ExtResource("2_jav1n")])
 NextTierProjectiles = Array[ExtResource("4_365nt")]([])
 RequireEnemy = false
-Tooltip = "Spiker spikes, 5 spikes max
-Damge 20x
+ProjectileSpeed = 200.0
+Tooltip = "Spikier spikes, 5 spikes max
+Damage 20x
 Firerate 0.1x"
 Icon = ExtResource("3_3qxh0")
 StatMultipliers = Dictionary[int, float]({

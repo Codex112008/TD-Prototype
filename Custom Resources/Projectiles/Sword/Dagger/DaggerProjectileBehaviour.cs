@@ -47,7 +47,7 @@ public partial class DaggerProjectileBehaviour : RayCast2D
 			foreach (TowerStat stat in Stats.Keys)
 				Stats[stat] /= 2f;
 
-			_body.Velocity = -Transform.Y.Normalized() * DaggerData.FireForce;
+			_body.Velocity = -Transform.Y.Normalized() * DaggerData.ProjectileSpeed;
 
 			VisibleOnScreenNotifier2D notifier = new();
 			_body.AddChild(notifier);

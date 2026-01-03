@@ -231,7 +231,8 @@ public partial class Enemy : CharacterBody2D
 			switch (status)
 			{
 				case StatusEffect.Poison:
-					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * 0.001f * _currentStatusEffects[status], DamageType.Poison, true);
+					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.001f * _currentStatusEffects[status], 0.07f), DamageType.Poison, true);
+					// Do something with excess poison stacks
 					break;
 				case StatusEffect.Burn:
 					int burnExplosionThreshold = (int)(StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn) * Mathf.FloorToInt(_currentStatusEffects[status] / StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn)));

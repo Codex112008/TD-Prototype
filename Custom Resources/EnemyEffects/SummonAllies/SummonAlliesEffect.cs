@@ -12,7 +12,6 @@ public partial class SummonAlliesEffect : EnemyEffect
 
     public async override void ApplyEffect(Enemy enemy)
     {
-        GD.Print("Calling...");
         enemy.AddStatusEffectStacks(StatusEffect.Stun, (1.5f + _spawnDelay * (_enemiesToSpawnCount - 1)) * 40);
 
         foreach (EnemySpawnData spawnData in _enemiesToSpawn)
@@ -50,6 +49,7 @@ public partial class SummonAlliesEffect : EnemyEffect
 
             spawnedEnemy.GlobalPosition = centeredTileGlobalPos + (directionToTargetTile * randomDistance) + offsetVector;
             spawnedEnemy.GetChild<Sprite2D>(0).Rotation = directionToTargetTile.Angle();
+            spawnedEnemy.SpawnedWave = enemy.SpawnedWave;
 
             EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
             
@@ -61,7 +61,5 @@ public partial class SummonAlliesEffect : EnemyEffect
         }
 
         timer.QueueFree();
-
-        GD.Print("Calling done!");
     }
 }

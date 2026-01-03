@@ -13,11 +13,19 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 	
 	private float _currentHealth;
 	private float _targetRot;
+	private bool _showMaxHp = true;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_currentHealth = Stats[TowerStat.Damage];
+
+		if (_showMaxHp)
+		{
+			GetChild<RichTextLabel>(3).Visible = true;
+			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + Stats[TowerStat.Damage];
+			GetChild<RichTextLabel>(3).Rotation = -Rotation;
+		}
 
 		RandomNumberGenerator rand = new();
 		_targetRot = rand.RandfRange(Mathf.Pi / 2f, 3f * Mathf.Pi/ 2f);
@@ -33,7 +41,7 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 		if (GlobalPosition.DistanceTo(TargetPos) < 7f)
 			Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 		else
-			Velocity = -Transform.Y.Normalized() * SpikeData.Speed;
+			Velocity = -Transform.Y.Normalized() * SpikeData.ProjectileSpeed;
 
 		if (!Velocity.IsZeroApprox())
 			_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, _targetRot, Velocity.Length() / 10f * (float)delta);
@@ -59,7 +67,9 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 			foreach (TowerStat stat in statsToUse.Keys)
 				statsToUse[stat] *= statMultiplier;
 
-			_currentHealth -= enemy.GetCurrentHealth();
+			_currentHealth = Mathf.Max(_currentHealth - enemy.GetCurrentHealth(), 0);
+
+			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + Stats[TowerStat.Damage];
 
 			foreach (TowerEffect effect in SpikeData.Effects)
 				effect.ApplyEffect(statsToUse, enemy);

@@ -4,7 +4,6 @@ using System.Linq;
 
 public partial class DroneProjectile : Projectile
 {
-	[Export] public float FireSpeed = 400f;
     [Export] public int MaxSpawns = 3;
     [Export] public float SummonSpeed = 30f;
     [Export] public float SummonAcceleration = 5f;

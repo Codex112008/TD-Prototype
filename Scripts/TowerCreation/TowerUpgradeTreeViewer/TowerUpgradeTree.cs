@@ -38,7 +38,7 @@ public partial class TowerUpgradeTree : Node2D
             if (dirAccess.FileExists(towerSceneFileName))
             {
 				// Create temporary instance of tower to load data from
-                Tower tempTowerToDisplayUpgrade = GD.Load<PackedScene>(currentDir + '/' + towerSceneFileName).Instantiate<Tower>();
+                Tower tempTowerToDisplayUpgrade = ResourceLoader.Load<PackedScene>(currentDir + '/' + towerSceneFileName, "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
 				TowerUpgradeDisplay towerUpgradeDisplay = _towerUpgradeDisplayScene.Instantiate<TowerUpgradeDisplay>();
 				
 				// Sets the upgrade display's tower to the temporary tower
@@ -66,7 +66,7 @@ public partial class TowerUpgradeTree : Node2D
 	public void ChangeTowerPreview(int towerLevelToDisplay)
     {
 		_towerPreview?.QueueFree();
-        _towerPreview = GD.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + towerLevelToDisplay + ".tscn").Instantiate<Tower>();
+        _towerPreview = ResourceLoader.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + towerLevelToDisplay + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
 		_towerPreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
 		_towerPreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerPreview);
@@ -74,6 +74,6 @@ public partial class TowerUpgradeTree : Node2D
 
 	public void OnAddUpgradeButtonClicked()
     {
-        RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, GD.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + (_maximumLevel - 1) + ".tscn"));
+        RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, ResourceLoader.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + (_maximumLevel - 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace));
     }
 }

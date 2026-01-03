@@ -31,6 +31,7 @@ public partial class EnemyManager : Node, IManager
 	public bool InTowerCreator = false;
 	public Array<Vector2> BaseLocations;
 	public Array<Vector2> SpawnPoints;
+	public EnemySpawnData SelectedTestingEnemy;
 
 	private List<Tuple<EnemySpawnData, bool>> _enemySpawnQueue = []; // Should only be one wave at a time
 	private int _tileSize;
@@ -49,6 +50,8 @@ public partial class EnemyManager : Node, IManager
 		_startWaveButton.Pressed += StartWave;
 
 		RNGManager.instance.AddNewRNG(this);
+
+		SelectedTestingEnemy = EnemiesToSpawnData[0];
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -66,7 +69,7 @@ public partial class EnemyManager : Node, IManager
 		}
 		else if (InTowerCreator && _spawnTimer.IsStopped())
 		{
-			Enemy spawnedEnemy = EnemiesToSpawnData[0].EnemyScene.Instantiate<Enemy>();
+			Enemy spawnedEnemy = SelectedTestingEnemy.EnemyScene.Instantiate<Enemy>();
 			spawnedEnemy.TargetPos = BaseLocations[RNGManager.instance.RandInstances[this].RandiRange(0, BaseLocations.Count - 1)];
 			spawnedEnemy.GlobalPosition = SpawnPoints[RNGManager.instance.RandInstances[this].RandiRange(0, SpawnPoints.Count - 1)];
 
@@ -118,8 +121,7 @@ public partial class EnemyManager : Node, IManager
 
 	private void StartWave()
 	{
-		if (!BuildingManager.instance.CurrencyAtWaveRecord.ContainsKey(CurrentWave))
-			BuildingManager.instance.CurrencyAtWaveRecord.Add(CurrentWave, BuildingManager.instance.PlayerCurrency);
+		RunController.instance.SaveLevel();
 		
 		CurrentWave++;
 
