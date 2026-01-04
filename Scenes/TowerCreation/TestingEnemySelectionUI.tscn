@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4cvndmu55tkl"]
+
+[ext_resource type="Script" uid="uid://b4rrp1o2vnql2" path="res://Scripts/TowerCreation/TestingEnemySelectionUiPanel.cs" id="1_6xejf"]
+
+[node name="TestingEnemySelectionUIPanel" type="PanelContainer" node_paths=PackedStringArray("enemySelectionButtonsContainer")]
+custom_minimum_size = Vector2(177, 1.45519e-11)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -177.0
+offset_bottom = 600.0
+grow_horizontal = 0
+script = ExtResource("1_6xejf")
+enemySelectionButtonsContainer = NodePath("ScrollContainer/VBoxContainer/VBoxContainer")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Enemy Selection"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/Button" to="." method="ToggleVisibility"]

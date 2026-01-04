@@ -6,33 +6,31 @@
 [ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_o8qbj"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_6dswb"]
 [ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="6_wogk0"]
-[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileIcon.png" id="7_n47li"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileIcon.png" id="7_n47li"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="8_3farx"]
-[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Spike/Impaler/ImpalerProjectileResource.tres" id="9_dmyd1"]
-[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Spike/Pin/PinProjectileResource.tres" id="10_efxsp"]
-[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Spike/Drone/DroneProjectileResource.tres" id="11_2q8sh"]
-[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectileScene.tscn" id="12_hlapn"]
-[ext_resource type="Script" path="res://Custom Resources/Projectiles/Spike/SpikeFiles/SpikeProjectile.cs" id="13_buup5"]
+[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileResource.tres" id="9_dmyd1"]
+[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileResource.tres" id="10_efxsp"]
+[ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileResource.tres" id="11_2q8sh"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileScene.tscn" id="12_hlapn"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectile.cs" id="13_buup5"]
 [ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="14_ebdn7"]
 
 [sub_resource type="Resource" id="Resource_jy164"]
-resource_name = "Spike"
+resource_name = "Bullet"
 script = ExtResource("13_buup5")
-MaxSpawns = 3
 ProjectileScene = ExtResource("12_hlapn")
 Effects = Array[ExtResource("5_6dswb")]([ExtResource("6_wogk0")])
 NextTierProjectiles = Array[ExtResource("8_3farx")]([ExtResource("9_dmyd1"), ExtResource("10_efxsp"), ExtResource("11_2q8sh")])
-RequireEnemy = false
-ProjectileSpeed = 150.0
-Tooltip = "Lays down road traps for enemies to step on, 3 spikes max
-Damge 10x
-Firerate 0.15x"
+RequireEnemy = true
+ProjectileSpeed = 300.0
+Tooltip = "Shoot a bullet
+Nothing Special"
 Icon = ExtResource("7_n47li")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 10.0,
+1: 1.0,
 2: 1.0,
-3: 0.15
+3: 1.0
 })
 PointCost = 25
 

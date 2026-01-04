@@ -22,7 +22,7 @@
 [ext_resource type="Resource" uid="uid://08kipvbksfmg" path="res://Custom Resources/TowerEffects/Burn/BurnEffectResource.tres" id="13_ipj2w"]
 [ext_resource type="PackedScene" uid="uid://tmbqjvjqq1dq" path="res://Custom Resources/BaseTowers/DomainTower/DomainTower.tscn" id="14_5p0vn"]
 [ext_resource type="Script" uid="uid://bx1inkekj1aan" path="res://Scripts/TowerCreation/TowerSelector.cs" id="19_p8u2g"]
-[ext_resource type="Script" uid="uid://b4rrp1o2vnql2" path="res://Scripts/TowerCreation/TestingEnemySelectionUiPanel.cs" id="23_5syig"]
+[ext_resource type="PackedScene" uid="uid://b4cvndmu55tkl" path="res://Scenes/TowerCreation/TestingEnemySelectionUI.tscn" id="23_5syig"]
 
 [node name="TowerCreator" type="Node2D" node_paths=PackedStringArray("_towerCreatorUI", "_towerPreviewArea")]
 z_index = -2
@@ -127,31 +127,10 @@ auto_width = true
 auto_height = true
 icon_scale = 2.0
 
-[node name="TestingEnemySelectionUIPanel" type="PanelContainer" parent="UI" node_paths=PackedStringArray("enemySelectionButtonsContainer")]
-custom_minimum_size = Vector2(177, 1.45519e-11)
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 40.0
-grow_horizontal = 0
-script = ExtResource("23_5syig")
-enemySelectionButtonsContainer = NodePath("VBoxContainer/VBoxContainer")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/TestingEnemySelectionUIPanel"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="UI/TestingEnemySelectionUIPanel/VBoxContainer"]
-layout_mode = 2
-text = "Enemy Selection"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/TestingEnemySelectionUIPanel/VBoxContainer"]
-visible = false
-layout_mode = 2
+[node name="TestingEnemySelectionUIPanel" parent="UI" instance=ExtResource("23_5syig")]
 
 [connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/SaveButton" to="." method="SaveTowerResource"]
 [connection signal="text_changed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/NameInput" to="." method="UpdateTowerPreview"]
 [connection signal="picker_created" from="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/ColorPickerButton" method="WhenPickerCreated"]
 [connection signal="pressed" from="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector/HBoxContainer/TextureButton" to="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector" method="ToggleVisibility"]
 [connection signal="item_selected" from="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector/ModifierList" to="UI/TowerCreatorUIPanel/TowerCreatorUI/TowerSelector" method="OnItemSelectedSignal"]
-[connection signal="pressed" from="UI/TestingEnemySelectionUIPanel/VBoxContainer/Button" to="UI/TestingEnemySelectionUIPanel" method="ToggleVisibility"]

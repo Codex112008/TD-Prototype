@@ -377,7 +377,7 @@ public abstract partial class Tower : Sprite2D
 
                 CharacterBody2D dummyBody = new();
                 AddChild(dummyBody);
-                //dummyBody.AddChild(new Sprite2D(){Texture = _projectile.Icon});
+                dummyBody.AddChild(new Sprite2D(){Texture = _projectile.Icon});
                 dummyBody.GlobalPosition = randomPos;
                 return dummyBody;
             }

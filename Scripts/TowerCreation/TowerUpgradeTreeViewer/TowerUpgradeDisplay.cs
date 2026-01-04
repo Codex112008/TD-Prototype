@@ -30,7 +30,8 @@ public partial class TowerUpgradeDisplay : PanelContainer
             {
                 Text = stat.Key.ToString() + ": " + stat.Value,
 				FitContent = true,
-				AutowrapMode = TextServer.AutowrapMode.Off
+				AutowrapMode = TextServer.AutowrapMode.Off,
+				MouseFilter = MouseFilterEnum.Ignore
             };
 			_statsContainer.AddChild(statLabel);
         }
