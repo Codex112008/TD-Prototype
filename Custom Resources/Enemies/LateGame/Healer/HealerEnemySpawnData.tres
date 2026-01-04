@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=5 format=3 uid="uid://bxrh0xtb4xjl"]
+
+[ext_resource type="PackedScene" uid="uid://dsck0jf7m478k" path="res://Custom Resources/Enemies/LateGame/Healer/HealerEnemy.tscn" id="1_7k3yt"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_ydr0u"]
+[ext_resource type="Resource" uid="uid://ch7qtvavkb5sh" path="res://Custom Resources/Enemies/MidGame/TankerEnemy/TankerEnemySpawnData.tres" id="3_1w1jx"]
+[ext_resource type="Resource" uid="uid://dwm2npydja82i" path="res://Custom Resources/Enemies/EarlyGame/StrongEnemy/StrongEnemySpawnData.tres" id="4_7q3nw"]
+
+[resource]
+script = ExtResource("2_ydr0u")
+EnemyScene = ExtResource("1_7k3yt")
+BaseWeight = 1
+MinWave = 30
+MaxWave = 2147483647
+QtyLow = 1
+QtyMean = 1
+QtyHigh = 2
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 1.0
+PairingChoices = Array[ExtResource("2_ydr0u")]([ExtResource("3_1w1jx"), ExtResource("4_7q3nw")])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

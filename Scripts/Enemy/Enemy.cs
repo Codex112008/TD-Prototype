@@ -7,7 +7,14 @@ using Godot.Collections;
 public partial class Enemy : CharacterBody2D
 {
 	[Export] public Dictionary<EnemyEffectTrigger, Array<EnemyEffect>> Effects = [];
-	[Export] private Dictionary<EnemyStat, int> _baseEnemyStats = [];
+	[Export] private Dictionary<EnemyStat, int> _baseEnemyStats = new()
+	{
+		{EnemyStat.Damage, 1},
+		{EnemyStat.DeathReward, 10},
+		{EnemyStat.Defence, 1},
+		{EnemyStat.MaxHealth, 8},
+		{EnemyStat.Speed, 30}
+	};
 	[Export] private float _acceleration = 5f;
 	[Export] private float _deceleration = 10f;
 	[Export] private float _offsetMargin = 0.4f;
@@ -16,13 +23,13 @@ public partial class Enemy : CharacterBody2D
 	public Vector2 TargetPos;
 	public Array<Vector2> PathArray = [];
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
+	public Array<Timer> TimerEffectTimers = [];
 	public int SpawnedWave = -1;
 
-	private Dictionary<StatusEffect, float> _currentStatusEffects = [];
-	private Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
+	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
+	protected Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
-	private Array<Timer> _timerEffectTimers = [];
-	private Sprite2D _sprite;
+	protected Sprite2D _sprite;
 	private float _currentHealth;
 	private RandomNumberGenerator _rand = new();
 	private bool _isDead = false;
@@ -74,6 +81,7 @@ public partial class Enemy : CharacterBody2D
 		_currentHealth = CurrentEnemyStats[EnemyStat.MaxHealth];
 
 		TriggerEffects(EnemyEffectTrigger.OnSpawn);
+		TriggerEffects(EnemyEffectTrigger.OnTimer);
 
 		if (Effects.TryGetValue(EnemyEffectTrigger.OnTimer, out Array<EnemyEffect> onTimerEffects) && onTimerEffects.Count > 0)
 		{
@@ -85,7 +93,7 @@ public partial class Enemy : CharacterBody2D
 					Autostart = true
                 };
                 timer.Timeout += () => effect.ApplyEffect(this);
-				_timerEffectTimers.Add(timer);
+				TimerEffectTimers.Add(timer);
 				AddChild(timer);
 			}
 		}
@@ -132,6 +140,9 @@ public partial class Enemy : CharacterBody2D
 	{
 		if (Mathf.RoundToInt(amount * 100) == 0)
 			return amount;
+		
+		if (amount < 0)
+			damageType = DamageType.Heal;
 
 		if (!_isDead)
 		{
@@ -140,10 +151,11 @@ public partial class Enemy : CharacterBody2D
 				damageDealt = DamageAfterArmorPierce(damageDealt);
 
 			_currentHealth -= damageDealt;
+			_currentHealth = Mathf.Clamp(_currentHealth, 0, CurrentEnemyStats[EnemyStat.MaxHealth]);
 
 			InstantiateDamageNumber(damageDealt, damageType);
 
-			TriggerEffects(EnemyEffectTrigger.OnDamage);
+			TriggerEffects(EnemyEffectTrigger.OnThreshold);
 
 			if (_currentHealth <= 0)
 				Die();
@@ -158,7 +170,7 @@ public partial class Enemy : CharacterBody2D
 		return float.NaN;
 	}
 
-	public void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
+	public virtual void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
 	{
 		// If status effect applied start decay timer of it if timer exists
 		if (!decay && _currentStatusEffects[status] <= 0f && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
@@ -177,50 +189,15 @@ public partial class Enemy : CharacterBody2D
 			tickTimer.Start();
 
 		// Special effects if status effects reach certain requirements
-		switch (status)
-		{
-			case StatusEffect.Chill: // If chill reaches max value convert it all to stun and recolor enemy slightly for a brief period
-				// Cant chill enemies that are frozen
-				if (Modulate == new Color(0.17f, 1f, 1f, 1f))
-					_currentStatusEffects[status] -= statusStacks;
+		if (StatusEffectsData.DoesStatusEffectHaveThreshold(status))
+			StatusEffectsData.DoEnemyStatusThresholdBehaviour(status, this);
+		
+		UpdateStats();
+	}
 
-				if (_currentStatusEffects[status] >= StatusEffectsData.GetMaxStatusEffectValue(status))
-				{
-					AddStatusEffectStacks(StatusEffect.Stun, _currentStatusEffects[status]);
-					
-					Modulate = new Color(0.17f, 1f, 1f, 1f);
-					Timer timer = new()
-					{
-						WaitTime = _currentStatusEffects[status] / 10f,
-						Autostart = true,
-						OneShot = true
-					};
-					timer.Connect(Timer.SignalName.Timeout, Callable.From(RestoreOriginalColor));
-					timer.Connect(Timer.SignalName.Timeout, Callable.From(timer.QueueFree));
-					AddChild(timer);
-
-					_currentStatusEffects[status] = 0f;
-				}
-				break;
-			case StatusEffect.Stun: // Effects that run on the timer pause while stunned, like summoning enemies
-				if (_currentStatusEffects[status] > 0)
-				{
-					foreach (Timer timer in _timerEffectTimers)
-					{
-						if (!timer.Paused)
-							timer.Paused = true;
-					}
-				}
-				else
-				{
-					foreach (Timer timer in _timerEffectTimers)
-					{
-						if (timer.Paused)
-							timer.Paused = false;
-					}
-				}
-				break;
-		}
+	public void SetStatusEffectValue(StatusEffect status, float amount)
+	{
+		_currentStatusEffects[status] = amount;
 	}
 
 	public void TickStatusEffect(StatusEffect status)
@@ -228,27 +205,7 @@ public partial class Enemy : CharacterBody2D
 		if (_currentStatusEffects[status] > 0f && StatusEffectsData.IsStatusEfectTicking(status))
 		{
 			_currentStatusEffectTickTimers[status].Start();
-			switch (status)
-			{
-				case StatusEffect.Poison:
-					TakeDamage(CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.001f * _currentStatusEffects[status], 0.07f), DamageType.Poison, true);
-					// Do something with excess poison stacks
-					break;
-				case StatusEffect.Burn:
-					int burnExplosionThreshold = (int)(StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn) * Mathf.FloorToInt(_currentStatusEffects[status] / StatusEffectsData.GetMaxStatusEffectValue(StatusEffect.Burn)));
-
-					float burnToConsume = _currentStatusEffects[status] * 0.75f;
-                    TakeDamage(burnToConsume * 0.05f, DamageType.Burn, false);
-					_currentStatusEffects[status] -= burnToConsume;
-
-					if (_currentStatusEffects[status] < burnExplosionThreshold)
-					{
-						burnToConsume = _currentStatusEffects[status] * 0.25f;
-						TakeDamage(burnToConsume * 0.1f, DamageType.Burn, false);
-						_currentStatusEffects[status] -= burnToConsume;
-					}
-					break;
-			}
+			StatusEffectsData.TickEnemyStatusEffect(status, this);
 		}
 	}
 
@@ -269,8 +226,6 @@ public partial class Enemy : CharacterBody2D
 	{
 		Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
 
-		UpdateSpeedStat();
-
 		Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed] * speedMult, _acceleration * delta);
 		_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), _acceleration * delta);
 	}
@@ -284,24 +239,31 @@ public partial class Enemy : CharacterBody2D
 		QueueFree();
 	}
 
-	protected virtual float UpdateSpeedStat()
+	protected virtual void UpdateStats()
 	{
-		float speed = _baseEnemyStats[EnemyStat.Speed];
+		foreach(EnemyStat stat in CurrentEnemyStats.Keys)
+		{
+			float value = _baseEnemyStats[stat];
 
-		if (_currentStatusEffects[StatusEffect.Chill] > 0f)
-			speed *= 6.4f / Mathf.Pow(_currentStatusEffects[StatusEffect.Chill] + 3f, 2f) + 0.35f;
+			foreach ((StatusEffect status, float stacks) in _currentStatusEffects)
+			{
+				if (stacks > 0 && StatusEffectsData.DoesStatusMultiplyEnemyStat(status, stat))
+					value *= StatusEffectsData.GetEnemyStatusStatMultiplier(status, stat, this);
+			}
 
-		if (_currentStatusEffects[StatusEffect.Poison] > 0f)
-			speed *= 0.95f;
+			float healAmount = -1f;
+			if (stat == EnemyStat.MaxHealth && value > CurrentEnemyStats[stat])
+			{
+				healAmount = value - CurrentEnemyStats[stat];
+			}
 
-		if (_currentStatusEffects[StatusEffect.Stun] > 0)
-			speed = 0;
+			CurrentEnemyStats[stat] = value;
 
-		if (_currentStatusEffects[StatusEffect.Burn] > 0f)
-			speed *= 1.1f;
+			if (healAmount > 0)
+				TakeDamage(-healAmount, DamageType.Heal, true);
 
-		CurrentEnemyStats[EnemyStat.Speed] = speed;
-		return speed;
+			_currentHealth = Mathf.Clamp(_currentHealth, 0, CurrentEnemyStats[EnemyStat.MaxHealth]);
+		}
 	}
 
 	protected void TriggerEffects(EnemyEffectTrigger triggerEvent)
@@ -309,7 +271,14 @@ public partial class Enemy : CharacterBody2D
 		if (Effects.TryGetValue(triggerEvent, out Array<EnemyEffect> effects) && effects.Count > 0)
 		{
 			foreach (EnemyEffect effect in effects)
-				effect.ApplyEffect(this);
+			{
+				if (triggerEvent == EnemyEffectTrigger.OnThreshold && _currentHealth / CurrentEnemyStats[EnemyStat.MaxHealth] < effect.HealthPercentageThreshold)
+				{
+					effect.ApplyEffect(this);
+				}
+				else
+					effect.ApplyEffect(this);
+			}
 		}
 	}
 
@@ -318,19 +287,19 @@ public partial class Enemy : CharacterBody2D
 		DamageNumber damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
 		damageNumber.DamageValue = Mathf.Round(damageDealt * 100) / 100;
 		damageNumber.DamageTypeDealt = damageType;
-		damageNumber.GlobalPosition = GlobalPosition + new Vector2(_rand.RandfRange(-2f, 2f), _rand.RandfRange(-0.5f, 0.5f));
+		damageNumber.GlobalPosition = GlobalPosition + new Vector2(_rand.RandfRange(-5f, 5f), _rand.RandfRange(-1f, 1f));
 		EnemyManager.instance.EnemyParent.AddChild(damageNumber);
 	}
 
 	protected float DamageAfterArmorPierce(float originalDamage)
 	{
 		if (CurrentEnemyStats.TryGetValue(EnemyStat.Defence, out float defence))
-			return originalDamage * Mathf.Pow(0.975f, defence);
+			return originalDamage * Mathf.Pow(0.975f, defence - 1);
 		else
 			return originalDamage;
 	}
 
-	private void RestoreOriginalColor()
+	public void RestoreOriginalColor()
 	{
 		Modulate = Colors.White;
 	}

@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_m0peo"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="2_hamoi"]
-[ext_resource type="Texture2D" uid="uid://b32oi3sxm6okx" path="res://Sprites/Enemies/tanker.png" id="3_d4yht"]
+[ext_resource type="Texture2D" uid="uid://dfwb2u3q0wwmo" path="res://Custom Resources/Enemies/MidGame/TankerEnemy/tanker.png" id="3_m0peo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(10, 10)
 
-[node name="StrongEnemy" type="CharacterBody2D" groups=["Enemy"]]
+[node name="TankerEnemy" type="CharacterBody2D" groups=["Enemy"]]
 collision_mask = 0
 script = ExtResource("1_m0peo")
 _baseEnemyStats = Dictionary[int, int]({
@@ -15,13 +15,13 @@ _baseEnemyStats = Dictionary[int, int]({
 1: 3000,
 2: 22,
 3: 2,
-4: 20
+4: 21
 })
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("2_hamoi")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("3_d4yht")
+texture = ExtResource("3_m0peo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_60jb5")

@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://rpufv7jj3q0x"]
+
+[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_gwf7n"]
+[ext_resource type="Resource" uid="uid://dc8dmvg26ehic" path="res://Custom Resources/Enemies/LateGame/Charger/ChargerSwiftnessDeathPulse.tres" id="2_fgpqs"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="2_slmk8"]
+[ext_resource type="Texture2D" uid="uid://bu5ep1qkv2wl4" path="res://Custom Resources/Enemies/LateGame/Charger/charger.png" id="3_tgheb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(10, 6)
+
+[node name="ChargerEnemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_gwf7n")
+Effects = Dictionary[int, Array]({
+1: [ExtResource("2_fgpqs")]
+})
+_baseEnemyStats = Dictionary[int, int]({
+0: 500,
+1: 2200,
+2: 80,
+3: 1,
+4: 1
+})
+_offsetMargin = 0.55
+_damageNumberScene = ExtResource("2_slmk8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_tgheb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

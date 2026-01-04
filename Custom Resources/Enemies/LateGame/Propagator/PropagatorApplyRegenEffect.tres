@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ApplyStatusEffect" load_steps=2 format=3 uid="uid://c75ihvy002hbg"]
+
+[ext_resource type="Script" uid="uid://bip027y5xa1sa" path="res://Custom Resources/EnemyEffects/ApplyStatus/ApplyStatusEffect.cs" id="1_obkq6"]
+
+[resource]
+script = ExtResource("1_obkq6")
+_status = 6
+_stacks = 2.67
+EffectInterval = 999.0
+HealthPercentageThreshold = 0.4
+metadata/_custom_type_script = "uid://bip027y5xa1sa"

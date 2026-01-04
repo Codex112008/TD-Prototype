@@ -67,7 +67,7 @@ public partial class TowerUpgradeTree : Node2D
     {
 		_towerPreview?.QueueFree();
         _towerPreview = ResourceLoader.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + towerLevelToDisplay + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
-		_towerPreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
+		_towerPreview.GlobalPosition = new Vector2I(14, 6) * PathfindingManager.instance.TileSize;
 		_towerPreview.RangeAlwaysVisible = true;
 		_towerPreviewArea.AddChild(_towerPreview);
     }

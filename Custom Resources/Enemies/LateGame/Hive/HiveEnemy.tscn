@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://ct6lwlqwnqym"]
+
+[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_lfqtv"]
+[ext_resource type="Resource" uid="uid://b72ydxyly0p7f" path="res://Custom Resources/Enemies/LateGame/Hive/HiveSummonEffectResource.tres" id="2_jlgg0"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_ch48b"]
+[ext_resource type="Texture2D" uid="uid://bpvl6orl3myfx" path="res://Custom Resources/Enemies/LateGame/Hive/hive.png" id="4_jlgg0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(12, 12)
+
+[node name="HiveEnemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_lfqtv")
+Effects = Dictionary[int, Array]({
+2: [ExtResource("2_jlgg0")],
+3: [ExtResource("2_jlgg0")]
+})
+_baseEnemyStats = Dictionary[int, int]({
+0: 1200,
+1: 16000,
+2: 20,
+3: 1,
+4: 17
+})
+_offsetMargin = 0.55
+_damageNumberScene = ExtResource("3_ch48b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_jlgg0")
+flip_v = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

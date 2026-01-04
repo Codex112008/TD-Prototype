@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://cigc2p7413nxx"]
+
+[ext_resource type="Script" uid="uid://dkl21qvxbpxxt" path="res://Custom Resources/Enemies/LateGame/Propagator/Propagator.cs" id="1_xms2w"]
+[ext_resource type="Resource" uid="uid://l8jrdmb3kmj1" path="res://Custom Resources/Enemies/LateGame/BroodmotherEnemy/BroodmotherEnemySpawnData.tres" id="2_wjn4o"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_oll71"]
+[ext_resource type="Resource" uid="uid://danojg6cxpy12" path="res://Custom Resources/Enemies/MidGame/CarrierEnemy/CarrierEnemySpawnData.tres" id="3_r8tjx"]
+[ext_resource type="Resource" uid="uid://c75ihvy002hbg" path="res://Custom Resources/Enemies/LateGame/Propagator/PropagatorApplyRegenEffect.tres" id="4_wjn4o"]
+[ext_resource type="Texture2D" uid="uid://dda3y1c5yyd7m" path="res://Custom Resources/Enemies/LateGame/Propagator/propagator.png" id="5_xhnec"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(12, 12)
+
+[node name="PropagatorEnemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_xms2w")
+_broodmotherSpawnData = ExtResource("2_wjn4o")
+_carrierSpawnData = ExtResource("3_r8tjx")
+_broodmotherDamageThreshold = 500.0
+Effects = Dictionary[int, Array]({
+2: [ExtResource("4_wjn4o")]
+})
+_baseEnemyStats = Dictionary[int, int]({
+0: 3000,
+1: 33333,
+2: 24,
+3: 5,
+4: 16
+})
+_damageNumberScene = ExtResource("3_oll71")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("5_xhnec")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

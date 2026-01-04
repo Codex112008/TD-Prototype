@@ -58,6 +58,8 @@ public partial class ShotgunTower : Tower
                         if (_target.GetParent() == this)
                             _target.QueueFree();
                     }
+
+                    _target = FindFirstEnemy();
                 }
                 else
                     _target = FindFirstEnemy();

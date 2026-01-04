@@ -10,7 +10,6 @@
 [resource]
 resource_name = "Dagger"
 script = ExtResource("6_8sass")
-FireForce = 600.0
 ProjectileScene = ExtResource("5_rjde2")
 Effects = Array[ExtResource("1_f8yvk")]([ExtResource("2_j1enh")])
 NextTierProjectiles = Array[ExtResource("4_da5l6")]([])

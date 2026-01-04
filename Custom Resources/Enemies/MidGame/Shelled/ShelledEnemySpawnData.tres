@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=4 format=3 uid="uid://blqu7x4mgxsms"]
+
+[ext_resource type="PackedScene" uid="uid://c5r26er6q1x2g" path="res://Custom Resources/Enemies/MidGame/Shelled/ShelledEnemy.tscn" id="1_vbr80"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_3l6np"]
+[ext_resource type="Resource" uid="uid://cdec5svn28g5x" path="res://Custom Resources/Enemies/MidGame/Bastion/BastionEnemySpawnData.tres" id="3_q2p50"]
+
+[resource]
+script = ExtResource("2_3l6np")
+EnemyScene = ExtResource("1_vbr80")
+BaseWeight = 1
+MinWave = 23
+MaxWave = 2147483647
+QtyLow = 2
+QtyMean = 4
+QtyHigh = 6
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 1.3
+PairingChoices = Array[ExtResource("2_3l6np")]([ExtResource("3_q2p50")])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

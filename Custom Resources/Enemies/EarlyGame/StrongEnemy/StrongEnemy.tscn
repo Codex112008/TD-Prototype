@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_sxk7a"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="2_mnv5b"]
-[ext_resource type="Texture2D" uid="uid://bjbyeejcqql1k" path="res://Sprites/Enemies/strong.png" id="3_lbxpu"]
+[ext_resource type="Texture2D" uid="uid://bolpkrfqg46xk" path="res://Custom Resources/Enemies/EarlyGame/StrongEnemy/strong.png" id="3_mnyw8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(10, 10)
@@ -15,13 +15,13 @@ _baseEnemyStats = Dictionary[int, int]({
 1: 50,
 2: 24,
 3: 2,
-4: 8
+4: 9
 })
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("2_mnv5b")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("3_lbxpu")
+texture = ExtResource("3_mnyw8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_60jb5")

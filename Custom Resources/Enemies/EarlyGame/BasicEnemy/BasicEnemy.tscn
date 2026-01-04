@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_qjapj"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="2_xdyv2"]
-[ext_resource type="Texture2D" uid="uid://crat4o68hjhiy" path="res://Sprites/Enemies/enemy.png" id="3_h87rr"]
+[ext_resource type="Texture2D" uid="uid://dwyqpt47n3jco" path="res://Custom Resources/Enemies/EarlyGame/BasicEnemy/enemy.png" id="3_hgcjo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(6, 6)
@@ -10,17 +10,11 @@ size = Vector2(6, 6)
 [node name="BasicEnemy" type="CharacterBody2D" groups=["Enemy"]]
 collision_mask = 0
 script = ExtResource("1_qjapj")
-_baseEnemyStats = Dictionary[int, int]({
-0: 10,
-1: 8,
-2: 30,
-3: 1
-})
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("2_xdyv2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("3_h87rr")
+texture = ExtResource("3_hgcjo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_60jb5")

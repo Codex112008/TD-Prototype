@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_58ibh"]
 [ext_resource type="Resource" uid="uid://rhr6scowalxs" path="res://Custom Resources/Enemies/MidGame/CarrierEnemy/SpawnSplittersEffectResource.tres" id="2_v48fm"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_02re0"]
-[ext_resource type="Texture2D" uid="uid://bae5rlev537nl" path="res://Sprites/Enemies/carrier.png" id="4_h3svw"]
+[ext_resource type="Texture2D" uid="uid://unmqjpspw80s" path="res://Custom Resources/Enemies/MidGame/CarrierEnemy/carrier.png" id="4_2mr5a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(12, 12)
@@ -19,13 +19,13 @@ _baseEnemyStats = Dictionary[int, int]({
 1: 100,
 2: 34,
 3: 1,
-4: 7
+4: 8
 })
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("3_02re0")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("4_h3svw")
+texture = ExtResource("4_2mr5a")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_60jb5")

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SummonAlliesEffect" load_steps=4 format=3 uid="uid://bs7hvrvgv2n1a"]
+
+[ext_resource type="Resource" uid="uid://l8jrdmb3kmj1" path="res://Custom Resources/Enemies/LateGame/BroodmotherEnemy/BroodmotherEnemySpawnData.tres" id="1_rd1e4"]
+[ext_resource type="Resource" uid="uid://danojg6cxpy12" path="res://Custom Resources/Enemies/MidGame/CarrierEnemy/CarrierEnemySpawnData.tres" id="2_78lbq"]
+[ext_resource type="Script" uid="uid://bteaehp6g8775" path="res://Custom Resources/EnemyEffects/SummonAllies/SummonAlliesEffect.cs" id="4_blvue"]
+
+[resource]
+script = ExtResource("4_blvue")
+_enemiesToSpawn = Array[Object]([ExtResource("1_rd1e4"), ExtResource("2_78lbq"), ExtResource("1_rd1e4")])
+_enemiesToSpawnCount = 5
+_spawnDelay = 0.5
+EffectInterval = 6.0
+HealthPercentageThreshold = 0.0
+metadata/_custom_type_script = "uid://bteaehp6g8775"

@@ -10,7 +10,6 @@
 [resource]
 resource_name = "Drone"
 script = ExtResource("6_hd3nc")
-FireSpeed = 200.0
 MaxSpawns = 5
 SummonSpeed = 30.0
 SummonAcceleration = 5.0

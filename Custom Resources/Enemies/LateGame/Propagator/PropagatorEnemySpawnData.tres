@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=3 format=3 uid="uid://bcju45pu5y0nu"]
+
+[ext_resource type="PackedScene" uid="uid://cigc2p7413nxx" path="res://Custom Resources/Enemies/LateGame/Propagator/PropagatorEnemy.tscn" id="1_5dx12"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_q16q3"]
+
+[resource]
+script = ExtResource("2_q16q3")
+EnemyScene = ExtResource("1_5dx12")
+BaseWeight = 1
+MinWave = 35
+MaxWave = 2147483647
+QtyLow = 1
+QtyMean = 1
+QtyHigh = 1
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 0.1
+PairingChoices = Array[ExtResource("2_q16q3")]([])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

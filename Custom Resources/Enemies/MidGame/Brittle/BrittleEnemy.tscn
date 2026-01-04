@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://bo2w82tnm8f41"]
+
+[ext_resource type="Script" uid="uid://b83ln665al6no" path="res://Custom Resources/Enemies/MidGame/Brittle/Brittle.cs" id="1_g03cn"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="2_2k3sx"]
+[ext_resource type="Texture2D" uid="uid://2usr08to73sf" path="res://Custom Resources/Enemies/MidGame/Brittle/brittle.png" id="2_g03cn"]
+[ext_resource type="Texture2D" uid="uid://c1234xss35o6" path="res://Sprites/poisonResist.png" id="3_a4gey"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(10, 10)
+
+[node name="BrittleEnemy" type="CharacterBody2D" node_paths=PackedStringArray("resistIconSprite") groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_g03cn")
+resistIconSprite = NodePath("PoisonResistIcon")
+_baseEnemyStats = Dictionary[int, int]({
+0: 600,
+1: 50000,
+2: 27,
+3: 1,
+4: -99
+})
+_damageNumberScene = ExtResource("2_2k3sx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_g03cn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PoisonResistIcon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_a4gey")

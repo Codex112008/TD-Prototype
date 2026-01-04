@@ -24,7 +24,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(160, 94)]
+"values": [Vector2(200, 117.5)]
 }
 
 [sub_resource type="Animation" id="Animation_rci85"]
@@ -40,7 +40,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(160, -98), Vector2(160, 94)]
+"values": [Vector2(200, -117.5), Vector2(200, 117.5)]
 }
 
 [sub_resource type="Animation" id="Animation_tfoyi"]
@@ -56,7 +56,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(484, 94), Vector2(160, 94)]
+"values": [Vector2(960, 188), Vector2(200, 117.5)]
 }
 
 [sub_resource type="Animation" id="Animation_gg8i0"]
@@ -72,7 +72,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(160, 282), Vector2(160, 94)]
+"values": [Vector2(200, 352.5), Vector2(200, 117.5)]
 }
 
 [sub_resource type="Animation" id="Animation_w2sna"]
@@ -88,7 +88,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(160, 94), Vector2(160, 282)]
+"values": [Vector2(200, 117.5), Vector2(200, 352.5)]
 }
 
 [sub_resource type="Animation" id="Animation_ud3b5"]
@@ -104,7 +104,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(160, 94), Vector2(484, 94)]
+"values": [Vector2(200, 117.5), Vector2(600, 117.5)]
 }
 
 [sub_resource type="Animation" id="Animation_skahh"]
@@ -120,7 +120,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(160, 94), Vector2(160, -94)]
+"values": [Vector2(200, 117.5), Vector2(200, -117.5)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gg8i0"]
@@ -184,8 +184,8 @@ z_index = 1
 [node name="InstancedNodes" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(160, 94)
-zoom = Vector2(4, 4)
+position = Vector2(200, 117.5)
+zoom = Vector2(3.2, 3.2)
 process_callback = 0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Camera2D"]
@@ -200,21 +200,32 @@ z_index = 2
 position = Vector2(160, -19)
 texture = ExtResource("10_gf1ev")
 
+[node name="TransitionUp" type="Sprite2D" parent="TransitionElements/TransitionUp"]
+z_index = 2
+position = Vector2(320, 1.45519e-11)
+texture = ExtResource("10_gf1ev")
+
 [node name="TransitionDown" type="Sprite2D" parent="TransitionElements"]
 z_index = 2
-position = Vector2(160, 207)
+position = Vector2(160, 395)
+texture = ExtResource("10_gf1ev")
+flip_v = true
+
+[node name="TransitionDown" type="Sprite2D" parent="TransitionElements/TransitionDown"]
+z_index = 2
+position = Vector2(320, 1.45519e-11)
 texture = ExtResource("10_gf1ev")
 flip_v = true
 
 [node name="TransitionRight" type="Sprite2D" parent="TransitionElements"]
 z_index = 2
-position = Vector2(329, 94)
+position = Vector2(649, 188)
 rotation = 1.5708
 texture = ExtResource("10_gf1ev")
 
 [node name="TransitionLeft" type="Sprite2D" parent="TransitionElements"]
 z_index = 2
-position = Vector2(-9, 94)
+position = Vector2(-9, 188)
 rotation = -1.5708
 texture = ExtResource("10_gf1ev")
 

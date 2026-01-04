@@ -13,7 +13,6 @@
 [resource]
 resource_name = "Spike"
 script = ExtResource("6_iqxt3")
-Speed = 175.0
 MaxSpawns = 3
 ProjectileScene = ExtResource("5_7wxxt")
 Effects = Array[ExtResource("1_somg1")]([ExtResource("2_si5te")])

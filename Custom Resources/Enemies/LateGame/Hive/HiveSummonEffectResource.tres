@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SummonAlliesEffect" load_steps=3 format=3 uid="uid://b72ydxyly0p7f"]
+
+[ext_resource type="Resource" uid="uid://chfmebru8fuxk" path="res://Custom Resources/Enemies/LateGame/Hiveling/HivelingEnemySpawnData.tres" id="1_bv6i3"]
+[ext_resource type="Script" uid="uid://bteaehp6g8775" path="res://Custom Resources/EnemyEffects/SummonAllies/SummonAlliesEffect.cs" id="3_kk48d"]
+
+[resource]
+script = ExtResource("3_kk48d")
+_enemiesToSpawn = Array[Object]([ExtResource("1_bv6i3")])
+_enemiesToSpawnCount = 3
+_spawnDelay = 0.6
+EffectInterval = 7.0
+HealthPercentageThreshold = 0.25
+metadata/_custom_type_script = "uid://bteaehp6g8775"

@@ -1,0 +1,47 @@
+[gd_scene load_steps=10 format=3 uid="uid://dsck0jf7m478k"]
+
+[ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_l08xq"]
+[ext_resource type="Resource" uid="uid://b12yilpc7qi21" path="res://Custom Resources/Enemies/LateGame/Healer/HealerRegenPulse.tres" id="2_8v1i0"]
+[ext_resource type="Resource" uid="uid://wps8x7wl7j1q" path="res://Custom Resources/Enemies/LateGame/Healer/HealerCleanseBurnRegenPulse.tres" id="3_61wi6"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_xpwnx"]
+[ext_resource type="Resource" uid="uid://5yi3sqr1uqsb" path="res://Custom Resources/Enemies/LateGame/Healer/HealerCleanseChillRegenPulse.tres" id="4_mfvad"]
+[ext_resource type="Resource" uid="uid://jupidruubv0w" path="res://Custom Resources/Enemies/LateGame/Healer/HealerCleansePoisonPulse.tres" id="5_2rgf7"]
+[ext_resource type="Resource" uid="uid://dpogrx1h5sq8d" path="res://Custom Resources/Enemies/LateGame/Healer/HealerCleanseStunPulse.tres" id="6_1n80r"]
+[ext_resource type="Texture2D" uid="uid://gyeatlqir3c0" path="res://Custom Resources/Enemies/LateGame/Healer/healer.png" id="8_8v1i0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
+size = Vector2(8, 8)
+
+[node name="HealerEnemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_l08xq")
+Effects = Dictionary[int, Array]({
+3: [ExtResource("2_8v1i0"), ExtResource("3_61wi6"), ExtResource("4_mfvad"), ExtResource("5_2rgf7"), ExtResource("6_1n80r")]
+})
+_baseEnemyStats = Dictionary[int, int]({
+0: 300,
+1: 8000,
+2: 30,
+3: 1,
+4: 5
+})
+_offsetMargin = 0.55
+_damageNumberScene = ExtResource("3_xpwnx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("8_8v1i0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60jb5")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

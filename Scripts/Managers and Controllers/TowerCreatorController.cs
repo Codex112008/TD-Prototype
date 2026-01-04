@@ -417,7 +417,7 @@ public partial class TowerCreatorController : Node2D
 	private void InstantiateTowerPreview(PackedScene towerType, bool addToScene = true)
 	{
 		_towerToCreatePreview = towerType.Instantiate<Tower>();
-		_towerToCreatePreview.GlobalPosition = new Vector2I(11, 5) * PathfindingManager.instance.TileSize;
+		_towerToCreatePreview.GlobalPosition = new Vector2I(14, 6) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		if (addToScene)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);

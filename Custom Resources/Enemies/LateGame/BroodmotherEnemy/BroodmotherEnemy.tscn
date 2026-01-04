@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_5jpgi"]
 [ext_resource type="Resource" uid="uid://dy3kyjahi7nfb" path="res://Custom Resources/Enemies/LateGame/BroodmotherEnemy/SpawnCarriersEffectResource.tres" id="2_3emx0"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_mfq8i"]
-[ext_resource type="Texture2D" uid="uid://ckdini2hjwbne" path="res://Sprites/Enemies/broodmother.png" id="4_3emx0"]
+[ext_resource type="Texture2D" uid="uid://jm1h0lj0vbj7" path="res://Custom Resources/Enemies/LateGame/BroodmotherEnemy/broodmother.png" id="4_7ibgo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(12, 12)
@@ -19,13 +19,13 @@ _baseEnemyStats = Dictionary[int, int]({
 1: 200,
 2: 26,
 3: 1,
-4: 12
+4: 13
 })
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("3_mfq8i")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("4_3emx0")
+texture = ExtResource("4_7ibgo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_60jb5")

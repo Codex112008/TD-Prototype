@@ -8,7 +8,8 @@ public static class DamageTypeData
 		{DamageType.Physical, new Color("#dadada")},
 		{DamageType.Chill, new Color("#6ddcff")},
 		{DamageType.Poison, new Color("#d976f2ff")},
-		{DamageType.Burn, new Color("#f95e5eff")}
+		{DamageType.Burn, new Color("#f95e5eff")},
+		{DamageType.Heal, new Color("#5ef96eff")},
 	};
 
 	public static Color GetDamageTypeColor(DamageType damageType)

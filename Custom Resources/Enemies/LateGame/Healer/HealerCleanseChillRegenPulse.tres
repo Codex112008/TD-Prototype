@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusPulseEffect" load_steps=3 format=3 uid="uid://5yi3sqr1uqsb"]
+
+[ext_resource type="PackedScene" uid="uid://w672viijbifx" path="res://Custom Resources/EnemyEffects/StatusPulse/StatusPulseScene.tscn" id="1_nmnbc"]
+[ext_resource type="Script" uid="uid://clcwyjd8qejj3" path="res://Custom Resources/EnemyEffects/StatusPulse/StatusPulseEffect.cs" id="2_a7j2a"]
+
+[resource]
+script = ExtResource("2_a7j2a")
+_pulseScene = ExtResource("1_nmnbc")
+_status = 0
+_stacks = -10.0
+_range = 8.5
+_pauseLength = 0.0
+_color = Color(0, 0, 0, 0)
+EffectInterval = 12.0
+metadata/_custom_type_script = "uid://clcwyjd8qejj3"

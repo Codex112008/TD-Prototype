@@ -10,7 +10,6 @@
 [resource]
 resource_name = "Pin"
 script = ExtResource("6_o1wjo")
-Speed = 200.0
 MaxSpawns = 20
 ProjectileScene = ExtResource("5_xf3dr")
 Effects = Array[ExtResource("1_hv8yh")]([ExtResource("2_1uskx")])

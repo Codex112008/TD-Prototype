@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c2mj26nvxhy3s" path="res://Scripts/Enemy/Enemy.cs" id="1_4f1sg"]
 [ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="2_ednvs"]
 [ext_resource type="Resource" uid="uid://drqhig5xcv3f" path="res://Custom Resources/Enemies/MidGame/CallerEnemy/CallerSummonEffectResource.tres" id="2_f2ju6"]
-[ext_resource type="Texture2D" uid="uid://cqk6h8ax0n3t6" path="res://Sprites/Enemies/caller.png" id="4_ppb17"]
+[ext_resource type="Texture2D" uid="uid://cxl60hcaj2vrn" path="res://Custom Resources/Enemies/MidGame/CallerEnemy/caller.png" id="4_v2yb4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_60jb5"]
 size = Vector2(8, 7)
@@ -18,13 +18,14 @@ _baseEnemyStats = Dictionary[int, int]({
 0: 750,
 1: 2800,
 2: 21,
-3: 1
+3: 1,
+4: 1
 })
 _offsetMargin = 0.55
 _damageNumberScene = ExtResource("2_ednvs")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("4_ppb17")
+texture = ExtResource("4_v2yb4")
 flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

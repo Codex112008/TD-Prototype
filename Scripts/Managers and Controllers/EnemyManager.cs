@@ -236,12 +236,16 @@ public partial class EnemyManager : Node, IManager
 
 	public EnemySpawnData WeightedEnemyChoice(Array<EnemySpawnData> enemiesToSpawnData, bool restrictWaves = true)
 	{
+		RandomNumberGenerator rand  = new();
+		if (_tempRand != null)
+			rand = _tempRand;
+
 		Array<EnemySpawnData> enemySpawnData = [.. enemiesToSpawnData];
 		if (restrictWaves)
 			enemySpawnData = [.. new Array<EnemySpawnData>(enemiesToSpawnData).Where(spawnData => CurrentWave >= spawnData.MinWave && CurrentWave <= spawnData.MaxWave)];
 
 		int totalWeight = enemySpawnData.Sum(spawnData => spawnData.Weight);
-		int randomChoice = _tempRand.RandiRange(1, totalWeight);
+		int randomChoice = rand.RandiRange(1, totalWeight);
 		int currentSum = 0;
 		foreach (EnemySpawnData spawnData in enemySpawnData)
 		{

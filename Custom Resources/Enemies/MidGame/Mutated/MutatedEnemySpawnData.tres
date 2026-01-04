@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemySpawnData" load_steps=3 format=3 uid="uid://dm7l6abt6p1km"]
+
+[ext_resource type="PackedScene" uid="uid://31k8d1743wi6" path="res://Custom Resources/Enemies/MidGame/Mutated/MutatedEnemy.tscn" id="1_fxux2"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_j6v62"]
+
+[resource]
+script = ExtResource("2_j6v62")
+EnemyScene = ExtResource("1_fxux2")
+BaseWeight = 2
+MinWave = 18
+MaxWave = 2147483647
+QtyLow = 5
+QtyMean = 6
+QtyHigh = 7
+QtyMin = 1
+QtyMax = 2147483647
+BaseSpawnDelay = 0.6
+PairingChoices = Array[ExtResource("2_j6v62")]([])
+metadata/_custom_type_script = "uid://dc61pm1c2pe7p"

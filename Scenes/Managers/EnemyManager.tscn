@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://ddy77x3qvehc1"]
+[gd_scene load_steps=24 format=3 uid="uid://ddy77x3qvehc1"]
 
 [ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers and Controllers/EnemyManager.cs" id="1_1ax1c"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="2_iwexs"]
@@ -13,13 +13,23 @@
 [ext_resource type="Resource" uid="uid://dvxpythycidpt" path="res://Custom Resources/Enemies/MidGame/BoltEnemy/BoltEnemySpawnData.tres" id="8_l0d00"]
 [ext_resource type="Resource" uid="uid://l8jrdmb3kmj1" path="res://Custom Resources/Enemies/LateGame/BroodmotherEnemy/BroodmotherEnemySpawnData.tres" id="9_ew2q4"]
 [ext_resource type="Resource" uid="uid://ch7qtvavkb5sh" path="res://Custom Resources/Enemies/MidGame/TankerEnemy/TankerEnemySpawnData.tres" id="9_v5hyt"]
+[ext_resource type="Resource" uid="uid://dm7l6abt6p1km" path="res://Custom Resources/Enemies/MidGame/Mutated/MutatedEnemySpawnData.tres" id="10_1xfnc"]
+[ext_resource type="Resource" uid="uid://cdec5svn28g5x" path="res://Custom Resources/Enemies/MidGame/Bastion/BastionEnemySpawnData.tres" id="12_l0d00"]
+[ext_resource type="Resource" uid="uid://c3vr5e67yguhi" path="res://Custom Resources/Enemies/MidGame/Brittle/BrittleEnemySpawnData.tres" id="13_v5hyt"]
+[ext_resource type="Resource" uid="uid://b7mbkk5jbweab" path="res://Custom Resources/Enemies/LateGame/Charger/ChargerSpawnData.tres" id="14_dh13m"]
+[ext_resource type="Resource" uid="uid://blqu7x4mgxsms" path="res://Custom Resources/Enemies/MidGame/Shelled/ShelledEnemySpawnData.tres" id="15_7wjuo"]
+[ext_resource type="Resource" uid="uid://dmcve5qk1do3k" path="res://Custom Resources/Enemies/LateGame/Bulwark/BulwarkEnemySpawnData.tres" id="17_7forj"]
+[ext_resource type="Resource" uid="uid://bxrh0xtb4xjl" path="res://Custom Resources/Enemies/LateGame/Healer/HealerEnemySpawnData.tres" id="17_iy27c"]
+[ext_resource type="Resource" uid="uid://bcju45pu5y0nu" path="res://Custom Resources/Enemies/LateGame/Propagator/PropagatorEnemySpawnData.tres" id="18_iy27c"]
+[ext_resource type="Resource" uid="uid://chfmebru8fuxk" path="res://Custom Resources/Enemies/LateGame/Hiveling/HivelingEnemySpawnData.tres" id="19_7wjuo"]
+[ext_resource type="Resource" uid="uid://bbm0gqxiafeqv" path="res://Custom Resources/Enemies/LateGame/Hive/HiveEnemySpawnData.tres" id="21_ej3b2"]
 
 [node name="EnemyManager" type="Node" node_paths=PackedStringArray("_spawnTimer", "_waveButtonContainer")]
 script = ExtResource("1_1ax1c")
 _spawnTimer = NodePath("SpawnTimer")
 _waveButtonContainer = NodePath("UI/WaveButtonContainer")
 TowerSlotUnlockWave = Array[int]([5, 10, 25, 50])
-EnemiesToSpawnData = Array[ExtResource("2_uhogm")]([ExtResource("3_417ac"), ExtResource("4_4ksl0"), ExtResource("5_417ac"), ExtResource("6_4ksl0"), ExtResource("7_ar3hy"), ExtResource("8_l0d00"), ExtResource("9_v5hyt"), ExtResource("8_1nywq"), ExtResource("8_ew2q4"), ExtResource("9_ew2q4")])
+EnemiesToSpawnData = Array[ExtResource("2_uhogm")]([ExtResource("3_417ac"), ExtResource("4_4ksl0"), ExtResource("5_417ac"), ExtResource("6_4ksl0"), ExtResource("7_ar3hy"), ExtResource("8_l0d00"), ExtResource("9_v5hyt"), ExtResource("8_ew2q4"), ExtResource("10_1xfnc"), ExtResource("12_l0d00"), ExtResource("8_1nywq"), ExtResource("13_v5hyt"), ExtResource("15_7wjuo"), ExtResource("14_dh13m"), ExtResource("9_ew2q4"), ExtResource("17_7forj"), ExtResource("17_iy27c"), ExtResource("19_7wjuo"), ExtResource("18_iy27c"), ExtResource("21_ej3b2")])
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 1.5
