@@ -10,6 +10,7 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public DroneProjectile DroneData;
 	public Array<Vector2> PathArray = null;
+	public Vector2 TargetPos;
 	
 	private float _currentHealth;
 	private bool _landedOnTrack = false;
@@ -62,7 +63,7 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 		}
 		else
 		{
-			if (!PathfindingManager.instance.IsTileAtGlobalPosSolid(GlobalPosition))
+			if (GlobalPosition.DistanceTo(TargetPos) < 8f)
 				Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 			else
 				Velocity = -Transform.Y.Normalized() * DroneData.ProjectileSpeed;

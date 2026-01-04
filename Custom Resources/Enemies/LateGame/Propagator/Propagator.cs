@@ -28,7 +28,8 @@ public partial class Propagator : Enemy
     public override float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
     {
 		float damage = base.TakeDamage(amount, damageType, defenceBreak);
-		_damageCounter += damage;
+		if (!float.IsNaN(damage) && damage > 0)
+			_damageCounter += damage;
 
 		// Spawns carriers and broodmothers based on hp loss
 		if (_spawnTimer.TimeLeft <= 0f && _damageCounter > 0)
@@ -58,6 +59,7 @@ public partial class Propagator : Enemy
 		int broodmotherCount = Mathf.FloorToInt(_damageCounter / _broodmotherDamageThreshold);
 		_damageCounter -= broodmotherCount * _broodmotherDamageThreshold;
 		int carrierCount = Mathf.FloorToInt(_damageCounter / 25f);
+		_damageCounter = 0;
 
 		AddStatusEffectStacks(StatusEffect.Stun, (0.5f + (broodmotherCount * 0.1f) + (carrierCount * 0.05f)) * 40f);
 

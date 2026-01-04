@@ -51,7 +51,8 @@ public partial class BasicTower : Tower
                             _target.QueueFree();
                     }
 
-                    _target = FindFirstEnemy();
+                    if (_target is Enemy)
+                        _target = FindFirstEnemy();
                 }
                 else
                     _target = FindFirstEnemy();

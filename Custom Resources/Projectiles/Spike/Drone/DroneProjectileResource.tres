@@ -17,7 +17,7 @@ ProjectileScene = ExtResource("5_7xvpk")
 Effects = Array[ExtResource("1_hd3nc")]([ExtResource("2_2c2mt")])
 NextTierProjectiles = Array[ExtResource("4_vbifc")]([])
 RequireEnemy = false
-ProjectileSpeed = 200.0
+ProjectileSpeed = 150.0
 Tooltip = "Send out suicide drones! 5 drones max
 Damage 5x
 Firerate 0.3x"

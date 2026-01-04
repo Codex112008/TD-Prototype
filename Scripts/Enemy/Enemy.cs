@@ -276,7 +276,7 @@ public partial class Enemy : CharacterBody2D
 				{
 					effect.ApplyEffect(this);
 				}
-				else
+				else if (triggerEvent != EnemyEffectTrigger.OnThreshold)
 					effect.ApplyEffect(this);
 			}
 		}

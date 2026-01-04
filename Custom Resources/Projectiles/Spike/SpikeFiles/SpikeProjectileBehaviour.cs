@@ -38,7 +38,7 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _PhysicsProcess(double delta)
 	{
-		if (GlobalPosition.DistanceTo(TargetPos) < 7f)
+		if (GlobalPosition.DistanceTo(TargetPos) < 8f)
 			Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 		else
 			Velocity = -Transform.Y.Normalized() * SpikeData.ProjectileSpeed;

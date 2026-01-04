@@ -18,7 +18,7 @@ ProjectileScene = ExtResource("5_7wxxt")
 Effects = Array[ExtResource("1_somg1")]([ExtResource("2_si5te")])
 NextTierProjectiles = Array[ExtResource("4_ad18y")]([ExtResource("5_u075f"), ExtResource("6_7wxxt"), ExtResource("6_ad18y")])
 RequireEnemy = false
-ProjectileSpeed = 175.0
+ProjectileSpeed = 150.0
 Tooltip = "Lays down road traps for enemies to step on, 3 spikes max
 Damge 10x
 Firerate 0.15x"

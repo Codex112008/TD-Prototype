@@ -15,7 +15,7 @@ ProjectileScene = ExtResource("5_xeuc6")
 Effects = Array[ExtResource("1_22wh3")]([ExtResource("2_jav1n")])
 NextTierProjectiles = Array[ExtResource("4_365nt")]([])
 RequireEnemy = false
-ProjectileSpeed = 200.0
+ProjectileSpeed = 130.0
 Tooltip = "Spikier spikes, 5 spikes max
 Damage 20x
 Firerate 0.1x"

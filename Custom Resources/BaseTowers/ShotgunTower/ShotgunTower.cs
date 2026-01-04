@@ -40,11 +40,8 @@ public partial class ShotgunTower : Tower
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
-                if (IsInstanceValid(_target))
+                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
                 {
-                    if (!VectorInRange(_target.GlobalPosition))
-                        _target = FindFirstEnemy();
-
                     Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
                     float targetAngle = dir.Angle() + Mathf.Pi / 2f;
                     _pivotPoint.Rotation = Mathf.LerpAngle(_pivotPoint.Rotation, targetAngle, _rotateSpeed * (float)delta);
@@ -59,7 +56,8 @@ public partial class ShotgunTower : Tower
                             _target.QueueFree();
                     }
 
-                    _target = FindFirstEnemy();
+                    if (_target is Enemy)
+                        _target = FindFirstEnemy();
                 }
                 else
                     _target = FindFirstEnemy();
