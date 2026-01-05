@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hlqpf3f1lbfg"
-path="res://.godot/imported/snipa1Icon.png-ab8a948e850769c99a43ba2bd3a2c552.ctex"
+uid="uid://cj6gu20mmm7je"
+path="res://.godot/imported/onetimes-1.png.png-e8f1f7df22ba8d5fa3c3056282ff539f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/snipa/snipa1Icon.png"
-dest_files=["res://.godot/imported/snipa1Icon.png-ab8a948e850769c99a43ba2bd3a2c552.ctex"]
+source_file="res://Sprites/GameSpeedIcons/onetimes-1.png.png"
+dest_files=["res://.godot/imported/onetimes-1.png.png-e8f1f7df22ba8d5fa3c3056282ff539f.ctex"]
 
 [params]
 

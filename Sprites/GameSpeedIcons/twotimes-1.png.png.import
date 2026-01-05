@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cus8y1ogxbqt5"
-path="res://.godot/imported/ShotgunTower1Icon.png-985738272d4d9ec7a50a6ce420c865c0.ctex"
+uid="uid://i83nb6x5s2w4"
+path="res://.godot/imported/twotimes-1.png.png-774dba03eae89e9e08ddddffed5680e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/ShotgunTower/ShotgunTower1Icon.png"
-dest_files=["res://.godot/imported/ShotgunTower1Icon.png-985738272d4d9ec7a50a6ce420c865c0.ctex"]
+source_file="res://Sprites/GameSpeedIcons/twotimes-1.png.png"
+dest_files=["res://.godot/imported/twotimes-1.png.png-774dba03eae89e9e08ddddffed5680e9.ctex"]
 
 [params]
 

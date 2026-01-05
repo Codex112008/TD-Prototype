@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ddy77x3qvehc1"]
+[gd_scene load_steps=30 format=3 uid="uid://ddy77x3qvehc1"]
 
 [ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers and Controllers/EnemyManager.cs" id="1_1ax1c"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="2_iwexs"]
@@ -23,6 +23,17 @@
 [ext_resource type="Resource" uid="uid://bcju45pu5y0nu" path="res://Custom Resources/Enemies/LateGame/Propagator/PropagatorEnemySpawnData.tres" id="18_iy27c"]
 [ext_resource type="Resource" uid="uid://chfmebru8fuxk" path="res://Custom Resources/Enemies/LateGame/Hiveling/HivelingEnemySpawnData.tres" id="19_7wjuo"]
 [ext_resource type="Resource" uid="uid://bbm0gqxiafeqv" path="res://Custom Resources/Enemies/LateGame/Hive/HiveEnemySpawnData.tres" id="21_ej3b2"]
+[ext_resource type="Texture2D" uid="uid://cj6gu20mmm7je" path="res://Sprites/GameSpeedIcons/onetimes-1.png.png" id="24_bc3wf"]
+[ext_resource type="Script" uid="uid://cx381ol8opp3s" path="res://Scripts/GameSpeedButton.cs" id="25_4jn7h"]
+[ext_resource type="Texture2D" uid="uid://i83nb6x5s2w4" path="res://Sprites/GameSpeedIcons/twotimes-1.png.png" id="26_4jn7h"]
+[ext_resource type="Texture2D" uid="uid://dqfxrwvc6jo2v" path="res://Sprites/GameSpeedIcons/fourtimes-1.png.png" id="27_6ibjg"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_4jn7h"]
+device = -1
+keycode = 4194321
+
+[sub_resource type="Shortcut" id="Shortcut_6ibjg"]
+events = [SubResource("InputEventKey_4jn7h")]
 
 [node name="EnemyManager" type="Node" node_paths=PackedStringArray("_spawnTimer", "_waveButtonContainer")]
 script = ExtResource("1_1ax1c")
@@ -62,3 +73,18 @@ vertical_alignment = 1
 [node name="NextWaveButton" type="Button" parent="UI/WaveButtonContainer"]
 layout_mode = 2
 text = "Next Wave"
+
+[node name="TimeScaleButton" type="TextureButton" parent="UI/WaveButtonContainer"]
+custom_minimum_size = Vector2(64, 1.45519e-11)
+layout_mode = 2
+shortcut = SubResource("Shortcut_6ibjg")
+texture_normal = ExtResource("24_bc3wf")
+stretch_mode = 5
+script = ExtResource("25_4jn7h")
+_gameSpeedIcons = Dictionary[Texture2D, int]({
+ExtResource("24_bc3wf"): 1,
+ExtResource("26_4jn7h"): 2,
+ExtResource("27_6ibjg"): 4
+})
+
+[connection signal="pressed" from="UI/WaveButtonContainer/TimeScaleButton" to="UI/WaveButtonContainer/TimeScaleButton" method="OnPressed"]

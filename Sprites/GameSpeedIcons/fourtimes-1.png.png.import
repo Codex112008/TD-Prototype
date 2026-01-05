@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://biv1a7a1b6xsy"
-path="res://.godot/imported/dps3Icon.png-444fbc73eca41c5bacf61024044a1d13.ctex"
+uid="uid://dqfxrwvc6jo2v"
+path="res://.godot/imported/fourtimes-1.png.png-907f3fa9b91ce15cc0e45a462da0619e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/dps/dps3Icon.png"
-dest_files=["res://.godot/imported/dps3Icon.png-444fbc73eca41c5bacf61024044a1d13.ctex"]
+source_file="res://Sprites/GameSpeedIcons/fourtimes-1.png.png"
+dest_files=["res://.godot/imported/fourtimes-1.png.png-907f3fa9b91ce15cc0e45a462da0619e.ctex"]
 
 [params]
 

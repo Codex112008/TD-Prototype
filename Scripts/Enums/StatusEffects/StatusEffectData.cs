@@ -113,13 +113,11 @@ public static class StatusEffectsData
 		},
 		{StatusEffect.Burn, Callable.From((Enemy enemy) =>
 			{
-				int burnExplosionThreshold = (int)(GeStatusEffectThreshold(StatusEffect.Burn) * Mathf.FloorToInt(enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) / GeStatusEffectThreshold(StatusEffect.Burn)));
-
 				float burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) * 0.75f;
                 enemy.TakeDamage(burnToConsume * 0.05f, DamageType.Burn, false);
 				enemy.AddStatusEffectStacks(StatusEffect.Burn, -burnToConsume);
 
-				if (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) < burnExplosionThreshold)
+				if (burnToConsume > 50)
 				{
 					burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) * 0.25f;
 					enemy.TakeDamage(burnToConsume * 0.1f, DamageType.Burn, false);

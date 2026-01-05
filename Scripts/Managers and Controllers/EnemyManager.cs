@@ -32,11 +32,11 @@ public partial class EnemyManager : Node, IManager
 	public Array<Vector2> BaseLocations;
 	public Array<Vector2> SpawnPoints;
 	public EnemySpawnData SelectedTestingEnemy;
+	public Button StartWaveButton;
 
 	private List<Tuple<EnemySpawnData, bool>> _enemySpawnQueue = []; // Should only be one wave at a time
 	private int _tileSize;
 	private RichTextLabel _waveCounter;
-	private Button _startWaveButton;
 	private RandomNumberGenerator _tempRand = null; // Keep a temp copy of rand so can restore old version if saving in middle of wave for deterministic rng
 
 	// Called when the node enters the scene tree for the first time.
@@ -46,8 +46,8 @@ public partial class EnemyManager : Node, IManager
 			spawnData.Weight = spawnData.BaseWeight;
 
 		_waveCounter = _waveButtonContainer.GetChild<RichTextLabel>(0);
-		_startWaveButton = _waveButtonContainer.GetChild<Button>(1);
-		_startWaveButton.Pressed += StartWave;
+		StartWaveButton = _waveButtonContainer.GetChild<Button>(1);
+		StartWaveButton.Pressed += StartWave;
 
 		RNGManager.instance.AddNewRNG(this);
 
@@ -59,8 +59,8 @@ public partial class EnemyManager : Node, IManager
 	{
 		if (InLevel)
 		{
-			if (_enemySpawnQueue.Count > 0 && _startWaveButton.Disabled == false)
-				_startWaveButton.Disabled = true;
+			if (_enemySpawnQueue.Count > 0 && StartWaveButton.Disabled == false)
+				StartWaveButton.Disabled = true;
 
 			if (_enemySpawnQueue.Count > 0 && _spawnTimer.IsStopped())
 				SpawnQueuedEnemy();
@@ -76,6 +76,11 @@ public partial class EnemyManager : Node, IManager
 			EnemyParent.AddChild(spawnedEnemy);
 
 			_spawnTimer.Start();
+		}
+
+		if (StartWaveButton.Disabled == false && Input.IsPhysicalKeyPressed(Key.Space))
+		{
+			StartWave();
 		}
 	}
 
@@ -104,8 +109,8 @@ public partial class EnemyManager : Node, IManager
 
 		if (InTowerCreator)
 		{
-			_startWaveButton.Disabled = true;
-			_startWaveButton.Visible = false;
+			StartWaveButton.Disabled = true;
+			StartWaveButton.Visible = false;
 
 			_spawnTimer.WaitTime = 1f;
 			_spawnTimer.Start();
@@ -114,8 +119,8 @@ public partial class EnemyManager : Node, IManager
 		}
 		else if (InLevel)
 		{
-			_startWaveButton.Disabled = false;
-			_startWaveButton.Visible = true;
+			StartWaveButton.Disabled = false;
+			StartWaveButton.Visible = true;
 		}
 	}
 
@@ -153,7 +158,7 @@ public partial class EnemyManager : Node, IManager
 		_enemySpawnQueue.RemoveAt(0);
 		if (_enemySpawnQueue.Count == 0)
 		{
-			_startWaveButton.Disabled = false;
+			StartWaveButton.Disabled = false;
 		}
 		else if (_enemySpawnQueue[0].Item1.EnemyScene.ResourcePath != enemyToSpawn.Item1.EnemyScene.ResourcePath)
 		{
