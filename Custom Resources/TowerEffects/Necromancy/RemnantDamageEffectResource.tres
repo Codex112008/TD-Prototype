@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://bbpnungtyf31h"]
+
+[ext_resource type="Texture2D" uid="uid://be8gd642x7jkn" path="res://Custom Resources/TowerEffects/Necromancy/NecromancyEffectIcon.png" id="1_3kwjj"]
+[ext_resource type="Script" uid="uid://ckfol0wpekdnp" path="res://Custom Resources/TowerEffects/Damage/DamageEffect.cs" id="2_km2rm"]
+
+[resource]
+resource_name = "Damage"
+script = ExtResource("2_km2rm")
+DamageType = 2
+Tooltip = "you should not be here"
+Icon = ExtResource("1_3kwjj")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 1.0,
+2: 1.0,
+3: 1.0
+})
+PointCost = 25

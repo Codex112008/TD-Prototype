@@ -12,7 +12,7 @@ public abstract partial class TowerEffect : TowerComponent
     public void ApplyEffect(Dictionary<TowerStat, float> towerStats, Enemy target)
     {
         ApplyEffectStatMultipliers(towerStats);
-        ApplyEffectCore(towerStats, target);
+        ApplyEffectCore(_finalStats, target);
     }
 
     // Example of an effect could be damage effect, so dealing damage SHOULD also be implemented as an effect

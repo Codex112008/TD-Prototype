@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_4bvjf"]
 [ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_o8qbj"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_6dswb"]
-[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="6_wogk0"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="6_wogk0"]
 [ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileIcon.png" id="7_n47li"]
 [ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="8_3farx"]
 [ext_resource type="Resource" path="res://Custom Resources/Projectiles/Bullet/Penetrator/PenatratorProjectileResource.tres" id="9_dmyd1"]

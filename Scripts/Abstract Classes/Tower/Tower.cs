@@ -352,6 +352,12 @@ public abstract partial class Tower : Sprite2D
     // Placeholder, change to actual targetting system later
     protected CharacterBody2D FindFirstEnemy()
     {
+        foreach(Node child in GetChildren())
+        {
+            if (child is CharacterBody2D)
+                child.QueueFree();
+        }
+
         Enemy firstEnemy = null;
         foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
         {

@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdxkcj8t82kxc"]
+
+[ext_resource type="Script" uid="uid://cjpxj5otkxxqc" path="res://Custom Resources/TowerEffects/Necromancy/RemnantBehaviour.cs" id="1_0oy02"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rb7fd"]
+size = Vector2(2, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j7mya"]
+size = Vector2(12, 12)
+
+[node name="RemnantScene" type="CharacterBody2D" node_paths=PackedStringArray("Sprite")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_0oy02")
+Sprite = NodePath("Sprite2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_rb7fd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_j7mya")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://buvigto37m81u"]
+
+[ext_resource type="Texture2D" uid="uid://be8gd642x7jkn" path="res://Custom Resources/TowerEffects/Necromancy/NecromancyEffectIcon.png" id="1_8bu8b"]
+[ext_resource type="Script" uid="uid://ce7fuomdvtk2x" path="res://Custom Resources/TowerEffects/Necromancy/NecromancyEffect.cs" id="1_ocxsr"]
+[ext_resource type="Resource" uid="uid://bbpnungtyf31h" path="res://Custom Resources/TowerEffects/Necromancy/RemnantDamageEffectResource.tres" id="2_863ej"]
+[ext_resource type="PackedScene" uid="uid://cdxkcj8t82kxc" path="res://Custom Resources/TowerEffects/Necromancy/RemnantScene.tscn" id="3_1s5kg"]
+
+[resource]
+resource_name = "Necromancy"
+script = ExtResource("1_ocxsr")
+_remnantScene = ExtResource("3_1s5kg")
+_remnantTint = Color(0.458824, 0.513726, 0, 1)
+_healthPercentageToConvert = 0.4
+RemnantSpeed = 18.0
+RemnantAcceleration = 5.0
+RemnantDamageEffect = ExtResource("2_863ej")
+DamageType = 2
+Tooltip = "Spawns remnants on kill with 40% of enemy's max hp as health
+Damage 2x
+Firerate 0.4x"
+Icon = ExtResource("1_8bu8b")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 2.0,
+2: 1.0,
+3: 0.4
+})
+PointCost = 50

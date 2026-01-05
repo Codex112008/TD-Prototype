@@ -17,7 +17,7 @@ public partial class Brittle : Enemy
     {
 		if (damageType == DamageType.Poison)
 		{
-			_sprite.Modulate = new(_sprite.Modulate, 0.8f);
+			Sprite.Modulate = new(Sprite.Modulate, 0.8f);
 			resistIconSprite.Visible = true;
 			GetTree().CreateTimer(0.5f).Connect(Timer.SignalName.Timeout, Callable.From(SetIconInvisible));
 			return 0f;
@@ -28,7 +28,7 @@ public partial class Brittle : Enemy
 
 	private void SetIconInvisible()
 	{
-		_sprite.Modulate = new(_sprite.Modulate, 1);
+		Sprite.Modulate = new(Sprite.Modulate, 1);
 		resistIconSprite.Visible = false;
 	}
 }

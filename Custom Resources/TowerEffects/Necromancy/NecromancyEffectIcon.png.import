@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d4bt786vaa32h"
-path="res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"
+uid="uid://be8gd642x7jkn"
+path="res://.godot/imported/NecromancyEffectIcon.png-aceae2e1d548d724c5e419f714f4ab66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RuntimeData/SavedTowers/BasicTower/BasicTower0Icon.png"
-dest_files=["res://.godot/imported/BasicTower0Icon.png-e6e2db0de7ad773ce5dc97fdfa1cc645.ctex"]
+source_file="res://Custom Resources/TowerEffects/Necromancy/NecromancyEffectIcon.png"
+dest_files=["res://.godot/imported/NecromancyEffectIcon.png-aceae2e1d548d724c5e419f714f4ab66.ctex"]
 
 [params]
 

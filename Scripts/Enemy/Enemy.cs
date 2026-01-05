@@ -25,11 +25,11 @@ public partial class Enemy : CharacterBody2D
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
 	public Array<Timer> TimerEffectTimers = [];
 	public int SpawnedWave = -1;
+	public Sprite2D Sprite;
 
 	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	protected Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
-	protected Sprite2D _sprite;
 	private float _currentHealth;
 	private RandomNumberGenerator _rand = new();
 	private bool _isDead = false;
@@ -74,7 +74,7 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		_sprite = GetChild<Sprite2D>(0);
+		Sprite = GetChild<Sprite2D>(0);
 
 		foreach ((EnemyStat stat, int value) in _baseEnemyStats)
 			CurrentEnemyStats[stat] = value;
@@ -227,7 +227,7 @@ public partial class Enemy : CharacterBody2D
 		Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
 
 		Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed] * speedMult, _acceleration * delta);
-		_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), _acceleration * delta);
+		Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), _acceleration * delta);
 	}
 
 	protected virtual void Die()

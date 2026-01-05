@@ -11,7 +11,10 @@ config_version=5
 [application]
 
 config/name="TD-Prototype"
+config/version="0.01a"
 run/main_scene="uid://caojnjbhas8t5"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="TD-Prototype"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="uid://3t6ry881quig"
 
