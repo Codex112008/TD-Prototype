@@ -17,6 +17,13 @@ public abstract partial class Tower : Sprite2D
     [Export] public Array<Sprite2D> SpritesForIcon = [];
     [Export] public Array<Sprite2D> SpritesToColor = [];
     [Export(PropertyHint.MultilineText)] public string Tooltip;
+    [Export] public Array<TowerTargeting> AllowedTargetingModes = [
+        TowerTargeting.First,
+        TowerTargeting.Last,
+        TowerTargeting.Random,
+        TowerTargeting.Strong,
+        TowerTargeting.Weak,
+    ];
 
     [Export] private Texture2D _rangeOverlayTexture;
     [Export] private PackedScene _towerSelectedUIScene;
@@ -52,6 +59,7 @@ public abstract partial class Tower : Sprite2D
     [Export] public string TowerName;
     public float SellPercentage = 0.8f;
     public Node InstancedProjectiles;
+    public TowerTargeting CurrentTargeting = TowerTargeting.First;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
@@ -344,55 +352,12 @@ public abstract partial class Tower : Sprite2D
         return GlobalPosition + PathfindingManager.instance.LevelTilemap.TileSet.TileSize / 2;
     }
 
-    protected bool VectorInRange(Vector2 pos)
+    public bool VectorInRange(Vector2 pos)
     {
         return (GlobalPosition + (Vector2.One * 8f)).DistanceTo(pos) <= GetRangeInTiles();
     }
 
-    // Placeholder, change to actual targetting system later
-    protected CharacterBody2D FindFirstEnemy()
-    {
-        foreach(Node child in GetChildren())
-        {
-            if (child is CharacterBody2D)
-                child.QueueFree();
-        }
-
-        Enemy firstEnemy = null;
-        foreach (Node node in GetTree().GetNodesInGroup("Enemy"))
-        {
-            if (node is Enemy enemy)
-            {
-                if (((firstEnemy == null) || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && VectorInRange(enemy.GlobalPosition))
-                {
-                    firstEnemy = enemy;
-                }
-            }
-        }
-
-        if (firstEnemy == null && !Projectile.RequireEnemy)
-        {
-            Array<Vector2I> walkableTilesInRange = GetWalkableTilesInRange();
-            if (walkableTilesInRange.Count > 0)
-            {
-                RandomNumberGenerator rand = new();
-                Vector2 randomPos;
-                do
-                    randomPos = PathfindingManager.instance.GetTileToGlobalPos(walkableTilesInRange[rand.RandiRange(0, walkableTilesInRange.Count - 1)]) + new Vector2(rand.RandfRange(6f, 10f), rand.RandfRange(6f, 10f));
-                while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
-
-                CharacterBody2D dummyBody = new();
-                AddChild(dummyBody);
-                dummyBody.AddChild(new Sprite2D(){Texture = _projectile.Icon});
-                dummyBody.GlobalPosition = randomPos;
-                return dummyBody;
-            }
-        }
-
-        return firstEnemy;
-    }
-
-    protected Array<Vector2I> GetWalkableTilesInRange()
+    public Array<Vector2I> GetWalkableTilesInRange()
     {
         TileMapLayer tilemap = PathfindingManager.instance.LevelTilemap;
         Array<Vector2I> tilePosArray = [.. tilemap.GetUsedCells().Select(tile => PathfindingManager.instance.GlobalToCenteredGlobalTilePos(PathfindingManager.instance.GetTileToGlobalPos(tile))).Where(VectorInRange).Select(PathfindingManager.instance.GlobalToTilePos).Where(tile => (int)tilemap.GetCellTileData(tile).GetCustomData("MovementCost") < 10)];

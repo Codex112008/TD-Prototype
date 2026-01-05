@@ -5,6 +5,7 @@ public partial class TowerSelectedUI : VBoxContainer
 {
 	[Export] public Button UpgradeButton;
 	[Export] public Button SellButton;
+	[Export] private RichTextLabel _targetingLabel;
 	
 	[Export] private Control _upgradeUI;
 
@@ -45,5 +46,17 @@ public partial class TowerSelectedUI : VBoxContainer
 		Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
         UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]);
         upgradedTower.QueueFree();
+	}
+
+	public void ChangeTowerTargetingLeft()
+	{
+		_tower.CurrentTargeting = _tower.AllowedTargetingModes[(_tower.AllowedTargetingModes.IndexOf(_tower.CurrentTargeting) - 1) % _tower.AllowedTargetingModes.Count];
+		_targetingLabel.Text = _tower.CurrentTargeting.ToString();
+	}
+
+	public void ChangeTowerTargetingRight()
+	{
+		_tower.CurrentTargeting = _tower.AllowedTargetingModes[(_tower.AllowedTargetingModes.IndexOf(_tower.CurrentTargeting) + 1) % _tower.AllowedTargetingModes.Count];
+		_targetingLabel.Text = _tower.CurrentTargeting.ToString();
 	}
 }

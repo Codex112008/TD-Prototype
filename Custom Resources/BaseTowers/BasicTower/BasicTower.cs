@@ -52,10 +52,10 @@ public partial class BasicTower : Tower
                     }
 
                     if (_target is Enemy)
-                        _target = FindFirstEnemy();
+                        _target = TowerTargetingData.GetTargetedEnemy(CurrentTargeting, this);
                 }
                 else
-                    _target = FindFirstEnemy();
+                    _target = TowerTargetingData.GetTargetedEnemy(CurrentTargeting, this);
             }
         }
     }
