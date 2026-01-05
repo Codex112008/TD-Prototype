@@ -15,7 +15,7 @@ Effects = Dictionary[int, Array]({
 1: [ExtResource("2_fgpqs")]
 })
 _baseEnemyStats = Dictionary[int, int]({
-0: 500,
+0: 14,
 1: 2200,
 2: 80,
 3: 1,
