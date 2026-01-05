@@ -1,0 +1,66 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_2mayj"]
+[ext_resource type="Script" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_1spcq"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_6k51y"]
+[ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_4l6fb"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_e7r0v"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/AOE/AOEEffectResource.tres" id="6_1nlxh"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="7_24fuf"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileIcon.png" id="8_yuvhb"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="9_g2doa"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectileScene.tscn" id="10_5rcd3"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/Sniper/SniperProjectile.cs" id="11_gsf7p"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="12_pokxb"]
+
+[sub_resource type="Resource" id="Resource_x4kj0"]
+resource_name = "Sniper"
+script = ExtResource("11_gsf7p")
+ProjectileScene = ExtResource("10_5rcd3")
+Effects = Array[ExtResource("5_e7r0v")]([ExtResource("6_1nlxh"), ExtResource("7_24fuf")])
+NextTierProjectiles = Array[ExtResource("9_g2doa")]([])
+RequireEnemy = true
+ProjectileSpeed = 99999.0
+Tooltip = "Damage 5x
+Range 2.5x
+Fire Rate 0.25x"
+Icon = ExtResource("8_yuvhb")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 5.0,
+2: 2.5,
+3: 0.25
+})
+PointCost = 75
+
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_2mayj")
+centered = false
+script = ExtResource("2_1spcq")
+_firePoint = NodePath("PivotPoint/FirePoint")
+_pivotPoint = NodePath("PivotPoint")
+_rotateSpeed = 20.0
+BaseTowerStats = Dictionary[int, int]({
+0: 75,
+1: 3,
+2: 65,
+3: 2
+})
+SpritesForIcon = [NodePath("."), NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
+SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+_rangeOverlayTexture = ExtResource("3_6k51y")
+_towerSelectedUIScene = ExtResource("4_4l6fb")
+Projectile = SubResource("Resource_x4kj0")
+TowerName = "snipa"
+
+[node name="PivotPoint" type="Marker2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
+self_modulate = Color(1, 0.133333, 0.133333, 1)
+position = Vector2(0, -2)
+texture = ExtResource("12_pokxb")
+
+[node name="FirePoint" type="Marker2D" parent="PivotPoint"]
+position = Vector2(0, -6)

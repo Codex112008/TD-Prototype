@@ -18,7 +18,7 @@ public static class StatusEffectsData
 	private static readonly Dictionary<StatusEffect, float> _statusEffectThresholds = new()
 	{
 		{StatusEffect.Chill, 10f},
-		{StatusEffect.Burn, 50f},
+		{StatusEffect.Stun, 50f},
 	};
 
 	private static readonly Dictionary<StatusEffect, float> _tickingStatusEffects = new()

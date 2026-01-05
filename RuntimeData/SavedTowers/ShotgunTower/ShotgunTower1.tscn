@@ -1,0 +1,86 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_lx7ly"]
+[ext_resource type="Script" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.cs" id="2_yjrip"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_w6nt0"]
+[ext_resource type="PackedScene" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_hb2qj"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_jpash"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="6_0jyg1"]
+[ext_resource type="Resource" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="7_8eam0"]
+[ext_resource type="Texture2D" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileIcon.png" id="8_m8ur4"]
+[ext_resource type="Script" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="9_xfepx"]
+[ext_resource type="PackedScene" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileScene.tscn" id="10_6rknt"]
+[ext_resource type="Script" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectile.cs" id="11_272ut"]
+[ext_resource type="Texture2D" path="res://Sprites/Towers/ShotgunTower.png" id="12_ds21m"]
+
+[sub_resource type="Resource" id="Resource_mrb2a"]
+resource_name = "Chain"
+script = ExtResource("11_272ut")
+MaxChainDistance = 30.0
+ProjectileScene = ExtResource("10_6rknt")
+Effects = Array[ExtResource("5_jpash")]([ExtResource("6_0jyg1"), ExtResource("7_8eam0")])
+NextTierProjectiles = Array[ExtResource("9_xfepx")]([])
+RequireEnemy = true
+ProjectileSpeed = 99999.0
+Tooltip = "Chains Between Enemies
+Damage 0.5x"
+Icon = ExtResource("8_m8ur4")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 0.5,
+2: 1.0,
+3: 1.0
+})
+PointCost = 125
+
+[node name="ShotgunTower" type="Sprite2D" node_paths=PackedStringArray("_firePoints", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_lx7ly")
+centered = false
+script = ExtResource("2_yjrip")
+_firePoints = [NodePath("PivotPoint/FirePoints/FirePoint"), NodePath("PivotPoint/FirePoints/FirePoint2"), NodePath("PivotPoint/FirePoints/FirePoint3"), NodePath("PivotPoint/FirePoints/FirePoint4"), NodePath("PivotPoint/FirePoints/FirePoint5")]
+_pivotPoint = NodePath("PivotPoint")
+_rotateSpeed = 20.0
+_shotSpread = 22.5
+BaseTowerStats = Dictionary[int, int]({
+0: 143,
+1: 1,
+2: 30,
+3: 3
+})
+SpritesForIcon = [NodePath("."), NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
+SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+_rangeOverlayTexture = ExtResource("3_w6nt0")
+_towerSelectedUIScene = ExtResource("4_hb2qj")
+Projectile = SubResource("Resource_mrb2a")
+TowerName = "Shotgun  Tower"
+
+[node name="PivotPoint" type="Marker2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
+self_modulate = Color(0.133333, 0.505882, 1, 1)
+position = Vector2(0, -2)
+texture = ExtResource("12_ds21m")
+
+[node name="FirePoints" type="Node2D" parent="PivotPoint"]
+
+[node name="FirePoint" type="Marker2D" parent="PivotPoint/FirePoints"]
+position = Vector2(0, -6)
+rotation = 0.051313
+
+[node name="FirePoint2" type="Marker2D" parent="PivotPoint/FirePoints"]
+position = Vector2(0, -6)
+rotation = 0.39101
+
+[node name="FirePoint3" type="Marker2D" parent="PivotPoint/FirePoints"]
+position = Vector2(0, -6)
+rotation = -0.0224944
+
+[node name="FirePoint4" type="Marker2D" parent="PivotPoint/FirePoints"]
+position = Vector2(0, -6)
+rotation = -0.0304817
+
+[node name="FirePoint5" type="Marker2D" parent="PivotPoint/FirePoints"]
+position = Vector2(0, -6)
+rotation = -0.0640196
