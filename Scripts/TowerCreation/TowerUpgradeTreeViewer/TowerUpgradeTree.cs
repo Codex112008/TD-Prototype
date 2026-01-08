@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using System.Linq;
 
 public partial class TowerUpgradeTree : Node2D
 {
@@ -74,6 +72,10 @@ public partial class TowerUpgradeTree : Node2D
 
 	public void OnAddUpgradeButtonClicked()
     {
-        RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, ResourceLoader.Load<PackedScene>(TowerPathToDisplay + '/' + _towerName + (_maximumLevel - 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace));
+		string filePath = TowerPathToDisplay + '/' + _towerName + (_maximumLevel - 1) + ".tscn";
+		if (FileAccess.FileExists(filePath))
+        	RunController.instance.SwapScene(RunController.instance.TowerCreationScene, Key.W, ResourceLoader.Load<PackedScene>(filePath, "PackedScene", ResourceLoader.CacheMode.Replace));
+		else
+			GD.PrintErr(filePath + " does not exist!");
     }
 }

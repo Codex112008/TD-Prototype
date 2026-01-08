@@ -11,12 +11,13 @@ z_index = 1
 texture = ExtResource("1_ink6x")
 centered = false
 script = ExtResource("2_067wo")
-_firePoint = NodePath("FirePoint")
+_firePoint = NodePath("Marker2D")
+_projectileSpawnRadius = 20.0
 SpritesForIcon = [NodePath(".")]
 Tooltip = "Brrtz"
 _rangeOverlayTexture = ExtResource("3_hodwm")
 _towerSelectedUIScene = ExtResource("4_m3f8p")
 Projectile = ExtResource("5_5wwdw")
 
-[node name="FirePoint" type="Marker2D" parent="."]
+[node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(8, 8)

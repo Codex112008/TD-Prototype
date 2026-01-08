@@ -1,13 +1,16 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Linq;
 
 public partial class DomainTower : Tower
 {
-	[Export] private Marker2D _firePoint;
+    [Export] private Marker2D _firePoint;
+    [Export] private float _projectileSpawnRadius = 10f;
 
 	private Timer _fireTimer;
 	private RandomNumberGenerator _rand = new();
+    private CharacterBody2D _target = null;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -35,47 +38,47 @@ public partial class DomainTower : Tower
                 _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
             }
 
-            if (_fireTimer.IsStopped())
+            if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
-                Fire();
-                _fireTimer.Start();
+                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
+                {
+                    if (_fireTimer.IsStopped())
+                    {
+                        Fire();
+                        _fireTimer.Start();
+
+                        if (_target.GetParent() == this)
+                            _target.QueueFree();
+                    }
+
+                    if (_target is Enemy)
+                        _target = TowerTargetingData.GetTargetedEnemy(CurrentTargeting, this);
+                }
+                else
+                    _target = TowerTargetingData.GetTargetedEnemy(CurrentTargeting, this);
             }
         }
 	}
 
     protected override void Fire()
     {
-		// Randomises firepoint pos and rotation
-		float distance;
-		float angle;
-        if (Projectile.RequireEnemy)
+        for (int i = 0; i < TowerLevel + 1; i++)
         {
-            distance = _rand.RandfRange(0f, GetRangeInTiles());
-            angle = _rand.RandfRange(0f, Mathf.Tau);
-            _firePoint.Position = distance * Vector2.FromAngle(angle);
+            Vector2 predictedTargetPos = _target.GlobalPosition + _target.Velocity * (_projectileSpawnRadius / Projectile.ProjectileSpeed);
+            float randomAngle = _rand.RandfRange(0f, Mathf.Tau);
+            _firePoint.GlobalPosition = predictedTargetPos + Vector2.One.Rotated(randomAngle).Normalized() * _projectileSpawnRadius;
+            _firePoint.Rotation = _firePoint.GlobalPosition.DirectionTo(predictedTargetPos).Angle() + Mathf.Pi / 2f;
+            Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition);
         }
-        else
-        {
-            Array<Vector2I> walkableTilesInRange = GetWalkableTilesInRange();
-            _firePoint.GlobalPosition = PathfindingManager.instance.GetTileToGlobalPos(walkableTilesInRange[_rand.RandiRange(0, walkableTilesInRange.Count - 1)]) + new Vector2(_rand.RandfRange(6f, 10f), _rand.RandfRange(6f, 10f));
-        }
-		_firePoint.Rotation = _rand.RandfRange(0f, Mathf.Tau);
-
-		Projectile.InstantiateProjectile(this, _firePoint, _firePoint.GlobalPosition);
     }
 
-	protected override int GetPointCostFromDamage()
+    protected override int GetPointCostFromDamage()
     {
-        return BaseTowerStats[TowerStat.Damage] * 50;
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.9f) / 3f)) * (100f * BaseTowerStats[TowerStat.Damage]));
     }
-
-	protected override int GetPointCostFromRange()
+    
+    protected override int GetPointCostFromFireRate()
     {
-        return BaseTowerStats[TowerStat.Range] * -1;
-    }
-
-	protected override int GetPointCostFromFireRate()
-    {
-        return BaseTowerStats[TowerStat.FireRate] * 50;
+        return base.GetPointCostFromFireRate() / 3;
     }
 }

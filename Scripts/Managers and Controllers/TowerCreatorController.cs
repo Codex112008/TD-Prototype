@@ -45,7 +45,10 @@ public partial class TowerCreatorController : Node2D
 		// Upgrading init
 		_isUpgrading = BaseTowerScene != null;
 		if (_isUpgrading)
+		{
 			_baseTowerInstance = BaseTowerScene.Instantiate<Tower>();
+			_baseTowerInstance.TowerLevel = _towerLevel;
+		}
 
 		_savedTowerFilePath = Utils.AddCorrectDirectoryToPath(_savedTowerFilePath);
 		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
@@ -229,7 +232,7 @@ public partial class TowerCreatorController : Node2D
 		// Change name of the node
 		_towerToCreatePreview.TowerName = _towerNameInput.Text;
 
-		// Auto sets cost spinbox TODO: Remove point usage text
+		// Auto sets cost spinbox
 		if (costSelector != null)
 		{
 			costSelector.StatSpinBox.Value = CalculateCurrentTotalPointsAllocated();
@@ -250,6 +253,8 @@ public partial class TowerCreatorController : Node2D
 
 		if (newTowerType)
 			_towerPreviewArea.AddChild(_towerToCreatePreview);
+
+		_towerToCreatePreview.TowerLevel = _towerLevel;
 	}
 
 	public void UpdateTowerPreviewStat(StatSelector statSelector, TowerStat stat)
