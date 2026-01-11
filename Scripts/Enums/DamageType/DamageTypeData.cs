@@ -22,7 +22,7 @@ public static class DamageTypeData
 		Color colorToReturn = GetDamageTypeColor(damageTypes[0]);
 		for (int i = 1; i < damageTypes.Count; i++)
 		{
-			colorToReturn = (colorToReturn + GetDamageTypeColor(damageTypes[i])).Clamp();
+			colorToReturn = (colorToReturn + GetDamageTypeColor(damageTypes[i])) * 0.5f;
 		}
 
 		return colorToReturn;

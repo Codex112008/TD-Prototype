@@ -15,8 +15,8 @@ Effects = Dictionary[int, Array]({
 0: [ExtResource("2_xxep2")]
 })
 _baseEnemyStats = Dictionary[int, int]({
-0: 20,
-1: 275,
+0: 22,
+1: 175,
 2: 26,
 3: 3,
 4: 15

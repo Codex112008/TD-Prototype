@@ -12,8 +12,8 @@ collision_mask = 0
 script = ExtResource("1_vgexm")
 _baseEnemyStats = Dictionary[int, int]({
 0: 10,
-1: 750,
-2: 40,
+1: 300,
+2: 35,
 3: 1,
 4: 19
 })

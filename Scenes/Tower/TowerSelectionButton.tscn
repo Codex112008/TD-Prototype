@@ -7,6 +7,7 @@
 custom_minimum_size = Vector2(64, 64)
 offset_right = 64.0
 offset_bottom = 64.0
+focus_mode = 0
 theme = ExtResource("1_rw6w7")
 texture_normal = ExtResource("2_20w48")
 texture_pressed = ExtResource("2_20w48")

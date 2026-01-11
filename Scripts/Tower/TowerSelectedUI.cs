@@ -50,13 +50,13 @@ public partial class TowerSelectedUI : VBoxContainer
 
 	public void ChangeTowerTargetingLeft()
 	{
-		_tower.CurrentTargeting = _tower.AllowedTargetingModes[(_tower.AllowedTargetingModes.IndexOf(_tower.CurrentTargeting) - 1) % _tower.AllowedTargetingModes.Count];
+		_tower.CurrentTargeting = _tower.AllowedTargetingModes[Mathf.PosMod(_tower.AllowedTargetingModes.IndexOf(_tower.CurrentTargeting) - 1, _tower.AllowedTargetingModes.Count)];
 		_targetingLabel.Text = _tower.CurrentTargeting.ToString();
 	}
 
 	public void ChangeTowerTargetingRight()
 	{
-		_tower.CurrentTargeting = _tower.AllowedTargetingModes[(_tower.AllowedTargetingModes.IndexOf(_tower.CurrentTargeting) + 1) % _tower.AllowedTargetingModes.Count];
+		_tower.CurrentTargeting = _tower.AllowedTargetingModes[Mathf.PosMod(_tower.AllowedTargetingModes.IndexOf(_tower.CurrentTargeting) + 1, _tower.AllowedTargetingModes.Count)];
 		_targetingLabel.Text = _tower.CurrentTargeting.ToString();
 	}
 }

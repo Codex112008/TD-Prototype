@@ -156,13 +156,13 @@ public partial class Enemy : CharacterBody2D
 			InstantiateDamageNumber(damageDealt, damageType);
 
 			TriggerEffects(EnemyEffectTrigger.OnThreshold);
-
-			if (_currentHealth <= 0)
-				Die();
 			
 			// Debug thing
 			if (_showMaxHp)
 				GetChild<RichTextLabel>(2).Text = _currentHealth.ToString() + '/' + CurrentEnemyStats[EnemyStat.MaxHealth];
+
+			if (_currentHealth <= 0)
+				Die();
 
 			return damageDealt;
 		}

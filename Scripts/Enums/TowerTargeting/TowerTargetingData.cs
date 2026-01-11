@@ -93,23 +93,30 @@ public static class TowerTargetingData
 
 		if (foundEnemy == null && !tower.Projectile.RequireEnemy)
 		{
-			Array<Vector2I> walkableTilesInRange = tower.GetWalkableTilesInRange();
-            if (walkableTilesInRange.Count > 0)
-            {
-                RandomNumberGenerator rand = new();
-                Vector2 randomPos;
-                do
-                    randomPos = PathfindingManager.instance.GetTileToGlobalPos(walkableTilesInRange[rand.RandiRange(0, walkableTilesInRange.Count - 1)]) + new Vector2(rand.RandfRange(6f, 10f), rand.RandfRange(6f, 10f));
-                while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
-
-                CharacterBody2D dummyBody = new();
-                tower.AddChild(dummyBody);
-                dummyBody.AddChild(new Sprite2D(){Texture = tower.Projectile.Icon});
-                dummyBody.GlobalPosition = randomPos;
-                foundEnemy = dummyBody;
-            }
+			foundEnemy = CreateDummyTarget(tower);
 		}
 
 		return foundEnemy;
+	}
+
+	public static CharacterBody2D CreateDummyTarget(Tower tower)
+	{
+		Array<Vector2I> walkableTilesInRange = tower.GetWalkableTilesInRange();
+        if (walkableTilesInRange.Count > 0)
+        {
+            RandomNumberGenerator rand = new();
+            Vector2 randomPos;
+            do
+                randomPos = PathfindingManager.instance.GetTileToGlobalPos(walkableTilesInRange[rand.RandiRange(0, walkableTilesInRange.Count - 1)]) + new Vector2(rand.RandfRange(6f, 10f), rand.RandfRange(6f, 10f));
+            while(PathfindingManager.instance.IsTileAtGlobalPosSolid(randomPos));
+
+            CharacterBody2D dummyBody = new();
+            tower.AddChild(dummyBody);
+            dummyBody.AddChild(new Sprite2D(){Texture = tower.Projectile.Icon});
+            dummyBody.GlobalPosition = randomPos;
+            return dummyBody;
+        }
+		else
+			return null;
 	}
 }

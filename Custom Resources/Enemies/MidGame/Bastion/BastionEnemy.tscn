@@ -17,7 +17,7 @@ Effects = Dictionary[int, Array]({
 _baseEnemyStats = Dictionary[int, int]({
 0: 15,
 1: 500,
-2: 24,
+2: 22,
 3: 1,
 4: 5
 })

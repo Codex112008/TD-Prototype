@@ -208,7 +208,8 @@ public partial class RunController : Node2D
 		// Store current wave
 		Dictionary<string, Variant> gameData = new() {
 			{ "CurrentWave", EnemyManager.instance.CurrentWave },
-			{ "CurrentPlayerCurrency", BuildingManager.instance.PlayerCurrency }
+			{ "CurrentPlayerCurrency", BuildingManager.instance.PlayerCurrency },
+			{ "CurrentPlayerHealth" , BuildingManager.instance.PlayerHealth }
 		};
 		if (EnemyManager.instance.EnemyParent.GetChildren().Any(child => child is Enemy enemy && enemy.SpawnedWave > 0))
 			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy enemy && enemy.SpawnedWave > 0).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
@@ -280,10 +281,11 @@ public partial class RunController : Node2D
 						);
 					}
 					break;
-				case 1: // Load current wave
+				case 1: // Load game data like wave and currency
 					Dictionary<string, Variant> gameData = (Dictionary<string, Variant>)json.Data;
 					EnemyManager.instance.CurrentWave = (int)gameData["CurrentWave"];
 					BuildingManager.instance.PlayerCurrency = (int)gameData["CurrentPlayerCurrency"];
+					BuildingManager.instance.PlayerHealth = (int)gameData["CurrentPlayerHealth"];
 					break;
 				case 2: // Load rng data
 					Dictionary<string, Array<string>> rngData = (Dictionary<string, Array<string>>)json.Data;

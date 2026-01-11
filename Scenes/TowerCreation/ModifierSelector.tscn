@@ -26,6 +26,7 @@ autowrap_mode = 0
 [node name="TextureButton" type="TextureButton" parent="HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
+focus_mode = 0
 stretch_mode = 0
 
 [node name="CostLabel" type="RichTextLabel" parent="HBoxContainer"]

@@ -23,7 +23,7 @@ public partial class BuildingManager : Node2D, IManager
 
 	public Tower TowerPreview = null;
 	public int PlayerCurrency = 600;
-	private int _playerHealth = 10;
+	public int PlayerHealth = 10;
 	private PackedScene _selectedTower = null;
 	[Export] private Array<PackedScene> _towersToBuild = [];
 	private bool _validTowerPlacement;
@@ -69,7 +69,7 @@ public partial class BuildingManager : Node2D, IManager
 	public void Init()
 	{
 		_currentCurrencyLabel.Text = '$' + PlayerCurrency.ToString();
-		_currentHealthLabel.Text = _playerHealth.ToString();
+		_currentHealthLabel.Text = PlayerHealth.ToString();
 
 		UpdateTowerSelectionButtons();
 	}
@@ -283,9 +283,9 @@ public partial class BuildingManager : Node2D, IManager
 
 	public void TakeDamage(int damage)
 	{
-		_playerHealth -= damage;
-		_currentHealthLabel.Text = _playerHealth.ToString();
-		if (_playerHealth <= 0)
+		PlayerHealth -= damage;
+		_currentHealthLabel.Text = PlayerHealth.ToString();
+		if (PlayerHealth <= 0)
 		{
 			NewRunButton.DeleteExistingSave();
 			GetTree().ChangeSceneToFile("res://Scenes/MainScenes/MainMenu.tscn");

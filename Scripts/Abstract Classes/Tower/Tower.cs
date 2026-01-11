@@ -59,7 +59,7 @@ public abstract partial class Tower : Sprite2D
     [Export] public string TowerName;
     public float SellPercentage = 0.8f;
     public Node InstancedProjectiles;
-    public TowerTargeting CurrentTargeting = TowerTargeting.First;
+    public TowerTargeting CurrentTargeting;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
@@ -67,7 +67,8 @@ public abstract partial class Tower : Sprite2D
     public int TowerLevel;
 
     public override void _Ready()
-    {        
+    {
+        CurrentTargeting = AllowedTargetingModes[0];
         SpritesForIcon.Insert(0, this);
 
         Vector2 rectSize = GetRect().Size;
@@ -319,19 +320,19 @@ public abstract partial class Tower : Sprite2D
 
     protected virtual int GetPointCostFromDamage()
     {
-        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.5f) / 3f)) * (25f * BaseTowerStats[TowerStat.Damage]));
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.3f) / 3f)) * (20f * BaseTowerStats[TowerStat.Damage]));
         //Mathf.FloorToInt(Mathf.Pow(1.6f, BaseTowerStats[TowerStat.Damage] + 6.35f));
     }
 
     protected virtual int GetPointCostFromRange()
     {
-        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.3f) / 3f)) * (4f * BaseTowerStats[TowerStat.Range]));
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.1f) / 3f)) * (3f * BaseTowerStats[TowerStat.Range]));
         //Mathf.FloorToInt(Mathf.Pow(1.032f, BaseTowerStats[TowerStat.Range] + 99.8f));
     }
 
     protected virtual int GetPointCostFromFireRate()
     {
-        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.7f) / 3f)) * (50f * BaseTowerStats[TowerStat.FireRate]));
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.5f) / 3f)) * (30f * BaseTowerStats[TowerStat.FireRate]));
         //Mathf.FloorToInt(Mathf.Pow(1.9f, BaseTowerStats[TowerStat.FireRate] + 5.81f));
     }
 

@@ -72,11 +72,13 @@ vertical_alignment = 1
 
 [node name="NextWaveButton" type="Button" parent="UI/WaveButtonContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Next Wave"
 
 [node name="TimeScaleButton" type="TextureButton" parent="UI/WaveButtonContainer"]
 custom_minimum_size = Vector2(64, 1.45519e-11)
 layout_mode = 2
+focus_mode = 0
 shortcut = SubResource("Shortcut_6ibjg")
 texture_normal = ExtResource("24_bc3wf")
 stretch_mode = 5

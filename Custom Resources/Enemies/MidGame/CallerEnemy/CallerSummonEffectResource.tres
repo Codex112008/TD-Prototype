@@ -2,14 +2,14 @@
 
 [ext_resource type="Resource" uid="uid://dvxpythycidpt" path="res://Custom Resources/Enemies/MidGame/BoltEnemy/BoltEnemySpawnData.tres" id="1_i8s3n"]
 [ext_resource type="Resource" uid="uid://ch7qtvavkb5sh" path="res://Custom Resources/Enemies/MidGame/TankerEnemy/TankerEnemySpawnData.tres" id="2_5w0s7"]
-[ext_resource type="Resource" uid="uid://kl8a8cjxghhs" path="res://Custom Resources/Enemies/EarlyGame/AggroEnemy/AggroEnemySpawnData.tres" id="3_pb2p4"]
+[ext_resource type="Resource" uid="uid://dm7l6abt6p1km" path="res://Custom Resources/Enemies/MidGame/Mutated/MutatedEnemySpawnData.tres" id="3_qq1vl"]
 [ext_resource type="Script" uid="uid://bteaehp6g8775" path="res://Custom Resources/EnemyEffects/SummonAllies/SummonAlliesEffect.cs" id="4_v4e02"]
 
 [resource]
 script = ExtResource("4_v4e02")
-_enemiesToSpawn = Array[Object]([ExtResource("1_i8s3n"), ExtResource("2_5w0s7"), ExtResource("3_pb2p4")])
-_enemiesToSpawnCount = 10
+_enemiesToSpawn = Array[Object]([ExtResource("1_i8s3n"), ExtResource("2_5w0s7"), ExtResource("3_qq1vl")])
+_enemiesToSpawnCount = 5
 _spawnDelay = 0.2
-EffectInterval = 5.0
+EffectInterval = 7.0
 HealthPercentageThreshold = 0.0
 metadata/_custom_type_script = "uid://bteaehp6g8775"

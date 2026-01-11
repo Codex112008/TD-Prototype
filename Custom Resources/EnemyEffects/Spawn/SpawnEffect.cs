@@ -25,7 +25,7 @@ public partial class SpawnEffect : EnemyEffect
             spawnedEnemy.GlobalPosition = enemy.GlobalPosition;
             spawnedEnemy.SpawnedWave = enemy.SpawnedWave;
 
-            EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
+            EnemyManager.instance.EnemyParent.CallDeferred(Node.MethodName.AddChild, spawnedEnemy);
         }
     }
 }

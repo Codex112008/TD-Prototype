@@ -74,11 +74,12 @@ public partial class DomainTower : Tower
 
     protected override int GetPointCostFromDamage()
     {
-        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.9f) / 3f)) * (100f * BaseTowerStats[TowerStat.Damage]));
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.3f) / 3f)) * (100f * BaseTowerStats[TowerStat.Damage]));
     }
     
     protected override int GetPointCostFromFireRate()
     {
-        return base.GetPointCostFromFireRate() / 3;
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.1f) / 3f)) * (20f * BaseTowerStats[TowerStat.FireRate]));
+        //return base.GetPointCostFromFireRate() / 3;
     }
 }

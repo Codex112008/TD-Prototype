@@ -17,5 +17,6 @@ public partial class GameSpeedButton : TextureButton
 	{
 		TextureNormal = _gameSpeedIcons.Keys.ToArray()[(new Array<Texture2D>( _gameSpeedIcons.Keys.ToArray()).IndexOf(TextureNormal) + 1) % _gameSpeedIcons.Keys.Count];
 		Engine.TimeScale = _gameSpeedIcons[TextureNormal];
+		Engine.PhysicsTicksPerSecond = 60 * (int)Engine.TimeScale;
 	}
 }

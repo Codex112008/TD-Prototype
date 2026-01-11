@@ -8,8 +8,8 @@
 [resource]
 script = ExtResource("2_avk5c")
 EnemyScene = ExtResource("1_n1mfa")
-BaseWeight = 2
-MinWave = 7
+BaseWeight = 1
+MinWave = 10
 MaxWave = 19
 QtyLow = 1
 QtyMean = 1

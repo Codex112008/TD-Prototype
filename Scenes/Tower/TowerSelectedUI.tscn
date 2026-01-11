@@ -50,6 +50,7 @@ layout_mode = 2
 [node name="CycleLeft" type="TextureButton" parent="PanelContainer/VBoxContainer/Targeting/HBoxContainer"]
 custom_minimum_size = Vector2(51, 0)
 layout_mode = 2
+focus_mode = 0
 texture_normal = ExtResource("3_2cqh1")
 texture_pressed = ExtResource("3_2cqh1")
 stretch_mode = 4
@@ -64,17 +65,20 @@ autowrap_mode = 0
 [node name="CycleRight" type="TextureButton" parent="PanelContainer/VBoxContainer/Targeting/HBoxContainer"]
 custom_minimum_size = Vector2(51, 0)
 layout_mode = 2
+focus_mode = 0
 texture_normal = ExtResource("4_cu62f")
 texture_pressed = ExtResource("4_cu62f")
 stretch_mode = 4
 
 [node name="Upgrade" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 theme_override_font_sizes/font_size = 64
 text = "Upgrade! $999"
 
 [node name="Sell" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 theme_override_font_sizes/font_size = 64
 text = "Sell!"
 
