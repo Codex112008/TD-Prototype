@@ -243,7 +243,13 @@ public partial class EnemyManager : Node, IManager
 	{
 		RandomNumberGenerator rand  = new();
 		if (_tempRand != null)
-			rand = _tempRand;
+		{
+			rand = new()
+			{
+				Seed = _tempRand.Seed,
+				State = _tempRand.State
+			};
+		}
 
 		Array<EnemySpawnData> enemySpawnData = [.. enemiesToSpawnData];
 		if (restrictWaves)

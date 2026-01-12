@@ -93,6 +93,8 @@ public partial class RunController : Node2D
                     BuildingManager.instance.SetSelectedTower();
 					_managerParent.RemoveChild(BuildingManager.instance);
                 }
+				if (GetTree().GetNodesInGroup("Enemy").Count == 0)
+					SaveLevel();
 			}
 
 			// Play animation

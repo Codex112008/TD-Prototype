@@ -16,15 +16,10 @@ public partial class PauseMenu : PanelContainer
 		{
 			if (eventKey.Pressed && eventKey.Keycode == Key.Escape && !IsInstanceValid(BuildingManager.instance.TowerPreview))
 			{
-				switch (Engine.TimeScale)
-				{
-					case 1f:
-						Pause();
-						break;
-					case 0f:
-						UnPause();
-						break;
-				}
+				if (Engine.TimeScale > 0)
+					Pause();
+				else
+					UnPause();
 			}
 		}
 	}
@@ -43,7 +38,8 @@ public partial class PauseMenu : PanelContainer
 
 	public void ReturnToMainMenu()
 	{
-		RunController.instance.SaveLevel();
+		if (GetTree().GetNodesInGroup("Enemy").Count == 0)
+			RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();
 		GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainScenes/MainMenu.tscn"));
 	}
