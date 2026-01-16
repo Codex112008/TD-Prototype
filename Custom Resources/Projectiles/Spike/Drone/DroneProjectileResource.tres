@@ -24,8 +24,8 @@ Firerate 0.3x"
 Icon = ExtResource("3_hd3nc")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 5.0,
+1: 8.0,
 2: 1.0,
-3: 0.3
+3: 0.17
 })
 PointCost = 75

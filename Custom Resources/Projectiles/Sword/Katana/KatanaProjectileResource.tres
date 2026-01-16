@@ -19,12 +19,13 @@ NextTierProjectiles = Array[ExtResource("4_jorxp")]([])
 RequireEnemy = true
 ProjectileSpeed = 400.0
 Tooltip = "Fires sword waves that pierce but weaken
+Cost 0.9x
 Damage 1.2x
 Firerate 0.7x"
 Icon = ExtResource("3_jdlt3")
 StatMultipliers = Dictionary[int, float]({
-0: 1.0,
-1: 1.2,
+0: 0.9,
+1: 1.5,
 2: 1.0,
 3: 0.7
 })

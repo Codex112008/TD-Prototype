@@ -20,13 +20,14 @@ NextTierProjectiles = Array[ExtResource("4_0qv0o")]([ExtResource("5_fg8ae"), Ext
 RequireEnemy = true
 ProjectileSpeed = 100.0
 Tooltip = "Melee projectile! Dont set range too high or it will miss!
-Damage 1.1x
+Cost 0.9x
+Damage 1.2x
 Range 0.7x
 Firerate 0.7x"
 Icon = ExtResource("3_fg8ae")
 StatMultipliers = Dictionary[int, float]({
-0: 1.0,
-1: 1.1,
+0: 0.9,
+1: 1.2,
 2: 0.7,
 3: 0.7
 })

@@ -17,14 +17,14 @@ RequireEnemy = true
 ProjectileSpeed = 600.0
 Tooltip = "Swift weapon that swaps between a weaker ranged projectile and stronger melee if target is in range
 Cost 0.7x
-Damage 0.4x
+Damage 0.5x
 Range 0.9x
-Firerate 1.5x"
+Firerate 1.7x"
 Icon = ExtResource("3_eluan")
 StatMultipliers = Dictionary[int, float]({
 0: 0.7,
-1: 0.4,
+1: 0.5,
 2: 0.9,
-3: 1.5
+3: 1.7
 })
 PointCost = 125

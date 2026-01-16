@@ -20,12 +20,12 @@ Tooltip = "Bigger sword, sweeping swings can catch enemies behind as well
 Cost 1.2x
 Damage 2x
 Range 0.9x
-Firerate 0.6x"
+Firerate 0.7x"
 Icon = ExtResource("3_jt38a")
 StatMultipliers = Dictionary[int, float]({
 0: 1.2,
 1: 2.0,
 2: 0.9,
-3: 0.8
+3: 0.7
 })
 PointCost = 75
