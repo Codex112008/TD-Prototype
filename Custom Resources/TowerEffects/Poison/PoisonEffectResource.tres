@@ -9,12 +9,12 @@ script = ExtResource("2_1fq8o")
 DamageType = 2
 Tooltip = "Poisons enemies
 Does 0.01% max hp every second per stack
-Firerate 0.75x"
+Firerate 0.7x"
 Icon = ExtResource("1_h2g1i")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
 1: 1.0,
 2: 1.0,
-3: 0.75
+3: 0.7
 })
 PointCost = 100
