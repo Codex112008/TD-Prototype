@@ -8,7 +8,7 @@ public static class StatusEffectsData
 	{
 		{StatusEffect.Chill, 0.6f},
 		{StatusEffect.Stun, 0.025f},
-		{StatusEffect.Poison, 1.5f},
+		{StatusEffect.Poison, 10f},
 		{StatusEffect.Regen, 3f},
 		{StatusEffect.Reinforcement, 1f},
 		{StatusEffect.Swiftness, 1f},
@@ -44,12 +44,14 @@ public static class StatusEffectsData
 			new()
 			{
 				{StatusEffect.Reinforcement, Callable.From((Enemy enemy) => (float)Math.Log2((enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Reinforcement) + 15f) / 15f) + 1)},
+				{StatusEffect.Poison, Callable.From((Enemy enemy) => Mathf.Max(0.01f, 1f - (Mathf.Max(0f, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison) - 40f) * 0.01f)))},
 			}
 		},
 		{EnemyStat.MaxHealth,
 			new()
 			{
 				{StatusEffect.Surge, Callable.From((Enemy enemy) => (float)Math.Log2((enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Reinforcement) + 15f) / 15f) + 1)},
+				{StatusEffect.Poison, Callable.From((Enemy enemy) => Mathf.Max(0f, 1f - (Mathf.Max(0f, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison) - 140f) * 0.02f)))},
 			}
 		},
 	};
@@ -107,20 +109,19 @@ public static class StatusEffectsData
 	{
 		{StatusEffect.Poison, Callable.From((Enemy enemy) => 
 			{
-				enemy.TakeDamage(enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.001f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison), 0.07f), DamageType.Poison, true);
-				// Do something with excess poison stacks
+				enemy.TakeDamage(enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.0025f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison), 0.1f), DamageType.Poison, true);
 			})
 		},
 		{StatusEffect.Burn, Callable.From((Enemy enemy) =>
 			{
 				float burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) * 0.75f;
-                enemy.TakeDamage(burnToConsume * 0.05f, DamageType.Burn, false);
+                enemy.TakeDamage(burnToConsume * 0.07f, DamageType.Burn, false);
 				enemy.AddStatusEffectStacks(StatusEffect.Burn, -burnToConsume);
 
 				if (burnToConsume > 50)
 				{
-					burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) * 0.25f;
-					enemy.TakeDamage(burnToConsume * 0.1f, DamageType.Burn, false);
+					burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn);
+					enemy.TakeDamage(burnToConsume * 0.15f, DamageType.Burn, false);
 					enemy.AddStatusEffectStacks(StatusEffect.Burn, -burnToConsume);;
 				}
 			})

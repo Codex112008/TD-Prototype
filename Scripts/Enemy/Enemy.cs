@@ -252,9 +252,13 @@ public partial class Enemy : CharacterBody2D
 			}
 
 			float healAmount = -1f;
-			if (stat == EnemyStat.MaxHealth && value > CurrentEnemyStats[stat])
+			if (stat == EnemyStat.MaxHealth)
 			{
-				healAmount = value - CurrentEnemyStats[stat];
+				if (value > CurrentEnemyStats[stat])
+					healAmount = value - CurrentEnemyStats[stat];
+				
+				if (value <= 0f)
+					Die();
 			}
 
 			CurrentEnemyStats[stat] = value;

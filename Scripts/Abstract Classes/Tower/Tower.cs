@@ -326,7 +326,7 @@ public abstract partial class Tower : Sprite2D
 
     protected virtual int GetPointCostFromRange()
     {
-        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.1f) / 3f)) * (3f * BaseTowerStats[TowerStat.Range]));
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.1f) / 3f)) * (5f * BaseTowerStats[TowerStat.Range]));
         //Mathf.FloorToInt(Mathf.Pow(1.032f, BaseTowerStats[TowerStat.Range] + 99.8f));
     }
 
