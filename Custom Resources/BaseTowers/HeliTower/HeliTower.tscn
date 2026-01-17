@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bm5bfgo80br3d" path="res://Custom Resources/BaseTowers/HeliTower/HeliTower.cs" id="2_k1mig"]
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_5h14e"]
 [ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_3y1ji"]
-[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="6_yj5s1"]
+[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.png" id="6_yj5s1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_go7n7"]
 

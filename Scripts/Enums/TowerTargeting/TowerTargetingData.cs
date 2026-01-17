@@ -6,14 +6,14 @@ public static class TowerTargetingData
 {
 	private static readonly Dictionary<TowerTargeting, Callable> _findEnemyWithTargetingFunctions = new()
 	{
-		{TowerTargeting.First, Callable.From((Tower tower) =>
+		{TowerTargeting.First, Callable.From((Tower tower, string group) =>
 			{
 				Enemy firstEnemy = null;
-				foreach (Node node in tower.GetTree().GetNodesInGroup("Enemy"))
+				foreach (Node node in tower.GetTree().GetNodesInGroup(group))
 				{
 					if (node is Enemy enemy)
 					{
-						if (((firstEnemy == null) || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && tower.VectorInRange(enemy.GlobalPosition))
+						if ((firstEnemy == null || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && tower.VectorInRange(enemy.GlobalPosition))
 						{
 							firstEnemy = enemy;
 						}
@@ -22,10 +22,10 @@ public static class TowerTargetingData
 				return firstEnemy;
 			})
 		},
-		{TowerTargeting.Last, Callable.From((Tower tower) =>
+		{TowerTargeting.Last, Callable.From((Tower tower, string group) =>
 			{
 				Enemy lastEnemy = null;
-				foreach (Node node in tower.GetTree().GetNodesInGroup("Enemy"))
+				foreach (Node node in tower.GetTree().GetNodesInGroup(group))
 				{
 					if (node is Enemy enemy)
 					{
@@ -38,19 +38,19 @@ public static class TowerTargetingData
 				return lastEnemy;
 			})
 		},
-		{TowerTargeting.Random, Callable.From((Tower tower) =>
+		{TowerTargeting.Random, Callable.From((Tower tower, string group) =>
 			{
-				Array<Enemy> enemiesInRange = [.. tower.GetTree().GetNodesInGroup("Enemy").Where(node => node is Enemy enemy && tower.VectorInRange(enemy.GlobalPosition)).ToArray().Cast<Enemy>()];
+				Array<Enemy> enemiesInRange = [.. tower.GetTree().GetNodesInGroup(group).Where(node => node is Enemy enemy && tower.VectorInRange(enemy.GlobalPosition)).ToArray().Cast<Enemy>()];
 				if (enemiesInRange.Count > 0)
 					return enemiesInRange.PickRandom();
 				else
 					return null;
 			})
 		},
-		{TowerTargeting.Strong, Callable.From((Tower tower) =>
+		{TowerTargeting.Strong, Callable.From((Tower tower, string group) =>
 			{
 				Enemy strongestEnemy = null;
-				foreach (Node node in tower.GetTree().GetNodesInGroup("Enemy"))
+				foreach (Node node in tower.GetTree().GetNodesInGroup(group))
 				{
 					if (node is Enemy enemy)
 					{
@@ -63,10 +63,10 @@ public static class TowerTargetingData
 				return strongestEnemy;
 			})
 		},
-		{TowerTargeting.Weak, Callable.From((Tower tower) =>
+		{TowerTargeting.Weak, Callable.From((Tower tower, string group) =>
 			{
 				Enemy weakestEnemy = null;
-				foreach (Node node in tower.GetTree().GetNodesInGroup("Enemy"))
+				foreach (Node node in tower.GetTree().GetNodesInGroup(group))
 				{
 					if (node is Enemy enemy)
 					{
@@ -81,7 +81,7 @@ public static class TowerTargetingData
 		},
 	};
 
-	public static CharacterBody2D GetTargetedEnemy(TowerTargeting targeting, Tower tower)
+	public static CharacterBody2D GetTargetedEnemy(TowerTargeting targeting, Tower tower, string group = "Enemy")
 	{
 		foreach(Node child in tower.GetChildren())
         {
@@ -89,7 +89,7 @@ public static class TowerTargetingData
                 child.QueueFree();
         }
 
-		CharacterBody2D foundEnemy = (Enemy)_findEnemyWithTargetingFunctions[targeting].Call(tower);
+		CharacterBody2D foundEnemy = (Enemy)_findEnemyWithTargetingFunctions[targeting].Call(tower, group);
 
 		if (foundEnemy == null && !tower.Projectile.RequireEnemy)
 		{

@@ -26,6 +26,7 @@ public static class StatusEffectsData
 		{StatusEffect.Poison, 1f},
 		{StatusEffect.Burn, 0.75f},
 		{StatusEffect.Regen, 1f},
+		{StatusEffect.Bleed, 0.8f},
 	};
 
 	private static readonly Dictionary<EnemyStat, Dictionary<StatusEffect, Callable>> _enemyStatusStatMultipliers = new()
@@ -107,7 +108,7 @@ public static class StatusEffectsData
 
 	private static readonly Dictionary<StatusEffect, Callable> _tickEnemyStatusEffectBehaviours = new()
 	{
-		{StatusEffect.Poison, Callable.From((Enemy enemy) => 
+		{StatusEffect.Poison, Callable.From((Enemy enemy) =>
 			{
 				enemy.TakeDamage(enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.0025f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison), 0.1f), DamageType.Poison, true);
 			})
@@ -115,7 +116,7 @@ public static class StatusEffectsData
 		{StatusEffect.Burn, Callable.From((Enemy enemy) =>
 			{
 				float burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) * 0.75f;
-                enemy.TakeDamage(burnToConsume * 0.07f, DamageType.Burn, false);
+				enemy.TakeDamage(burnToConsume * 0.07f, DamageType.Burn, false);
 				enemy.AddStatusEffectStacks(StatusEffect.Burn, -burnToConsume);
 
 				if (burnToConsume > 50)
@@ -126,10 +127,15 @@ public static class StatusEffectsData
 				}
 			})
 		},
-		{StatusEffect.Regen, Callable.From((Enemy enemy) => 
+		{StatusEffect.Regen, Callable.From((Enemy enemy) =>
 			{
-				enemy.TakeDamage(enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.01f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Regen), 1f), DamageType.Heal, true);
+				enemy.TakeDamage(-enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.01f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Regen), 1f), DamageType.Heal, true);
 				// Do something with excess regen stacks
+			})
+		},
+		{StatusEffect.Bleed, Callable.From((Enemy enemy) => 
+			{ // Does more damage based on the speed of enemy
+				enemy.TakeDamage(((2.8f * (float)Math.Log10(enemy.CurrentEnemyStats[EnemyStat.Speed] + 12.1f)) - 3.031799f) * (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Bleed) * 0.75f), DamageType.Physical, false);
 			})
 		},
 	};

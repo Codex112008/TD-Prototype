@@ -77,7 +77,7 @@ public partial class ShotgunTower : Tower
 
     protected override int GetPointCostFromDamage()
     {
-        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.5f) / 3f)) * (60f * BaseTowerStats[TowerStat.Damage]));
+        return Mathf.FloorToInt((1f + (Mathf.Pow(TowerLevel, 1.5f) / 3f)) * (75f * BaseTowerStats[TowerStat.Damage]));
     }
 
     protected override int GetPointCostFromRange()

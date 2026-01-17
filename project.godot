@@ -82,6 +82,7 @@ texture={
 
 2d_physics/layer_1="Enemies"
 2d_physics/layer_2="Tower Bullets"
+2d_physics/layer_3="Tower Children"
 
 [rendering]
 

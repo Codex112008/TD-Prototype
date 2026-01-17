@@ -14,7 +14,9 @@ script = ExtResource("2_067wo")
 _firePoint = NodePath("Marker2D")
 _projectileSpawnRadius = 20.0
 SpritesForIcon = [NodePath(".")]
-Tooltip = "Brrtz"
+Tooltip = "Shoots projectiles at target from arouond it (idk how to explain just try it)
+Very expensive damage
+Very cheap firerate"
 _rangeOverlayTexture = ExtResource("3_hodwm")
 _towerSelectedUIScene = ExtResource("4_m3f8p")
 Projectile = ExtResource("5_5wwdw")

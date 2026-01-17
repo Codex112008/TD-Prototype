@@ -59,6 +59,7 @@ public partial class TowerCreatorController : Node2D
 			_towerLevel = (int)char.GetNumericValue(BaseTowerScene.ResourcePath[BaseTowerScene.ResourcePath.LastIndexOf('/')..BaseTowerScene.ResourcePath.LastIndexOf('.')][^1]) + 1;
 
 		// Creates a preview of the tower being created
+		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
 		if (_isUpgrading)
 			InstantiateTowerPreview(BaseTowerScene);
 		else
@@ -81,7 +82,6 @@ public partial class TowerCreatorController : Node2D
 			_towerColorPickerButton.QueueFree();
 
 		// Init tower creator
-		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
 		_towerSelector.UpdateSelector();
 		if (_isUpgrading)
 		{
@@ -176,6 +176,10 @@ public partial class TowerCreatorController : Node2D
 
 			_towerToCreatePreview.QueueFree();
 			InstantiateTowerPreview(_towerSelector.SelectedTowerType, false);
+
+			if (_towerColorPickerButton != null && _towerToCreatePreview.SpritesToColor != null && _towerToCreatePreview.SpritesToColor.Count > 0)
+				_towerColorPickerButton.Color = _towerToCreatePreview.SpritesToColor[0].SelfModulate;
+
 			newTowerType = true;
 		}
 
@@ -216,6 +220,7 @@ public partial class TowerCreatorController : Node2D
 					effects.Add(effect);
 
 				modifierPicker.CostLabel.Text = towerComponent.ResourceName/*"Cost: " + towerComponent.PointCost*/;
+				modifierPicker.SelectedItemButton.TooltipText = towerComponent.Tooltip;
 			}
 		}
 		_towerToCreatePreview.SetEffects(effects);
@@ -422,6 +427,7 @@ public partial class TowerCreatorController : Node2D
 	private void InstantiateTowerPreview(PackedScene towerType, bool addToScene = true)
 	{
 		_towerToCreatePreview = towerType.Instantiate<Tower>();
+		_towerSelector.SelectedItemButton.TooltipText = _towerToCreatePreview.Tooltip;
 		_towerToCreatePreview.GlobalPosition = new Vector2I(14, 6) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		if (addToScene)

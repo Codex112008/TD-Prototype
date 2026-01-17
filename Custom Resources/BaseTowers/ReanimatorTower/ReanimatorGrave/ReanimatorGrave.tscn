@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://c50qmij1abfeq"]
+
+[ext_resource type="Script" uid="uid://jecvautn3315" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimatorGraveBehaviour.cs" id="1_6qdrg"]
+[ext_resource type="Texture2D" uid="uid://bslc6twjso81b" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimatorTowerGrave.png" id="1_g7w7c"]
+[ext_resource type="Resource" uid="uid://bvg7uuk4wgqb3" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimateEnemy/ReanimateEnemyEffectResource.tres" id="2_0jnoj"]
+[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="3_petqa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6qdrg"]
+size = Vector2(8, 10)
+
+[node name="ReanimatorGrave" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 0
+script = ExtResource("1_6qdrg")
+Effects = Dictionary[int, Array]({
+1: [ExtResource("2_0jnoj")]
+})
+_baseEnemyStats = Dictionary[int, int]({
+0: 0,
+1: 1,
+2: 0,
+3: 0,
+4: 1
+})
+_acceleration = 0.0
+_deceleration = 0.0
+_damageNumberScene = ExtResource("3_petqa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_g7w7c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6qdrg")
+
+[node name="MaxHp" type="RichTextLabel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 21.0
+offset_bottom = 21.0
+scale = Vector2(0.2, 0.2)
+text = "5"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

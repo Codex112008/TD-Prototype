@@ -29,11 +29,11 @@ public partial class Enemy : CharacterBody2D
 
 	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	protected Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
+	protected bool _isDead = false;
+	
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
 	private float _currentHealth;
 	private RandomNumberGenerator _rand = new();
-	private bool _isDead = false;
-	private Timer _reachedBaseFreeTimer = null;
 	private bool _showMaxHp = true;
 
 	public override void _Ready()
@@ -235,6 +235,7 @@ public partial class Enemy : CharacterBody2D
 		_isDead = true;
 
 		TriggerEffects(EnemyEffectTrigger.OnDeath);
+		EnemyManager.instance.EmitSignal(EnemyManager.SignalName.EnemyDied, this);
 
 		QueueFree();
 	}

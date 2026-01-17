@@ -81,7 +81,7 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 		{
 			Enemy enemy = (Enemy)body;
 			Dictionary<TowerStat, float> statsToUse = new(Stats);
-			float statMultiplier = _currentHealth / Stats[TowerStat.Damage] ;
+			float statMultiplier = _currentHealth / Stats[TowerStat.Damage];
 
 			// If enemy has les hp than spike then weaken effect to do just enough to enemy
 			float enemyHealth = enemy.GetCurrentHealth();

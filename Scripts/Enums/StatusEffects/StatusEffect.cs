@@ -8,5 +8,6 @@ public enum StatusEffect
 	Reinforcement,
 	Regen,
 	Swiftness,
-	Surge
+	Surge,
+	Bleed
 }

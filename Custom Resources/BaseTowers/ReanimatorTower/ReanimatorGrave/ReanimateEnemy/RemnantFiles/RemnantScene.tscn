@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cdxkcj8t82kxc"]
 
-[ext_resource type="Script" uid="uid://cjpxj5otkxxqc" path="res://Custom Resources/TowerEffects/Necromancy/RemnantBehaviour.cs" id="1_0oy02"]
+[ext_resource type="Script" uid="uid://cjpxj5otkxxqc" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimateEnemy/RemnantFiles/RemnantBehaviour.cs" id="1_0oy02"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rb7fd"]
 size = Vector2(2, 2)
@@ -9,6 +9,7 @@ size = Vector2(2, 2)
 size = Vector2(12, 12)
 
 [node name="RemnantScene" type="CharacterBody2D" node_paths=PackedStringArray("Sprite")]
+z_index = 10
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_0oy02")

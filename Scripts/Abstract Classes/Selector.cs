@@ -4,7 +4,7 @@ public abstract partial class Selector : VBoxContainer
 {
 	[Export] public RichTextLabel ItemLabel;
 	[Export] public ItemList ItemList;
-	[Export] private TextureButton _selectedItemButton;
+	[Export] public TextureButton SelectedItemButton;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -24,9 +24,8 @@ public abstract partial class Selector : VBoxContainer
 	{
 		ToggleVisibility();
 
-		// TODO: Change _selectedModifierButton's texture to icon
-		_selectedItemButton.TextureNormal = ItemList.GetItemIcon(index);
-		_selectedItemButton.TexturePressed = ItemList.GetItemIcon(index);
+		SelectedItemButton.TextureNormal = ItemList.GetItemIcon(index);
+		SelectedItemButton.TexturePressed = ItemList.GetItemIcon(index);
 	}
 
 	public void OnItemSelectedSignal(int index)
@@ -53,8 +52,8 @@ public abstract partial class Selector : VBoxContainer
 
 	public void DisableSelector()
 	{
-		_selectedItemButton.MouseFilter = MouseFilterEnum.Ignore;
-		_selectedItemButton.FocusMode = FocusModeEnum.None;
+		SelectedItemButton.MouseFilter = MouseFilterEnum.Ignore;
+		SelectedItemButton.FocusMode = FocusModeEnum.None;
 	}
 
 	public abstract void UpdateSelector();

@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bnsoaen6emvx" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileIcon.png" id="5_483h1"]
 [ext_resource type="PackedScene" uid="uid://bcuufp67y4aq3" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileScene.tscn" id="6_wbl77"]
 [ext_resource type="Script" uid="uid://dda7yiaawjumm" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectile.cs" id="7_827w1"]
-[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="8_qklu6"]
+[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.png" id="8_qklu6"]
 
 [sub_resource type="Resource" id="Resource_dbdm5"]
 resource_name = "Bullet"

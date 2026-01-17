@@ -5,8 +5,9 @@ using System;
 public partial class RemnantBehaviour : CharacterBody2D
 {
 	[Export] public Sprite2D Sprite;
+	[Export] public float Acceleration = 4f;
 	
-	public NecromancyEffect NecromancyData;
+	public Tower Tower;
 	public float MaxHealth;
 	public float Speed;
 	public Array<Vector2> PathArray = null;
@@ -50,9 +51,9 @@ public partial class RemnantBehaviour : CharacterBody2D
 		else
 		{
 			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
-			Velocity = Velocity.Lerp(dir.Normalized() * Speed, NecromancyData.RemnantAcceleration *  (float)delta);
-			Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), NecromancyData.RemnantAcceleration * (float)delta);
-			Rotation = Mathf.LerpAngle(Rotation, Mathf.Pi / 2f, NecromancyData.RemnantAcceleration * (float)delta);
+			Velocity = Velocity.Lerp(dir.Normalized() * Speed * 0.25f, Acceleration *  (float)delta);
+			Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), Acceleration * (float)delta);
+			Rotation = Mathf.LerpAngle(Rotation, Mathf.Pi / 2f, Acceleration * (float)delta);
 
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= Speed / 5f)
 				PathArray.RemoveAt(0);
@@ -63,26 +64,31 @@ public partial class RemnantBehaviour : CharacterBody2D
 
 	public void OnBodyEntered(Node2D body)
 	{
-		if (body.IsInGroup("Enemy"))
+		if (body.IsInGroup("Enemy") && body is not ReanimatorGraveBehaviour)
 		{
 			Enemy enemy = (Enemy)body;
-			float damageToDeal = _currentHealth;
-			float damageMultiplier = _currentHealth / MaxHealth;
+			Dictionary<TowerStat, float> statsToUse = Tower.GetFinalTowerStats();
+			statsToUse[TowerStat.Damage] = MaxHealth;
+			statsToUse[TowerStat.FireRate] = Speed;
 
-			// If enemy has les hp then weaken damage to do just enough to enemy
+			float statMultiplier = _currentHealth / MaxHealth;
+
+			// If enemy has les hp than spike then weaken effect to do just enough to enemy
 			float enemyHealth = enemy.GetCurrentHealth();
 			if (enemyHealth < _currentHealth)
 			{
-				damageMultiplier = enemyHealth / MaxHealth;
+				statMultiplier = enemyHealth / MaxHealth;
 			}
 
-			damageToDeal *= damageMultiplier;
+			foreach (TowerStat stat in statsToUse.Keys)
+				statsToUse[stat] *= statMultiplier;
 
 			_currentHealth = Mathf.Max(_currentHealth - enemy.GetCurrentHealth(), 0);
 
 			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + MaxHealth;
 
-			NecromancyData.RemnantDamageEffect.ApplyEffect(new(){{TowerStat.Damage, damageToDeal}}, enemy);
+			foreach (TowerEffect effect in Tower.Projectile.Effects)
+				effect.ApplyEffect(statsToUse, enemy);
 			
 			if (_currentHealth <= 0f)
 				QueueFree();

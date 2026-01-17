@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://bvg7uuk4wgqb3"]
+
+[ext_resource type="Script" uid="uid://b12njg5jufrc2" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimateEnemy/ReanimateEnemyEffect.cs" id="1_mv30y"]
+[ext_resource type="PackedScene" uid="uid://cdxkcj8t82kxc" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimateEnemy/RemnantFiles/RemnantScene.tscn" id="1_nt1t4"]
+
+[resource]
+script = ExtResource("1_mv30y")
+_remnantScene = ExtResource("1_nt1t4")
+_remnantTint = Color(0.458824, 0.592157, 0, 0.92549)
+_healthPercentageToConvert = 0.4
+_speedPercentageToConvert = 0.7
+_remnantAcceleration = 0.0
+EffectInterval = 999.0
+HealthPercentageThreshold = 0.0

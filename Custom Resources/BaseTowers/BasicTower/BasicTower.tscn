@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_vekyq"]
 [ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_safry"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileResource.tres" id="4_vekyq"]
-[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Sprites/Towers/BasicTower/BasicTower.png" id="5_sgnhf"]
+[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.png" id="5_sgnhf"]
 
 [node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
 z_index = 1
@@ -17,6 +17,9 @@ _pivotPoint = NodePath("PivotPoint")
 _rotateSpeed = 20.0
 SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+Tooltip = "Basic tower, nothing special
+(should i turn this into a repeater type tower?)
+Normal stat scaling"
 _rangeOverlayTexture = ExtResource("3_vekyq")
 _towerSelectedUIScene = ExtResource("4_safry")
 Projectile = ExtResource("4_vekyq")

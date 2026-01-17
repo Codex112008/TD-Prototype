@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://buuugov1sggdw"
-path="res://.godot/imported/BasicTower.png-ad07d5d1434070e961164dc3fef9b80c.ctex"
+uid="uid://bslc6twjso81b"
+path="res://.godot/imported/ReanimatorTowerGrave.png-b2d6d50ecf44cf63acde45bdbca7d7e7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Towers/BasicTower/BasicTower.png"
-dest_files=["res://.godot/imported/BasicTower.png-ad07d5d1434070e961164dc3fef9b80c.ctex"]
+source_file="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimatorTowerGrave.png"
+dest_files=["res://.godot/imported/ReanimatorTowerGrave.png-b2d6d50ecf44cf63acde45bdbca7d7e7.ctex"]
 
 [params]
 

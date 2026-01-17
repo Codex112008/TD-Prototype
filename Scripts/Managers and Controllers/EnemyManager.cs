@@ -6,6 +6,8 @@ using System.Linq;
 
 public partial class EnemyManager : Node, IManager
 {
+	[Signal] public delegate void EnemyDiedEventHandler(Enemy enemy);
+
 	public static EnemyManager instance;
 	public override void _EnterTree()
 	{

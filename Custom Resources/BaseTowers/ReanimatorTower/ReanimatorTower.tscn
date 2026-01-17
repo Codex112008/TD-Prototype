@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://bd1gvnkmribjj"]
+
+[ext_resource type="Texture2D" uid="uid://b6c7ve75cm8b1" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTowerBase.png" id="1_u4bte"]
+[ext_resource type="Script" uid="uid://cff28naunchdj" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTower.cs" id="2_578wl"]
+[ext_resource type="PackedScene" uid="uid://c50qmij1abfeq" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorGrave/ReanimatorGrave.tscn" id="3_ae6qa"]
+[ext_resource type="Texture2D" uid="uid://ccjoyoflwrsvg" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTowerHead.png" id="3_eymka"]
+[ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="4_glj5r"]
+[ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="5_bwrem"]
+
+[node name="ReanimatorTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_graveParent", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_u4bte")
+centered = false
+script = ExtResource("2_578wl")
+_firePoint = NodePath("TowerComponents/FirePoint")
+_graveParent = NodePath("GraveParent")
+_graveScene = ExtResource("3_ae6qa")
+SpritesForIcon = [NodePath("."), NodePath("TowerComponents/TowerHead")]
+SpritesToColor = [NodePath("TowerComponents/TowerHead")]
+Tooltip = "Spawns graves when enemies die, prioratises shooting graves
+Cheap damage
+Extremely expensive firerate
+Slightly expensive range"
+_rangeOverlayTexture = ExtResource("4_glj5r")
+_towerSelectedUIScene = ExtResource("5_bwrem")
+TowerName = "Reanimator"
+
+[node name="TowerComponents" type="Node2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="TowerComponents"]
+self_modulate = Color(0.819608, 0.792157, 0.584314, 1)
+texture = ExtResource("3_eymka")
+
+[node name="FirePoint" type="Marker2D" parent="TowerComponents"]
+
+[node name="GraveParent" type="Node2D" parent="."]

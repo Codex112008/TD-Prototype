@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_sacu3"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileResource.tres" id="4_5hs5a"]
 [ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_6t2gx"]
-[ext_resource type="Texture2D" uid="uid://b7byxvn5jhb0o" path="res://Sprites/Towers/ShotgunTower.png" id="5_8h754"]
+[ext_resource type="Texture2D" uid="uid://b7byxvn5jhb0o" path="res://Custom Resources/BaseTowers/ShotgunTower/ShotgunTower.png" id="5_8h754"]
 
 [node name="ShotgunTower" type="Sprite2D" node_paths=PackedStringArray("_firePoints", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
 z_index = 1
@@ -18,6 +18,10 @@ _rotateSpeed = 20.0
 _shotSpread = 90.0
 SpritesForIcon = [NodePath("."), NodePath("PivotPoint/TowerHead")]
 SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+Tooltip = "Shoots 5 projectiles in a 90 degree arc
+Very Expensive damage
+Expensive firerate
+Expensive range"
 _rangeOverlayTexture = ExtResource("3_sacu3")
 _towerSelectedUIScene = ExtResource("4_6t2gx")
 Projectile = ExtResource("4_5hs5a")

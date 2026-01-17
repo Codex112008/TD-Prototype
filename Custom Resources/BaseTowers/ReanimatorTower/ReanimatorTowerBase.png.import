@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7byxvn5jhb0o"
-path="res://.godot/imported/ShotgunTower.png-0b6cf11765bfed8a91a5a9342c186390.ctex"
+uid="uid://b6c7ve75cm8b1"
+path="res://.godot/imported/ReanimatorTowerBase.png-f67c139cdd78ae0f0a0f095b9d9d14b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Towers/ShotgunTower.png"
-dest_files=["res://.godot/imported/ShotgunTower.png-0b6cf11765bfed8a91a5a9342c186390.ctex"]
+source_file="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTowerBase.png"
+dest_files=["res://.godot/imported/ReanimatorTowerBase.png-f67c139cdd78ae0f0a0f095b9d9d14b7.ctex"]
 
 [params]
 
