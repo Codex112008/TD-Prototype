@@ -51,7 +51,7 @@ public partial class RemnantBehaviour : CharacterBody2D
 		else
 		{
 			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
-			Velocity = Velocity.Lerp(dir.Normalized() * Speed * 0.25f, Acceleration *  (float)delta);
+			Velocity = Velocity.Lerp(dir.Normalized() * Speed * 0.5f, Acceleration *  (float)delta);
 			Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), Acceleration * (float)delta);
 			Rotation = Mathf.LerpAngle(Rotation, Mathf.Pi / 2f, Acceleration * (float)delta);
 

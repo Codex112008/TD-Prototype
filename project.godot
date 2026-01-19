@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="TD-Prototype"
-config/version="0.01a"
+config/version="0.01"
 run/main_scene="uid://caojnjbhas8t5"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="TD-Prototype"
@@ -21,6 +21,10 @@ config/icon="uid://3t6ry881quig"
 [autoload]
 
 Utils="*res://Scripts/Autoloads/Utils.cs"
+
+[debug]
+
+file_logging/enable_file_logging=true
 
 [display]
 

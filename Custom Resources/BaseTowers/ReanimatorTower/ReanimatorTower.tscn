@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bd1gvnkmribjj"]
+[gd_scene load_steps=8 format=3 uid="uid://bd1gvnkmribjj"]
 
 [ext_resource type="Texture2D" uid="uid://b6c7ve75cm8b1" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTowerBase.png" id="1_u4bte"]
 [ext_resource type="Script" uid="uid://cff28naunchdj" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTower.cs" id="2_578wl"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ccjoyoflwrsvg" path="res://Custom Resources/BaseTowers/ReanimatorTower/ReanimatorTowerHead.png" id="3_eymka"]
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="4_glj5r"]
 [ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="5_bwrem"]
+[ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileResource.tres" id="6_glj5r"]
 
 [node name="ReanimatorTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_graveParent", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
 z_index = 1
@@ -23,6 +24,7 @@ Extremely expensive firerate
 Slightly expensive range"
 _rangeOverlayTexture = ExtResource("4_glj5r")
 _towerSelectedUIScene = ExtResource("5_bwrem")
+Projectile = ExtResource("6_glj5r")
 TowerName = "Reanimator"
 
 [node name="TowerComponents" type="Node2D" parent="."]

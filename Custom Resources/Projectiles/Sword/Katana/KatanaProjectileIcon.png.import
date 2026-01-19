@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dydptgorywst4"
-path="res://.godot/imported/steel-weapons.png-efccbe3b998f03d61a5a8add8379eaed.ctex"
+uid="uid://durc20cchhsel"
+path="res://.godot/imported/KatanaProjectileIcon.png-6f74074044ce3a2f7c9f34066ec0f957.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/steel-weapons.png"
-dest_files=["res://.godot/imported/steel-weapons.png-efccbe3b998f03d61a5a8add8379eaed.ctex"]
+source_file="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.png"
+dest_files=["res://.godot/imported/KatanaProjectileIcon.png-6f74074044ce3a2f7c9f34066ec0f957.ctex"]
 
 [params]
 

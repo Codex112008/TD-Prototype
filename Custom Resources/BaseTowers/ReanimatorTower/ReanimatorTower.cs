@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.Linq;
 
@@ -41,6 +42,8 @@ public partial class ReanimatorTower : Tower
             {
                 if (_graveParent.GetChildren().Any(child => child is Node2D node && VectorInRange(node.GlobalPosition)))
                     _target = _graveParent.GetChildren().First(child => child is Node2D node && VectorInRange(node.GlobalPosition)) as CharacterBody2D;
+                else
+                    _target = null;
 
                 if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
                 {
@@ -52,12 +55,7 @@ public partial class ReanimatorTower : Tower
                         if (_target.GetParent() == this)
                             _target.QueueFree();
                     }
-
-                    if (_target is Enemy)
-                        _target = TowerTargetingData.GetTargetedEnemy(CurrentTargeting, this);
                 }
-                else
-                    _target = TowerTargetingData.GetTargetedEnemy(CurrentTargeting, this);
             }
         }
     }
@@ -98,5 +96,12 @@ public partial class ReanimatorTower : Tower
     protected override int GetPointCostFromRange()
     {
         return Mathf.FloorToInt(base.GetPointCostFromRange() * 1.5f);
+    }
+
+    public override Dictionary<TowerStat, float> GetFinalTowerStats()
+    {
+        Dictionary<TowerStat, float> stats = base.GetFinalTowerStats();
+        stats[TowerStat.FireRate] *= 0.5f;
+        return stats;
     }
 }

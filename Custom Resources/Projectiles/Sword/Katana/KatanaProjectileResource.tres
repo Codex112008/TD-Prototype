@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_jorxp"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_0d2nn"]
-[ext_resource type="Texture2D" uid="uid://uh0ciac0ev6r" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.tres" id="3_jdlt3"]
+[ext_resource type="Texture2D" uid="uid://durc20cchhsel" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.png" id="3_jorxp"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_jorxp"]
 [ext_resource type="PackedScene" uid="uid://ctho7p1gaayew" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileScene.tscn" id="5_t452s"]
 [ext_resource type="Script" uid="uid://cc81vthf4phhl" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectile.cs" id="6_mjup5"]
@@ -22,7 +22,7 @@ Tooltip = "Fires sword waves that pierce but weaken
 Cost 0.9x
 Damage 1.2x
 Firerate 0.7x"
-Icon = ExtResource("3_jdlt3")
+Icon = ExtResource("3_jorxp")
 StatMultipliers = Dictionary[int, float]({
 0: 0.9,
 1: 1.5,

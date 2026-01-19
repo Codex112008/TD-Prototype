@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="1_5qk4f"]
 [ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="2_pqs5d"]
-[ext_resource type="Texture2D" uid="uid://ugkntt4wqhie" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.tres" id="3_fg8ae"]
+[ext_resource type="Texture2D" uid="uid://p74ts7hm8mrc" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileIcon.png" id="3_fg8ae"]
 [ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="4_0qv0o"]
 [ext_resource type="Resource" uid="uid://2ulw61eoy6kc" path="res://Custom Resources/Projectiles/Sword/Saber/SaberProjectileResource.tres" id="5_fg8ae"]
 [ext_resource type="PackedScene" uid="uid://c2bcy2dgu5oty" path="res://Custom Resources/Projectiles/Sword/SwordFiles/SwordProjectileScene.tscn" id="5_ipf4s"]

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://croqqcst581a" path="res://Scripts/TowerCreation/ModifierSelector.cs" id="1_5ushg"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="1_t4dkk"]
 
-[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("CostLabel", "ItemLabel", "ItemList", "SelectedItemButton")]
+[node name="ModifierSelector" type="VBoxContainer" node_paths=PackedStringArray("CostLabel", "ItemLabel", "ItemList", "SelectedItemTextureButton")]
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_t4dkk")
@@ -11,7 +11,7 @@ script = ExtResource("1_5ushg")
 CostLabel = NodePath("HBoxContainer/CostLabel")
 ItemLabel = NodePath("HBoxContainer/RichTextLabel")
 ItemList = NodePath("ModifierList")
-SelectedItemButton = NodePath("HBoxContainer/TextureButton")
+SelectedItemTextureButton = NodePath("HBoxContainer/TextureButton")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

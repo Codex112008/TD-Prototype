@@ -241,7 +241,7 @@ public abstract partial class Tower : Sprite2D
     }
 
     // Calculates the stats of the tower after multipliers from effect and projectile
-    public Dictionary<TowerStat, float> GetFinalTowerStats()
+    public virtual Dictionary<TowerStat, float> GetFinalTowerStats()
     {
         Dictionary<TowerStat, float> finalTowerStats = [];
         foreach ((TowerStat stat, int value) in BaseTowerStats)

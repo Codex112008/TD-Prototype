@@ -1,7 +1,0 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://clir5dkr5jeiq"]
-
-[ext_resource type="Texture2D" uid="uid://dydptgorywst4" path="res://Sprites/steel-weapons.png" id="1_7ox4e"]
-
-[resource]
-atlas = ExtResource("1_7ox4e")
-region = Rect2(48, 0, 16, 16)

@@ -220,7 +220,7 @@ public partial class TowerCreatorController : Node2D
 					effects.Add(effect);
 
 				modifierPicker.CostLabel.Text = towerComponent.ResourceName/*"Cost: " + towerComponent.PointCost*/;
-				modifierPicker.SelectedItemButton.TooltipText = towerComponent.Tooltip;
+				modifierPicker.SelectedItemTextureButton.TooltipText = towerComponent.Tooltip;
 			}
 		}
 		_towerToCreatePreview.SetEffects(effects);
@@ -427,7 +427,7 @@ public partial class TowerCreatorController : Node2D
 	private void InstantiateTowerPreview(PackedScene towerType, bool addToScene = true)
 	{
 		_towerToCreatePreview = towerType.Instantiate<Tower>();
-		_towerSelector.SelectedItemButton.TooltipText = _towerToCreatePreview.Tooltip;
+		_towerSelector.SelectedItemTextureButton.TooltipText = _towerToCreatePreview.Tooltip;
 		_towerToCreatePreview.GlobalPosition = new Vector2I(14, 6) * PathfindingManager.instance.TileSize;
 		_towerToCreatePreview.RangeAlwaysVisible = true;
 		if (addToScene)
