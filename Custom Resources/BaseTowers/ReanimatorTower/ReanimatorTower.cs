@@ -40,10 +40,7 @@ public partial class ReanimatorTower : Tower
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
-                if (_graveParent.GetChildren().Any(child => child is Node2D node && VectorInRange(node.GlobalPosition)))
-                    _target = _graveParent.GetChildren().First(child => child is Node2D node && VectorInRange(node.GlobalPosition)) as CharacterBody2D;
-                else
-                    _target = null;
+                _target = _graveParent.GetChildren().FirstOrDefault(child => child is Node2D node && VectorInRange(node.GlobalPosition) && node.IsInGroup("Enemy")) as CharacterBody2D;
 
                 if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
                 {

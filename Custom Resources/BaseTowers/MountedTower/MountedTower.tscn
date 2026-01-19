@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dcscpx7p5hw7p"]
+
+[ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_eeteq"]
+
+[node name="MountedTower" type="Sprite2D" groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_eeteq")
+centered = false

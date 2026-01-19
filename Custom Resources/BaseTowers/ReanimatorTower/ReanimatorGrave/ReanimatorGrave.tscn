@@ -8,9 +8,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6qdrg"]
 size = Vector2(8, 10)
 
-[node name="ReanimatorGrave" type="CharacterBody2D" groups=["Enemy"]]
+[node name="ReanimatorGrave" type="CharacterBody2D" node_paths=PackedStringArray("collider")]
 collision_mask = 0
 script = ExtResource("1_6qdrg")
+collider = NodePath("CollisionShape2D")
 Effects = Dictionary[int, Array]({
 1: [ExtResource("2_0jnoj")]
 })
@@ -21,15 +22,16 @@ _baseEnemyStats = Dictionary[int, int]({
 3: 0,
 4: 1
 })
+_damageNumberScene = ExtResource("3_petqa")
 _acceleration = 0.0
 _deceleration = 0.0
-_damageNumberScene = ExtResource("3_petqa")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_g7w7c")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_6qdrg")
+disabled = true
 
 [node name="MaxHp" type="RichTextLabel" parent="."]
 offset_left = -3.0

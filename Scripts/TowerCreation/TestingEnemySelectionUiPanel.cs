@@ -14,7 +14,7 @@ public partial class TestingEnemySelectionUiPanel : PanelContainer
 		{
 			Button button = new()
 			{
-				Text = Utils.SplitIntoPascalCase(spawnData[i].ResourcePath[(spawnData[i].ResourcePath.LastIndexOf("Enemies/") + 8)..spawnData[i].ResourcePath.LastIndexOf('/')])
+				Text = Utils.SplitPascalCase(spawnData[i].ResourcePath[(spawnData[i].ResourcePath.LastIndexOf("Enemies/") + 8)..spawnData[i].ResourcePath.LastIndexOf('/')])
 			};
 			int index = i;
 			button.Connect(BaseButton.SignalName.Pressed, Callable.From(() => ChangeSelectedEnemy(index)));

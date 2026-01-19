@@ -2,15 +2,13 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public partial class DroneProjectileBehaviour : CharacterBody2D
+public partial class DroneProjectileBehaviour : PathfindingEntity
 {
 	[Export] private Sprite2D _sprite;
 	[Export] private float _friction;
 	
 	public Dictionary<TowerStat, float> Stats; // Has every stat but mostly damage being used
 	public DroneProjectile DroneData;
-	public Array<Vector2> PathArray = null;
-	public Vector2 TargetPos;
 	
 	private float _currentHealth;
 	private bool _landedOnTrack = false;
@@ -31,6 +29,9 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 		VisibleOnScreenNotifier2D notifier = new();
 		AddChild(notifier);
 		notifier.ScreenExited += OnScreenExited;
+
+		_acceleration = DroneData.SummonAcceleration;
+		// Not calling base ready function as path should be calculated after landing on track (techy yippee)
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -48,18 +49,8 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 					PathArray[i] += offset;
 			}
 
-			if (PathArray.Count == 0)
-				QueueFree();
-			else
-			{
-				Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
-				Velocity = Velocity.Lerp(dir.Normalized() * DroneData.SummonSpeed, DroneData.SummonAcceleration *  (float)delta);
-				_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, dir.Angle(), DroneData.SummonAcceleration * (float)delta);
-				Rotation = Mathf.LerpAngle(Rotation, Mathf.Pi / 2f, DroneData.SummonAcceleration * (float)delta);
-
-				if (GlobalPosition.DistanceTo(PathArray[0]) <= DroneData.SummonSpeed / 5f)
-					PathArray.RemoveAt(0);
-			}
+			_speed = DroneData.SummonSpeed;
+			base._PhysicsProcess(delta);
 		}
 		else
 		{
@@ -70,9 +61,9 @@ public partial class DroneProjectileBehaviour : CharacterBody2D
 
 			if (Velocity.IsZeroApprox())
 				_landedOnTrack = true;;
-		}
 
-		MoveAndSlide();
+			MoveAndSlide();
+		}
 	}
 
 	public void OnBodyEntered(Node2D body)

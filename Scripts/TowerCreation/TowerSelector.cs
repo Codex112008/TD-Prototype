@@ -20,7 +20,7 @@ public partial class TowerSelector : Selector
 		foreach (PackedScene type in _towerTypeScenes)
 		{
 			Tower tempTower = type.Instantiate<Tower>();
-			int index = ItemList.AddItem(Utils.SplitIntoPascalCase(type.ResourcePath[(type.ResourcePath.LastIndexOf('/') + 1)..type.ResourcePath.LastIndexOf(".tscn")]), ImageTexture.CreateFromImage(Utils.CreateImageFromSprites(tempTower)));
+			int index = ItemList.AddItem(Utils.SplitPascalCase(type.ResourcePath[(type.ResourcePath.LastIndexOf('/') + 1)..type.ResourcePath.LastIndexOf(".tscn")]), ImageTexture.CreateFromImage(Utils.CreateImageFromSprites(tempTower)));
 			ItemList.SetItemTooltip(index, tempTower.Tooltip);
 			ItemList.SetItemTooltipEnabled(index, true);
 			tempTower.QueueFree();

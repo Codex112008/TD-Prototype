@@ -19,7 +19,7 @@ public partial class TowerUpgradeDisplay : PanelContainer
 		// Sets the name label's text
         _nameLabel.Text = TowerLevel switch
         {
-            0 => Utils.SplitIntoPascalCase((string)TowerToDisplayUpgrade.Name),
+            0 => Utils.SplitPascalCase((string)TowerToDisplayUpgrade.Name),
             _ => "Level " + TowerLevel,
         };
 

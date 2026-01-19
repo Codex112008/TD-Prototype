@@ -4,7 +4,7 @@ using Godot;
 using Godot.Collections;
 
 [GlobalClass]
-public partial class Enemy : CharacterBody2D
+public partial class Enemy : PathfindingEntity
 {
 	[Export] public Dictionary<EnemyEffectTrigger, Array<EnemyEffect>> Effects = [];
 	[Export] private Dictionary<EnemyStat, int> _baseEnemyStats = new()
@@ -15,17 +15,11 @@ public partial class Enemy : CharacterBody2D
 		{EnemyStat.MaxHealth, 8},
 		{EnemyStat.Speed, 30}
 	};
-	[Export] private float _acceleration = 5f;
-	[Export] private float _deceleration = 10f;
-	[Export] private float _offsetMargin = 0.4f;
 	[Export] private PackedScene _damageNumberScene;
 
-	public Vector2 TargetPos;
-	public Array<Vector2> PathArray = [];
 	public Dictionary<EnemyStat, float> CurrentEnemyStats = [];
 	public Array<Timer> TimerEffectTimers = [];
 	public int SpawnedWave = -1;
-	public Sprite2D Sprite;
 	public bool RegisterDeathSignal = true;
 
 	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
@@ -34,7 +28,6 @@ public partial class Enemy : CharacterBody2D
 	
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
 	private float _currentHealth;
-	private RandomNumberGenerator _rand = new();
 	private bool _showMaxHp = true;
 
 	public override void _Ready()
@@ -99,42 +92,15 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
-		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
-		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f), _rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f));
-		for (int i = 1; i < PathArray.Count - 1; i++)
-			PathArray[i] += offset;
+		base._Ready();
 	}
 
-	public override void _Process(double delta)
-	{
-		if (PathArray.Count > 1)
-		{
-			MoveToNextPathPoint((float)delta);
+    public override void _PhysicsProcess(double delta)
+    {
+		_speed = CurrentEnemyStats[EnemyStat.Speed];
 
-			if (GlobalPosition.DistanceTo(PathArray[0]) <= CurrentEnemyStats[EnemyStat.Speed] / 5f)
-				PathArray.RemoveAt(0);
-		}
-		else if (PathArray.Count == 1)
-		{
-			// Slow down as reaching goal (looks cool and copying infinitode lmao)
-			MoveToNextPathPoint((float)delta, Mathf.Lerp(0.4f, 1f, Mathf.Clamp(GlobalPosition.DistanceTo(PathArray[0]) / 16f, 0f, 1f)));
-
-			if (GlobalPosition.DistanceTo(PathArray[0]) <= 0.5f)
-			{
-				if (BuildingManager.instance.IsInsideTree())
-					BuildingManager.instance.TakeDamage(Mathf.FloorToInt(CurrentEnemyStats[EnemyStat.Damage]));
-				QueueFree();
-			}
-		}
-		else
-		{
-			Velocity = Velocity.Lerp(Vector2.Zero, _deceleration * (float)delta);
-		}
-
-		if (IsInsideTree())
-			MoveAndSlide();
-	}
+        base._PhysicsProcess(delta);
+    }
 
 	// Returns Damage Dealt
 	public virtual float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
@@ -221,14 +187,6 @@ public partial class Enemy : CharacterBody2D
 	public float GetCurrentHealth()
 	{
 		return _currentHealth;
-	}
-
-	protected virtual void MoveToNextPathPoint(float delta, float speedMult = 1f)
-	{
-		Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
-
-		Velocity = Velocity.Lerp(dir.Normalized() * CurrentEnemyStats[EnemyStat.Speed] * speedMult, _acceleration * delta);
-		Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), _acceleration * delta);
 	}
 
 	protected virtual void Die()

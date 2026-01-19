@@ -2,7 +2,7 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
 using static Godot.Image;
 
 public partial class Utils : Node
@@ -28,18 +28,27 @@ public partial class Utils : Node
 		dirAccess.Remove(directory);
 	}
 
-	// TODO: maybe move this to some util class // Update: yeah i moved it yay
-	[GeneratedRegex("(?<!^)([A-Z])")]
-	private static partial Regex PascalSplitRegex();
-	private static readonly Regex sPascalCase = PascalSplitRegex();
-	public static string SplitIntoPascalCase(string input)
+	public static string SplitPascalCase(string input)
 	{
-		// Inserts a space before each uppercase letter that is not the first character.
-		// The pattern ensures that a space is inserted only if the uppercase letter
-		// is preceded by a lowercase letter or another uppercase letter that is
-		// part of an acronym (e.g., "GPSData" becomes "GPS Data").
-		// IDFK how this works
-		return sPascalCase.Replace(input, " $1").Trim();
+		if (string.IsNullOrEmpty(input) || !input.Any(char.IsUpper))
+			return input;
+		
+		var result = new StringBuilder();
+		result.Append(input[0]);
+		// Loop to from second to second last character as if first or last character is uppercase we dont want to add a space
+		for (int i = 1; i < input.Length - 1; i++) 
+		{
+			char current = input[i];
+			char previous = input[i - 1];
+			
+			if (char.IsUpper(current) && previous != ' ') // If current character is uppercase then add a spacebar
+				result.Append(' ');
+
+			result.Append(current);
+		}
+		result.Append(input[^1]);
+		
+		return result.ToString();
 	}
 
 	public static string RemoveWhitespaces(string input)

@@ -67,11 +67,11 @@ public partial class TowerCreatorController : Node2D
 
 		// Gets the name editor and defaults it to the base scene name (if existing tower uses that name asw)
 		_towerNameInput = _towerCreatorUI.GetChild<LineEdit>(1);
-		_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerToCreatePreview.Name);
+		_towerNameInput.Text = Utils.SplitPascalCase(_towerToCreatePreview.Name);
 		if (_isUpgrading) // Cant change name if its an upgraded tower
 		{
 			_towerNameInput.Editable = false;
-			_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerToCreatePreview.TowerName);
+			_towerNameInput.Text = Utils.SplitPascalCase(_towerToCreatePreview.TowerName);
 		}
 
 		// Sets default color
@@ -171,8 +171,8 @@ public partial class TowerCreatorController : Node2D
 		bool newTowerType = false;
 		if (_towerToCreatePreview.GetType().Name != _towerSelector.SelectedTowerTypeName())
 		{
-			if (_towerNameInput.Text == Utils.SplitIntoPascalCase(_towerToCreatePreview.GetType().Name))
-				_towerNameInput.Text = Utils.SplitIntoPascalCase(_towerSelector.SelectedTowerTypeName());
+			if (_towerNameInput.Text == Utils.SplitPascalCase(_towerToCreatePreview.GetType().Name))
+				_towerNameInput.Text = Utils.SplitPascalCase(_towerSelector.SelectedTowerTypeName());
 
 			_towerToCreatePreview.QueueFree();
 			InstantiateTowerPreview(_towerSelector.SelectedTowerType, false);
@@ -418,7 +418,7 @@ public partial class TowerCreatorController : Node2D
 	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
 	{
 		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
-		statPicker.StatLabel.Text = Utils.SplitIntoPascalCase(statSelectorLabelName);
+		statPicker.StatLabel.Text = Utils.SplitPascalCase(statSelectorLabelName);
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;
