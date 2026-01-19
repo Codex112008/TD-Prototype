@@ -21,7 +21,7 @@ public partial class StatusPulseEffect : EnemyEffect
         statusPulse.Status = _status;
         statusPulse.Stacks = _stacks;
         statusPulse.Range = _range;
-        EnemyManager.instance.EnemyParent.AddChild(statusPulse);
-        statusPulse.GlobalPosition = enemy.GlobalPosition;
+        EnemyManager.instance.EnemyParent.CallDeferred(Node.MethodName.AddChild, statusPulse);
+        statusPulse.Position = enemy.GlobalPosition;
     }
 }

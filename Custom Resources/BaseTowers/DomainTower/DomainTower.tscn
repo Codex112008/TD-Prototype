@@ -1,19 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://tmbqjvjqq1dq"]
+[gd_scene load_steps=7 format=3 uid="uid://tmbqjvjqq1dq"]
 
 [ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_ink6x"]
 [ext_resource type="Script" uid="uid://d0rotchiyvded" path="res://Custom Resources/BaseTowers/DomainTower/DomainTower.cs" id="2_067wo"]
 [ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_hodwm"]
 [ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_m3f8p"]
 [ext_resource type="Resource" uid="uid://diabts3pmdc7t" path="res://Custom Resources/Projectiles/Bullet/BulletFiles/BulletProjectileResource.tres" id="5_5wwdw"]
+[ext_resource type="Texture2D" uid="uid://b7245hmknhl5" path="res://Custom Resources/BaseTowers/DomainTower/DomainTowerHead.png" id="6_n75ac"]
 
-[node name="DomainTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "SpritesForIcon") groups=["Persist"]]
+[node name="DomainTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
 z_index = 1
 texture = ExtResource("1_ink6x")
 centered = false
 script = ExtResource("2_067wo")
 _firePoint = NodePath("Marker2D")
 _projectileSpawnRadius = 20.0
-SpritesForIcon = [NodePath(".")]
+SpritesForIcon = [NodePath("."), NodePath("TowerHead")]
+SpritesToColor = [NodePath("TowerHead")]
 Tooltip = "Shoots projectiles at target from arouond it (idk how to explain just try it)
 Very expensive damage
 Very cheap firerate"
@@ -23,3 +25,8 @@ Projectile = ExtResource("5_5wwdw")
 
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="."]
+self_modulate = Color(0.886275, 0.14902, 0.305882, 1)
+texture = ExtResource("6_n75ac")
+centered = false

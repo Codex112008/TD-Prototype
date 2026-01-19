@@ -8,12 +8,10 @@ public partial class ReanimatorGraveBehaviour : Enemy
 	public Dictionary<EnemyStat, float> StoredEnemyStats = [];
 	public Texture2D StoredEnemyTexture;
 
-    protected override void Die()
+    public override void _Ready()
     {
-        _isDead = true;
+        base._Ready();
 
-		TriggerEffects(EnemyEffectTrigger.OnDeath);
-
-		QueueFree();
+		RegisterDeathSignal = false;
     }
 }

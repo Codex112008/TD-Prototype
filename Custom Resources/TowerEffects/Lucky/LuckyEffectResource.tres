@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://pqky0mdr3aw2"]
+
+[ext_resource type="Texture2D" uid="uid://etcfumjgdfcc" path="res://Custom Resources/TowerEffects/Lucky/LuckyEffectIcon.png" id="1_m5qy5"]
+[ext_resource type="Script" uid="uid://bq5qwmse6y6rh" path="res://Custom Resources/TowerEffects/Lucky/LuckyEffect.cs" id="2_0jp7u"]
+
+[resource]
+resource_name = "Lucky"
+script = ExtResource("2_0jp7u")
+DamageType = 0
+Tooltip = "Has a chance per shot to get some money and deal 2x damage! Normal shots do 0.7x damage
+(Lucky shot chance calculated by firerate, inverse relationship)"
+Icon = ExtResource("1_m5qy5")
+StatMultipliers = Dictionary[int, float]({
+0: 1.1,
+1: 1.0,
+2: 1.0,
+3: 1.0
+})
+PointCost = 100

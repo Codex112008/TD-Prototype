@@ -26,6 +26,7 @@ public partial class Enemy : CharacterBody2D
 	public Array<Timer> TimerEffectTimers = [];
 	public int SpawnedWave = -1;
 	public Sprite2D Sprite;
+	public bool RegisterDeathSignal = true;
 
 	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	protected Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
@@ -235,7 +236,8 @@ public partial class Enemy : CharacterBody2D
 		_isDead = true;
 
 		TriggerEffects(EnemyEffectTrigger.OnDeath);
-		EnemyManager.instance.EmitSignal(EnemyManager.SignalName.EnemyDied, this);
+		if (RegisterDeathSignal)
+			EnemyManager.instance.EmitSignal(EnemyManager.SignalName.EnemyDied, this);
 
 		QueueFree();
 	}

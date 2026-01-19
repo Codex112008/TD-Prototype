@@ -51,7 +51,7 @@ public partial class RemnantBehaviour : CharacterBody2D
 		else
 		{
 			Vector2 dir = GlobalPosition.DirectionTo(PathArray[0]);
-			Velocity = Velocity.Lerp(dir.Normalized() * Speed * 0.5f, Acceleration *  (float)delta);
+			Velocity = Velocity.Lerp(dir.Normalized() * Mathf.Max(Speed * 0.5f, 10f), Acceleration *  (float)delta);
 			Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), Acceleration * (float)delta);
 			Rotation = Mathf.LerpAngle(Rotation, Mathf.Pi / 2f, Acceleration * (float)delta);
 
@@ -86,6 +86,8 @@ public partial class RemnantBehaviour : CharacterBody2D
 			_currentHealth = Mathf.Max(_currentHealth - enemy.GetCurrentHealth(), 0);
 
 			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + MaxHealth;
+
+			enemy.RegisterDeathSignal = false;
 
 			foreach (TowerEffect effect in Tower.Projectile.Effects)
 				effect.ApplyEffect(statsToUse, enemy);
