@@ -7,7 +7,7 @@ public static class StatusEffectsData
 	private static readonly Dictionary<StatusEffect, float> _statusEffectDecayCooldowns = new()
 	{
 		{StatusEffect.Chill, 0.6f},
-		{StatusEffect.Stun, 0.025f},
+		{StatusEffect.Stun, 0.1f},
 		{StatusEffect.Poison, 10f},
 		{StatusEffect.Regen, 3f},
 		{StatusEffect.Reinforcement, 1f},
@@ -18,7 +18,7 @@ public static class StatusEffectsData
 	private static readonly Dictionary<StatusEffect, float> _statusEffectThresholds = new()
 	{
 		{StatusEffect.Chill, 10f},
-		{StatusEffect.Stun, 50f},
+		{StatusEffect.Stun, 20f},
 	};
 
 	private static readonly Dictionary<StatusEffect, float> _tickingStatusEffects = new()
@@ -65,7 +65,7 @@ public static class StatusEffectsData
 				if (enemy.Modulate == new Color(0.17f, 1f, 1f, 1f))
 					enemy.SetStatusEffectValue(StatusEffect.Chill, 0);
 
-				if (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Chill) >= GeStatusEffectThreshold(StatusEffect.Chill))
+				if (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Chill) >= GetStatusEffectThreshold(StatusEffect.Chill))
 				{
 					enemy.AddStatusEffectStacks(StatusEffect.Stun, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Chill));
 					
@@ -86,7 +86,8 @@ public static class StatusEffectsData
 		},
 		{StatusEffect.Stun, Callable.From((Enemy enemy) => // Effects that run on the timer pause while stunned, like summoning enemies
 			{	
-				if (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Stun) > 0)
+				float stunAmount = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Stun);
+				if (stunAmount > 0)
 				{
 					foreach (Timer timer in enemy.TimerEffectTimers)
 					{
@@ -116,13 +117,13 @@ public static class StatusEffectsData
 		{StatusEffect.Burn, Callable.From((Enemy enemy) =>
 			{
 				float burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn) * 0.75f;
-				enemy.TakeDamage(burnToConsume * 0.07f, DamageType.Burn, false);
+				enemy.TakeDamage(burnToConsume * 0.07f, DamageType.Burn, true);
 				enemy.AddStatusEffectStacks(StatusEffect.Burn, -burnToConsume);
 
 				if (burnToConsume > 50)
 				{
 					burnToConsume = enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Burn);
-					enemy.TakeDamage(burnToConsume * 0.15f, DamageType.Burn, false);
+					enemy.TakeDamage(burnToConsume * 0.15f, DamageType.Burn, true);
 					enemy.AddStatusEffectStacks(StatusEffect.Burn, -burnToConsume);;
 				}
 			})
@@ -135,7 +136,8 @@ public static class StatusEffectsData
 		},
 		{StatusEffect.Bleed, Callable.From((Enemy enemy) => 
 			{ // Does more damage based on the speed of enemy
-				enemy.TakeDamage(((2.8f * (float)Math.Log10(enemy.CurrentEnemyStats[EnemyStat.Speed] + 12.1f)) - 3.031799f) * (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Bleed) * 0.75f), DamageType.Physical, false);
+				enemy.TakeDamage(((2.8f * (float)Math.Log10(enemy.CurrentEnemyStats[EnemyStat.Speed] + 12.1f)) - 3.031799f) * (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Bleed) * 0.5f), DamageType.Physical, false);
+				enemy.AddStatusEffectStacks(StatusEffect.Bleed, (100f / enemy.CurrentEnemyStats[EnemyStat.Speed]) + 1);
 			})
 		},
 	};
@@ -145,7 +147,7 @@ public static class StatusEffectsData
 		return _statusEffectDecayCooldowns[status];
 	}
 
-	public static float GeStatusEffectThreshold(StatusEffect status)
+	public static float GetStatusEffectThreshold(StatusEffect status)
 	{
 		return _statusEffectThresholds[status];
 	}

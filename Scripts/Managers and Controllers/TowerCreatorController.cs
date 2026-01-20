@@ -114,6 +114,7 @@ public partial class TowerCreatorController : Node2D
 					if (_isUpgrading)
 						statPickerSpinBox.MinValue = 50;
 					statPickerSpinBox.Editable = false;
+					statPickerSpinBox.Visible = false;
 					break;
 				case TowerStat.Range:
 					statPickerSpinBox.Step = 5;
@@ -198,7 +199,7 @@ public partial class TowerCreatorController : Node2D
 			if (pickerNodeType is StatSelector statSelector)
 			{
 				// Updates stat picker text and sets it on the preview
-				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text));
+				TowerStat stat = (TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text[..^1]));
 				UpdateTowerPreviewStat(statSelector, stat);
 				if (stat == TowerStat.Cost)
 					costSelector = statSelector;
@@ -242,11 +243,11 @@ public partial class TowerCreatorController : Node2D
 		{
 			costSelector.StatSpinBox.Value = CalculateCurrentTotalPointsAllocated();
 			UpdateTowerPreviewStat(costSelector, TowerStat.Cost);
-			costSelector.CostLabel.Text = "($" + _towerToCreatePreview.GetFinalTowerStats()[TowerStat.Cost] + ")";
+			costSelector.CostLabel.Text = "$" + _towerToCreatePreview.GetFinalTowerStats()[TowerStat.Cost];
 		}
 
 		foreach (StatSelector statSelector in otherStatSelectors)
-			statSelector.CostLabel.Text = "(" + _towerToCreatePreview.GetFinalTowerStats()[(TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text))] + ")";
+			statSelector.CostLabel.Text = "(" + _towerToCreatePreview.GetFinalTowerStats()[(TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text[..^1]))] + ")";
 
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)
@@ -269,7 +270,7 @@ public partial class TowerCreatorController : Node2D
 		else
 			_towerToCreatePreview.BaseTowerStats[stat] = Mathf.RoundToInt(statSelector.StatSpinBox.Value);
 
-		int pointCost = CalculatePointCostForStat(stat);
+		// int pointCost = CalculatePointCostForStat(stat);
 		// if (stat != TowerStat.Cost)
 		//	statSelector.CostLabel.Text = "(" + _towerToCreatePreview.GetFinalTowerStats()[stat] + ")";
 		// else
@@ -418,7 +419,7 @@ public partial class TowerCreatorController : Node2D
 	private StatSelector InstantiateStatSelector(string statSelectorLabelName)
 	{
 		StatSelector statPicker = _statPickerScene.Instantiate<StatSelector>();
-		statPicker.StatLabel.Text = Utils.SplitPascalCase(statSelectorLabelName);
+		statPicker.StatLabel.Text = Utils.SplitPascalCase(statSelectorLabelName) + ':';
 		_towerCreatorUI.AddChild(statPicker);
 
 		return statPicker;

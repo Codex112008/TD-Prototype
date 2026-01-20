@@ -38,7 +38,8 @@ public partial class PauseMenu : PanelContainer
 
 	public void ReturnToMainMenu()
 	{
-		if (GetTree().GetNodesInGroup("Enemy").Count == 0)
+		Engine.TimeScale = 1f;
+		if (GetTree().GetNodesInGroup("Enemy").Count == 0 && EnemyManager.instance.CurrentWave > 0)
 			RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();
 		GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainScenes/MainMenu.tscn"));

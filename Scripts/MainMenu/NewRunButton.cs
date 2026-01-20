@@ -10,6 +10,7 @@ public partial class NewRunButton : Button
 	{
 		DeleteExistingSave();
 
+		PathfindingManager.instance = null;
 		GetTree().ChangeSceneToFile(_runControllerScene.ResourcePath);
 	}
 

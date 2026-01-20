@@ -9,10 +9,13 @@ public partial class DamageNumber : Node2D
 	public DamageType DamageTypeDealt = DamageType.Physical;
 
 	private Tween _tween;
+	private float _offset = 0;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		RandomNumberGenerator rand = new();
+		_offset = rand.RandfRange(-35f, 35f);
 		_numberLabel.Position -= _numberLabel.Size / 2;
 		_numberLabel.Text = DamageValue.ToString();
 
@@ -29,6 +32,7 @@ public partial class DamageNumber : Node2D
 			0.0, 1.0, 1.5f
 		);
 		_tween.SetParallel();
+		_tween.TweenProperty(this, "position:x", Position.X + _offset, 1.5f);
 		if (Scale != Vector2.One * 0.25f)
 			_tween.TweenProperty(this, "scale", Vector2.One * 0.25f, 1f);
 		_tween.TweenProperty(this, "modulate", Colors.Transparent, 0.25f).SetDelay(0.1f);

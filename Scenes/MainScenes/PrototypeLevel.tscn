@@ -14,5 +14,3 @@ tile_set = ExtResource("5_s0kwr")
 position = Vector2(41, 41)
 
 [node name="TileHighlight" parent="LevelTilemap" instance=ExtResource("6_bx147")]
-position = Vector2(126, 301)
-offset = Vector2(-126, -301)

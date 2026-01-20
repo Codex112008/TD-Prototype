@@ -140,12 +140,11 @@ public partial class Enemy : PathfindingEntity
 	public virtual void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
 	{
 		// If status effect applied start decay timer of it if timer exists
-		if (!decay && _currentStatusEffects[status] <= 0f && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
+		if (!decay && statusStacks > 0f && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
             decayTimer.Start();
 
 		// Apply status effects stacks
-		_currentStatusEffects[status] += statusStacks;
-		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status], 0);
+		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status] + statusStacks, 0);
 
 		// If decayed but stacks sill above 0 then restart timer until it reaches 0
 		if (decay && _currentStatusEffects[status] > 0)
@@ -253,7 +252,7 @@ public partial class Enemy : PathfindingEntity
 		damageNumber.DamageValue = Mathf.Round(damageDealt * 100) / 100;
 		damageNumber.DamageTypeDealt = damageType;
 		damageNumber.GlobalPosition = GlobalPosition + new Vector2(_rand.RandfRange(-5f, 5f), _rand.RandfRange(-1f, 1f));
-		EnemyManager.instance.EnemyParent.AddChild(damageNumber);
+		AddSibling(damageNumber);
 	}
 
 	protected float DamageAfterArmorPierce(float originalDamage)

@@ -1,0 +1,72 @@
+[gd_scene load_steps=13 format=3 uid="uid://bigicen3r4de2"]
+
+[ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_tg5rf"]
+[ext_resource type="Script" uid="uid://476fij86s3r3" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_58vfe"]
+[ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_3m7im"]
+[ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_iw1um"]
+[ext_resource type="Resource" uid="uid://08kipvbksfmg" path="res://Custom Resources/TowerEffects/Burn/BurnEffectResource.tres" id="6_24nfe"]
+[ext_resource type="Resource" uid="uid://dunae7lk31h0u" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="6_kv1mi"]
+[ext_resource type="Texture2D" uid="uid://durc20cchhsel" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.png" id="8_v0g5c"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="9_sw4se"]
+[ext_resource type="PackedScene" uid="uid://ctho7p1gaayew" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileScene.tscn" id="10_6626v"]
+[ext_resource type="Script" uid="uid://cc81vthf4phhl" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectile.cs" id="11_5qd17"]
+[ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.png" id="12_1keol"]
+
+[sub_resource type="Resource" id="Resource_yttp3"]
+resource_name = "Katana"
+script = ExtResource("11_5qd17")
+WaveMaxSpeed = 600.0
+WaveInitialSpeed = 100.0
+Pierce = 3
+ProjectileScene = ExtResource("10_6626v")
+Effects = [ExtResource("6_kv1mi"), ExtResource("6_24nfe")]
+NextTierProjectiles = Array[ExtResource("9_sw4se")]([])
+RequireEnemy = true
+ProjectileSpeed = 150.0
+Tooltip = "Fires sword waves that pierce but weaken
+Cost 0.9x
+Damage 1.2x
+Firerate 0.7x"
+Icon = ExtResource("8_v0g5c")
+StatMultipliers = Dictionary[int, float]({
+0: 0.9,
+1: 1.5,
+2: 1.0,
+3: 0.7
+})
+PointCost = 75
+
+[node name="BasicTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "_pivotPoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_tg5rf")
+centered = false
+script = ExtResource("2_58vfe")
+_firePoint = NodePath("PivotPoint/FirePoint")
+_pivotPoint = NodePath("PivotPoint")
+_rotateSpeed = 20.0
+BaseTowerStats = Dictionary[int, int]({
+0: 593,
+1: 8,
+2: 60,
+3: 2
+})
+SpritesForIcon = [NodePath("."), NodePath("."), NodePath("."), NodePath("PivotPoint/TowerHead")]
+SpritesToColor = [NodePath("PivotPoint/TowerHead")]
+Tooltip = "Basic tower, nothing special
+(should i turn this into a repeater type tower?)
+Normal stat scaling"
+_rangeOverlayTexture = ExtResource("3_3m7im")
+_towerSelectedUIScene = ExtResource("4_iw1um")
+Projectile = SubResource("Resource_yttp3")
+TowerName = "Basic Tower"
+
+[node name="PivotPoint" type="Marker2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="TowerHead" type="Sprite2D" parent="PivotPoint"]
+self_modulate = Color(0.133333, 0.505882, 1, 1)
+position = Vector2(0, -2)
+texture = ExtResource("12_1keol")
+
+[node name="FirePoint" type="Marker2D" parent="PivotPoint"]
+position = Vector2(0, -6)

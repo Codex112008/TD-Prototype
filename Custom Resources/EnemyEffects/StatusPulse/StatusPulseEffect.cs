@@ -13,7 +13,7 @@ public partial class StatusPulseEffect : EnemyEffect
 
     public override void ApplyEffect(Enemy enemy)
     {
-        enemy.AddStatusEffectStacks(StatusEffect.Stun, _pauseLength * 40);
+        enemy.AddStatusEffectStacks(StatusEffect.Stun, _pauseLength * 10);
 
         StatusPulseBehaviour statusPulse = _pulseScene.Instantiate<StatusPulseBehaviour>();
         statusPulse.PulseCollider.Scale = Vector2.One * _range * PathfindingManager.instance.LevelTilemap.TileSet.TileSize.X / 40f;

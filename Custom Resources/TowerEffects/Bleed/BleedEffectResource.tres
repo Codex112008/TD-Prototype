@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=3 format=3 uid="uid://xfb66bg6v4n0"]
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://dechehegjx1rj"]
 
 [ext_resource type="Texture2D" uid="uid://b8xk3vs8pc83s" path="res://Custom Resources/TowerEffects/Bleed/BleedEffectIcon.png" id="1_ierek"]
 [ext_resource type="Script" uid="uid://dhwyvqcbowk4x" path="res://Custom Resources/TowerEffects/Bleed/BleedEffect.cs" id="2_d16to"]

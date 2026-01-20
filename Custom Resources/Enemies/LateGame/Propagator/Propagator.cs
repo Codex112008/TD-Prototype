@@ -61,7 +61,7 @@ public partial class Propagator : Enemy
 		int carrierCount = Mathf.FloorToInt(_damageCounter / 25f);
 		_damageCounter = 0;
 
-		AddStatusEffectStacks(StatusEffect.Stun, (0.5f + (broodmotherCount * 0.1f) + (carrierCount * 0.05f)) * 40f);
+		AddStatusEffectStacks(StatusEffect.Stun, (0.5f + (broodmotherCount * 0.1f) + (carrierCount * 0.05f)) * 10f);
 
 		Timer timer = new()
 		{

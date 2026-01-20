@@ -23,7 +23,7 @@ public partial class ChainProjectile : Projectile
         return projectile;
     }
 
-    public ChainProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Vector2 firePos, float rotation, Array<Enemy> chainedEnemies)
+    public ChainProjectileBehaviour InstantiateProjectile(Dictionary<TowerStat, float> towerStats, Vector2 firePos, float rotation, Array<Enemy> chainedEnemies, ChainProjectileBehaviour chain)
     {
         ChainProjectileBehaviour projectile = ProjectileScene.Instantiate<ChainProjectileBehaviour>();
         projectile.GlobalPosition = firePos;
@@ -35,7 +35,7 @@ public partial class ChainProjectile : Projectile
         // Colors the line
         projectile.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);
 
-        BuildingManager.instance.InstancedNodesParent.AddChild(projectile);
+        chain.AddSibling(projectile);
 
         return projectile;
     }

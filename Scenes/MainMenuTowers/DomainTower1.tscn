@@ -1,0 +1,65 @@
+[gd_scene load_steps=14 format=3 uid="uid://p1s8brpp5m6b"]
+
+[ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_0n2rq"]
+[ext_resource type="Script" uid="uid://d0rotchiyvded" path="res://Custom Resources/BaseTowers/DomainTower/DomainTower.cs" id="2_xigkq"]
+[ext_resource type="Texture2D" uid="uid://ci77xir3j3ggx" path="res://Sprites/Towers/MiscTowerAssets/RangeOverlay.png" id="3_k8ao8"]
+[ext_resource type="PackedScene" uid="uid://bhtwfd621wes7" path="res://Scenes/Tower/TowerSelectedUI.tscn" id="4_fa3xe"]
+[ext_resource type="Script" uid="uid://c4n71gxadig0q" path="res://Scripts/Abstract Classes/Tower/TowerEffect.cs" id="5_g6sie"]
+[ext_resource type="Resource" uid="uid://yobokgplsuku" path="res://Custom Resources/TowerEffects/Damage/DamageEffectResource.tres" id="6_wvjjk"]
+[ext_resource type="Resource" uid="uid://08kipvbksfmg" path="res://Custom Resources/TowerEffects/Burn/BurnEffectResource.tres" id="7_dy8pi"]
+[ext_resource type="Texture2D" uid="uid://ol24n0xrcsqa" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileIcon.png" id="8_mhyd4"]
+[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="9_mpjbv"]
+[ext_resource type="PackedScene" uid="uid://dfk26pq7sbr5h" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectileScene.tscn" id="10_obcfg"]
+[ext_resource type="Script" uid="uid://buggqv24nqp6a" path="res://Custom Resources/Projectiles/Bullet/Chain/ChainProjectile.cs" id="11_dj7m6"]
+[ext_resource type="Texture2D" uid="uid://b7245hmknhl5" path="res://Custom Resources/BaseTowers/DomainTower/DomainTowerHead.png" id="12_nomqc"]
+
+[sub_resource type="Resource" id="Resource_ap17j"]
+resource_name = "Chain"
+script = ExtResource("11_dj7m6")
+MaxChainDistance = 30.0
+ProjectileScene = ExtResource("10_obcfg")
+Effects = Array[ExtResource("5_g6sie")]([ExtResource("6_wvjjk"), ExtResource("7_dy8pi")])
+NextTierProjectiles = Array[ExtResource("9_mpjbv")]([])
+RequireEnemy = true
+ProjectileSpeed = 99999.0
+Tooltip = "Chains Between Enemies
+Damage 0.5x"
+Icon = ExtResource("8_mhyd4")
+StatMultipliers = Dictionary[int, float]({
+0: 1.0,
+1: 0.5,
+2: 1.0,
+3: 1.0
+})
+PointCost = 125
+
+[node name="DomainTower" type="Sprite2D" node_paths=PackedStringArray("_firePoint", "SpritesForIcon", "SpritesToColor") groups=["Persist"]]
+z_index = 1
+texture = ExtResource("1_0n2rq")
+centered = false
+script = ExtResource("2_xigkq")
+_firePoint = NodePath("Marker2D")
+_projectileSpawnRadius = 20.0
+BaseTowerStats = Dictionary[int, int]({
+0: 459,
+1: 2,
+2: 45,
+3: 5
+})
+SpritesForIcon = [NodePath("."), NodePath("."), NodePath("."), NodePath("TowerHead")]
+SpritesToColor = [NodePath("TowerHead")]
+Tooltip = "Shoots projectiles at target from arouond it (idk how to explain just try it)
+Very expensive damage
+Very cheap firerate"
+_rangeOverlayTexture = ExtResource("3_k8ao8")
+_towerSelectedUIScene = ExtResource("4_fa3xe")
+Projectile = SubResource("Resource_ap17j")
+TowerName = "Domain Tower"
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-49.9462, 57.2801)
+
+[node name="TowerHead" type="Sprite2D" parent="."]
+self_modulate = Color(0.886275, 0.14902, 0.305882, 1)
+texture = ExtResource("12_nomqc")
+centered = false

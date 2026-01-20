@@ -3,6 +3,9 @@ using System;
 
 public partial class ContinueRunButton : Button
 {
+	[Export] private NewRunButton _newRunButton;
+	[Export] private Texture2D _rightArrow;
+
 	[Export] private PackedScene _runControllerScene;
 
 	// Called when the node enters the scene tree for the first time.
@@ -21,11 +24,21 @@ public partial class ContinueRunButton : Button
             DirAccess.MakeDirRecursiveAbsolute(runSaveFilePath);
 
 		if (dirAccessLevel.GetFiles().Length == 0 && dirAccessRun.GetFiles().Length == 0)
+		{
 			Disabled = true;
+			Icon = null;
+			_newRunButton.Icon = _rightArrow;
+		}
+		else
+		{
+			Icon = _rightArrow;
+			_newRunButton.Icon = null;
+		}
 	} 
 	
 	public void OnPressed()
 	{
+		PathfindingManager.instance = null;
 		GetTree().ChangeSceneToFile(_runControllerScene.ResourcePath);
 	}
 }

@@ -39,14 +39,17 @@ public partial class PathfindingManager : Node2D, IManager
 		LevelTilemap = (TileMapLayer)GetTree().GetFirstNodeInGroup("Tilemap");
 		TileSize = LevelTilemap.TileSet.TileSize.X;
 
-		TilemapBuildableData.Clear();
-		Array<Vector2I> towerPositions = [..BuildingManager.instance.TowerParent.GetChildren().Where(child => child is Tower).Select(tower => (Vector2I)((tower as Tower).GlobalPosition / TileSize))];
-		foreach (Vector2I tilePos in LevelTilemap.GetUsedCells())
+		if (IsInstanceValid(BuildingManager.instance))
 		{
-			if (towerPositions.Contains(tilePos))
-				TilemapBuildableData[tilePos] = false;
-			else
-				TilemapBuildableData[tilePos] = (bool)LevelTilemap.GetCellTileData(tilePos).GetCustomData("Buildable");
+			TilemapBuildableData.Clear();
+			Array<Vector2I> towerPositions = [..BuildingManager.instance.TowerParent.GetChildren().Where(child => child is Tower).Select(tower => (Vector2I)((tower as Tower).GlobalPosition / TileSize))];
+			foreach (Vector2I tilePos in LevelTilemap.GetUsedCells())
+			{
+				if (towerPositions.Contains(tilePos))
+					TilemapBuildableData[tilePos] = false;
+				else
+					TilemapBuildableData[tilePos] = (bool)LevelTilemap.GetCellTileData(tilePos).GetCustomData("Buildable");
+			}
 		}
 
 		SetUpAStarGrid();

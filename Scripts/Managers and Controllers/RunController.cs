@@ -48,8 +48,6 @@ public partial class RunController : Node2D
 		DirAccess dirAccess = DirAccess.Open(_levelSaveFilePath);
 		if (dirAccess.GetFiles().Length > 0)
 			LoadLevel();
-		
-		SaveLevel();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

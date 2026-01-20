@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=19 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_r5dbq"]
 [ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/MainScenes/PrototypeLevel.tscn" id="2_ud3b5"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://gtxproojnjj7" path="res://Scenes/Managers/BuildingManager.tscn" id="5_dl6nd"]
 [ext_resource type="PackedScene" uid="uid://dwnfkc6e4143k" path="res://Scenes/Managers/PathfindingManager.tscn" id="6_m4rul"]
 [ext_resource type="PackedScene" uid="uid://ddy77x3qvehc1" path="res://Scenes/Managers/EnemyManager.tscn" id="7_r2f0h"]
-[ext_resource type="PackedScene" uid="uid://cxtrwlefpqdy7" path="res://Scenes/TilemapScenes/DefencePoint.tscn" id="8_mnqak"]
 [ext_resource type="PackedScene" uid="uid://cmgbeg3m83gjq" path="res://Scenes/Managers/RNGManager.tscn" id="9_1phdm"]
 [ext_resource type="Texture2D" uid="uid://buy2sc8pcjfcx" path="res://Sprites/Tilemap/New Piskel.png" id="10_gf1ev"]
 
@@ -171,7 +170,6 @@ TowerParent = NodePath("../../Towers")
 [node name="PathfindingManager" parent="Managers" instance=ExtResource("6_m4rul")]
 
 [node name="EnemyManager" parent="Managers" node_paths=PackedStringArray("EnemyParent") instance=ExtResource("7_r2f0h")]
-_baseScene = ExtResource("8_mnqak")
 EnemyParent = NodePath("../../Enemies")
 
 [node name="RngManager" parent="Managers" instance=ExtResource("9_1phdm")]
