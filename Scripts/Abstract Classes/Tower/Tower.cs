@@ -60,11 +60,12 @@ public abstract partial class Tower : Sprite2D
     public float SellPercentage = 0.8f;
     public Node InstancedProjectiles;
     public TowerTargeting CurrentTargeting;
+    public int TotalMoneySpent;
+    public int TowerLevel;
 
     private Sprite2D _rangeOverlay;
     private TowerSelectedUI _selectedUI;
     private bool _inDisrepair = false;
-    public int TowerLevel;
 
     public override void _Ready()
     {
@@ -88,7 +89,7 @@ public abstract partial class Tower : Sprite2D
         Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
         if (DoesUpgradeExist())
         { 
-            Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
+            Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.ReplaceDeep).Instantiate<Tower>();
             _selectedUI.UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]);
             upgradedTower.QueueFree();
         }
@@ -115,7 +116,7 @@ public abstract partial class Tower : Sprite2D
         if (_inDisrepair)
             Modulate = new Color("#393f47");
 
-        if (!_inDisrepair && !FileAccess.FileExists(SceneFilePath) && !RangeAlwaysVisible)
+        if (!_inDisrepair && !ResourceLoader.Exists(SceneFilePath) && !RangeAlwaysVisible)
             _inDisrepair = true;
 
         if (PathfindingManager.instance.GetMouseGlobalTilemapPos() == (Vector2I)GlobalPosition || RangeAlwaysVisible || IsBuildingPreview || SelectedTower == this)
@@ -270,10 +271,11 @@ public abstract partial class Tower : Sprite2D
             {
                 // Spawn upgraded tower
                 Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(SceneFilePath[..SceneFilePath.LastIndexOf('.')]);
-                Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
+                Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.ReplaceDeep).Instantiate<Tower>();
                 if (Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]) <= BuildingManager.instance.PlayerCurrency)
                 {
                     upgradedTower.GlobalPosition = GlobalPosition;
+                    upgradedTower.TotalMoneySpent = TotalMoneySpent + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]);
                     BuildingManager.instance.TowerParent.AddChild(upgradedTower);
 
                     // Deduct player currency by difference in cost stats
@@ -298,14 +300,19 @@ public abstract partial class Tower : Sprite2D
     {
         if (!_inDisrepair)
         {
-            // Give back some amount of money
-            BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(GetFinalTowerStats()[TowerStat.Cost] * SellPercentage));
+            if (IsInstanceValid(BuildingManager.instance) && IsInstanceValid(PathfindingManager.instance) && PathfindingManager.instance.TilemapBuildableData.ContainsKey((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize)))
+            {
+                // Give back some amount of money
+                BuildingManager.instance.AddPlayerCurrency(Mathf.FloorToInt(TotalMoneySpent * SellPercentage));
 
-            // Make tile buildable again
-            PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize)] = true;
+                // Make tile buildable again
+                PathfindingManager.instance.TilemapBuildableData[(Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize)] = true;
 
-            // Delete current tower
-            QueueFree();
+                // Delete current tower
+                QueueFree();
+            }
+            else
+                GD.PrintErr("Something is null when selling!");
         }
     }
 

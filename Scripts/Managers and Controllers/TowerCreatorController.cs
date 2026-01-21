@@ -112,9 +112,9 @@ public partial class TowerCreatorController : Node2D
 			switch (stat)
 			{
 				case TowerStat.Cost:
-					statPickerSpinBox.MaxValue = 1000 * Mathf.RoundToInt(Mathf.Pow(10, _towerLevel));
+					statPickerSpinBox.MaxValue = 1000 + 750 * (_towerLevel + 1);
 					if (_isUpgrading)
-						statPickerSpinBox.MinValue = 50;
+						statPickerSpinBox.MinValue = 50 * (_towerLevel + 1);
 					statPickerSpinBox.Editable = false;
 					statPickerSpinBox.Visible = false;
 					break;

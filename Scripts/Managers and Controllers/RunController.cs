@@ -221,7 +221,7 @@ public partial class RunController : Node2D
 		foreach (Tower nodeToSave in nodesToSave)
 		{
 			// Check the node is an instanced scene so it can be instanced again during load.
-			if (string.IsNullOrEmpty((nodeToSave as Node2D).SceneFilePath))
+			if (string.IsNullOrEmpty(nodeToSave.SceneFilePath))
 				continue;
 
 			// Check if any towers are building previews and skip them
@@ -229,6 +229,7 @@ public partial class RunController : Node2D
 				continue;
 
 			Dictionary<string, Variant> saveData = nodeToSave.SavePosition();
+			saveData.Add("TotalSpent", nodeToSave.TotalMoneySpent);
 			string jsonString = Json.Stringify(saveData);
 			saveFile.StoreLine(jsonString);
 		}
@@ -290,6 +291,8 @@ public partial class RunController : Node2D
 					Dictionary<string, Variant> nodeData = (Dictionary<string, Variant>)json.Data;
 					PackedScene nodeScene = GD.Load<PackedScene>(nodeData["SceneFilePath"].ToString());
 					Tower instancedNode = nodeScene.Instantiate<Tower>();
+					if (nodeData.TryGetValue("TotalSpent", out Variant value))
+						instancedNode.TotalMoneySpent = (int)value;
 					instancedNode.LoadPosition(nodeData);
 					GetNode(nodeData["Parent"].ToString()).AddChild((Node)instancedNode);
 					break;

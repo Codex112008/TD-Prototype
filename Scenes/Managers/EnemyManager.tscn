@@ -1,8 +1,9 @@
-[gd_scene load_steps=30 format=3 uid="uid://ddy77x3qvehc1"]
+[gd_scene load_steps=31 format=3 uid="uid://ddy77x3qvehc1"]
 
 [ext_resource type="Script" uid="uid://bei0brc0kpndl" path="res://Scripts/Managers and Controllers/EnemyManager.cs" id="1_1ax1c"]
 [ext_resource type="PackedScene" uid="uid://cxtrwlefpqdy7" path="res://Scenes/TilemapScenes/DefencePoint.tscn" id="2_bc3wf"]
 [ext_resource type="Theme" uid="uid://dau7t85gbci6u" path="res://UIStuff/TowerCreatorUITheme.tres" id="2_iwexs"]
+[ext_resource type="Script" uid="uid://dc61pm1c2pe7p" path="res://Scripts/Enemy/EnemySpawnData.cs" id="2_uhogm"]
 [ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/EarlyGame/BasicEnemy/BasicEnemySpawnData.tres" id="3_417ac"]
 [ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/EarlyGame/FastEnemy/FastEnemySpawnData.tres" id="4_4ksl0"]
 [ext_resource type="Resource" uid="uid://dwm2npydja82i" path="res://Custom Resources/Enemies/EarlyGame/StrongEnemy/StrongEnemySpawnData.tres" id="5_417ac"]
@@ -41,7 +42,7 @@ _spawnTimer = NodePath("SpawnTimer")
 _waveButtonContainer = NodePath("UI/WaveButtonContainer")
 _baseScene = ExtResource("2_bc3wf")
 TowerSlotUnlockWave = Array[int]([5, 10, 25, 50])
-EnemiesToSpawnData = [ExtResource("3_417ac"), ExtResource("4_4ksl0"), ExtResource("5_417ac"), ExtResource("6_4ksl0"), ExtResource("7_ar3hy"), ExtResource("8_l0d00"), ExtResource("9_v5hyt"), ExtResource("8_ew2q4"), ExtResource("10_1xfnc"), ExtResource("12_l0d00"), ExtResource("8_1nywq"), ExtResource("13_v5hyt"), ExtResource("15_7wjuo"), ExtResource("14_dh13m"), ExtResource("9_ew2q4"), ExtResource("17_7forj"), ExtResource("17_iy27c"), ExtResource("19_7wjuo"), ExtResource("18_iy27c"), ExtResource("21_ej3b2")]
+EnemiesToSpawnData = Array[ExtResource("2_uhogm")]([ExtResource("3_417ac"), ExtResource("4_4ksl0"), ExtResource("5_417ac"), ExtResource("6_4ksl0"), ExtResource("7_ar3hy"), ExtResource("8_l0d00"), ExtResource("9_v5hyt"), ExtResource("8_ew2q4"), ExtResource("10_1xfnc"), ExtResource("12_l0d00"), ExtResource("8_1nywq"), ExtResource("13_v5hyt"), ExtResource("15_7wjuo"), ExtResource("14_dh13m"), ExtResource("9_ew2q4"), ExtResource("17_7forj"), ExtResource("17_iy27c"), ExtResource("19_7wjuo"), ExtResource("18_iy27c"), ExtResource("21_ej3b2")])
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 1.5

@@ -109,6 +109,7 @@ public partial class BuildingManager : Node2D, IManager
 			TowerPreview.GlobalPosition = PathfindingManager.instance.GetMouseGlobalTilemapPos();
 			TowerPreview.IsBuildingPreview = false;
 			TowerPreview.Modulate = Colors.White;
+			TowerPreview.TotalMoneySpent = Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]);
 			AddPlayerCurrency(-Mathf.FloorToInt(TowerPreview.GetFinalTowerStats()[TowerStat.Cost]));
 			
 			Tower.SelectedTower = null;
@@ -161,7 +162,7 @@ public partial class BuildingManager : Node2D, IManager
 		_towersToBuild = [];
 		for (int i = 0; i < savedTowers.Count; i++)
 		{
-			_towersToBuild.Add(ResourceLoader.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn", "PackedScene", ResourceLoader.CacheMode.Replace));
+			_towersToBuild.Add(ResourceLoader.Load<PackedScene>(_pathToSavedTowers + savedTowers[i] + "/" + savedTowers[i] + "0.tscn", "PackedScene", ResourceLoader.CacheMode.ReplaceDeep));
 		}
 
 		for (int i = 0; i < GetTotalTowerSlots(); i++)

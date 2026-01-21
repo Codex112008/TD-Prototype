@@ -7,11 +7,11 @@
 [resource]
 script = ExtResource("2_157pc")
 EnemyScene = ExtResource("1_thesa")
-BaseWeight = 1
+BaseWeight = 2
 MinWave = 28
 MaxWave = 2147483647
-QtyLow = 2
-QtyMean = 3
+QtyLow = 3
+QtyMean = 4
 QtyHigh = 5
 QtyMin = 1
 QtyMax = 2147483647

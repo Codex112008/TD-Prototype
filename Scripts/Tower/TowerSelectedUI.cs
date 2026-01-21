@@ -6,6 +6,7 @@ public partial class TowerSelectedUI : VBoxContainer
 	[Export] public Button UpgradeButton;
 	[Export] public Button SellButton;
 	[Export] private RichTextLabel _targetingLabel;
+	[Export] private RichTextLabel _totalSpentLabel;
 	
 	[Export] private Control _upgradeUI;
 
@@ -21,6 +22,7 @@ public partial class TowerSelectedUI : VBoxContainer
 
 	public void UpdateUpgradeUIVisibility(bool visibility)
 	{
+		_totalSpentLabel.Text = "Spent: $" + _tower.TotalMoneySpent.ToString();
 		if (_upgradeUI.Visible != visibility)
 			_upgradeUI.Visible = visibility;
 	}
@@ -38,7 +40,7 @@ public partial class TowerSelectedUI : VBoxContainer
 	public void ResetUpgradeButtonText()
 	{	
 		Tuple<string, int> towerPathAndLevel = Utils.TrimNumbersFromString(_tower.SceneFilePath[.._tower.SceneFilePath.LastIndexOf('.')]);
-		Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.Replace).Instantiate<Tower>();
+		Tower upgradedTower = ResourceLoader.Load<PackedScene>(towerPathAndLevel.Item1 + (towerPathAndLevel.Item2 + 1) + ".tscn", "PackedScene", ResourceLoader.CacheMode.ReplaceDeep).Instantiate<Tower>();
         UpgradeButton.Text = "Upgrade: $" + Mathf.FloorToInt(upgradedTower.GetFinalTowerStats()[TowerStat.Cost]);
         upgradedTower.QueueFree();
 	}

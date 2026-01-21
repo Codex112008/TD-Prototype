@@ -6,12 +6,12 @@
 [resource]
 script = ExtResource("2_fmskp")
 EnemyScene = ExtResource("1_g1pp3")
-BaseWeight = 1
+BaseWeight = 2
 MinWave = 32
 MaxWave = 2147483647
-QtyLow = 1
-QtyMean = 1
-QtyHigh = 2
+QtyLow = 2
+QtyMean = 2
+QtyHigh = 4
 QtyMin = 1
 QtyMax = 2147483647
 BaseSpawnDelay = 1.2
