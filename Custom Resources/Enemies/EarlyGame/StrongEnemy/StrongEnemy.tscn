@@ -11,14 +11,14 @@ size = Vector2(10, 10)
 collision_mask = 0
 script = ExtResource("1_sxk7a")
 _baseEnemyStats = Dictionary[int, int]({
-0: 15,
+0: 10,
 1: 50,
 2: 24,
 3: 2,
 4: 9
 })
-_offsetMargin = 0.55
 _damageNumberScene = ExtResource("2_mnv5b")
+_offsetMargin = 0.55
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_mnyw8")

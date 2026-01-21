@@ -4,6 +4,7 @@ using System;
 public partial class PauseMenu : PanelContainer
 {
 	[Export] private Button _mainMenuButton;
+	private double _timescaleBeforePause = 1;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -30,13 +31,14 @@ public partial class PauseMenu : PanelContainer
 
 	private void Pause()
 	{
+		_timescaleBeforePause = Engine.TimeScale;
 		Engine.TimeScale = 0f;
 		Visible = true;
 	}
 
 	private void UnPause()
 	{
-		Engine.TimeScale = 1f;
+		Engine.TimeScale = _timescaleBeforePause;
 		Visible = false;
 	}
 
