@@ -15,14 +15,14 @@ Effects = Dictionary[int, Array]({
 1: [ExtResource("2_v48fm")]
 })
 _baseEnemyStats = Dictionary[int, int]({
-0: 20,
+0: 40,
 1: 100,
 2: 34,
 3: 1,
 4: 8
 })
-_offsetMargin = 0.55
 _damageNumberScene = ExtResource("3_02re0")
+_offsetMargin = 0.55
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("4_2mr5a")

@@ -19,11 +19,6 @@ public partial class TowerSelectedUI : VBoxContainer
 		_tower = GetParent<Tower>();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
 	public void UpdateUpgradeUIVisibility(bool visibility)
 	{
 		if (_upgradeUI.Visible != visibility)

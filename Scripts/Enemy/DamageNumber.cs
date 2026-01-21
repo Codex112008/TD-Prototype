@@ -38,9 +38,4 @@ public partial class DamageNumber : Node2D
 		_tween.TweenProperty(this, "modulate", Colors.Transparent, 0.25f).SetDelay(0.1f);
 		_tween.TweenCallback(Callable.From(QueueFree)).SetDelay(0.5f);
 	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
 }

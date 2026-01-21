@@ -17,7 +17,7 @@ public static class StatusEffectsData
 
 	private static readonly Dictionary<StatusEffect, float> _statusEffectThresholds = new()
 	{
-		{StatusEffect.Chill, 10f},
+		{StatusEffect.Chill, 20f},
 		{StatusEffect.Stun, 20f},
 	};
 
@@ -67,7 +67,7 @@ public static class StatusEffectsData
 
 				if (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Chill) >= GetStatusEffectThreshold(StatusEffect.Chill))
 				{
-					enemy.AddStatusEffectStacks(StatusEffect.Stun, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Chill));
+					enemy.AddStatusEffectStacks(StatusEffect.Stun, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Chill) / 4f);
 					
 					enemy.Modulate = new Color(0.17f, 1f, 1f, 1f);
 					Timer timer = new()

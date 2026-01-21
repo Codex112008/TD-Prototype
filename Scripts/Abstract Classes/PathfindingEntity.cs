@@ -42,8 +42,7 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= 0.5f)
 			{
-				if (BuildingManager.instance != null && BuildingManager.instance.IsInsideTree())
-					BuildingManager.instance.TakeDamage(Mathf.FloorToInt(_speed));
+				ReachedPathEnd();
 				QueueFree();
 			}
 		}
@@ -62,5 +61,10 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 
 		Velocity = Velocity.Lerp(dir.Normalized() * _speed * speedMult, _acceleration * delta);
 		Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), _acceleration * delta);
+	}
+
+	protected virtual void ReachedPathEnd()
+	{
+		return;
 	}
 }

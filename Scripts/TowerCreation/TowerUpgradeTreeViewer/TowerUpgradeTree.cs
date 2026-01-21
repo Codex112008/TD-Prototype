@@ -56,11 +56,6 @@ public partial class TowerUpgradeTree : Node2D
 		ChangeTowerPreview(0);
     }
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
 	public void ChangeTowerPreview(int towerLevelToDisplay)
     {
 		_towerPreview?.QueueFree();

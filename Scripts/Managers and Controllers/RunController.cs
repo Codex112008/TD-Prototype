@@ -50,12 +50,6 @@ public partial class RunController : Node2D
 			LoadLevel();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-
-	}
-
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (!_swappingScene && @event is InputEventKey eventKey && eventKey.Pressed)

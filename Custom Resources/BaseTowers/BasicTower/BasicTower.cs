@@ -22,9 +22,9 @@ public partial class BasicTower : Tower
         _fireTimer.WaitTime = 1f / GetFinalTowerStats()[TowerStat.FireRate];
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
-        base._Process(delta);
+        base._PhysicsProcess(delta);
 
         if (Projectile != null && Projectile.Effects.Count > 0 && !IsBuildingPreview)
         {

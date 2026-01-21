@@ -29,10 +29,6 @@ public partial class MainMenuEnemySpawn : Marker2D
 		_spawnTimer.Connect(Timer.SignalName.Timeout, Callable.From(SpawnEnemy));
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
 
 	private void SpawnEnemy()
 	{

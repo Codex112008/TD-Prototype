@@ -44,11 +44,6 @@ public partial class TowerCreatorController : Node2D
 	{
 		// Upgrading init
 		_isUpgrading = BaseTowerScene != null;
-		if (_isUpgrading)
-		{
-			_baseTowerInstance = BaseTowerScene.Instantiate<Tower>();
-			_baseTowerInstance.TowerLevel = _towerLevel;
-		}
 
 		_savedTowerFilePath = Utils.AddCorrectDirectoryToPath(_savedTowerFilePath);
 		if (!DirAccess.DirExistsAbsolute(_savedTowerFilePath))
@@ -57,6 +52,13 @@ public partial class TowerCreatorController : Node2D
 		// Sets tower level if upgrading tower
 		if (_isUpgrading)
 			_towerLevel = (int)char.GetNumericValue(BaseTowerScene.ResourcePath[BaseTowerScene.ResourcePath.LastIndexOf('/')..BaseTowerScene.ResourcePath.LastIndexOf('.')][^1]) + 1;
+
+		// Instantiate a temporary instance of base tower
+		if (_isUpgrading)
+		{
+			_baseTowerInstance = BaseTowerScene.Instantiate<Tower>();
+			_baseTowerInstance.TowerLevel = _towerLevel;
+		}
 
 		// Creates a preview of the tower being created
 		_towerSelector = _towerCreatorUI.GetChild<TowerSelector>(3);
@@ -157,11 +159,6 @@ public partial class TowerCreatorController : Node2D
 		}
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
 	public void UpdateTowerPreview(string _ = "")
 	{
 		// if performing an upgrade reset preview tower stats to base tower stats before updating them
@@ -243,11 +240,11 @@ public partial class TowerCreatorController : Node2D
 		{
 			costSelector.StatSpinBox.Value = CalculateCurrentTotalPointsAllocated();
 			UpdateTowerPreviewStat(costSelector, TowerStat.Cost);
-			costSelector.CostLabel.Text = "$" + _towerToCreatePreview.GetFinalTowerStats()[TowerStat.Cost];
+			costSelector.CostLabel.Text = "$" + Math.Round(_towerToCreatePreview.GetFinalTowerStats()[TowerStat.Cost], 2);
 		}
 
 		foreach (StatSelector statSelector in otherStatSelectors)
-			statSelector.CostLabel.Text = "(" + _towerToCreatePreview.GetFinalTowerStats()[(TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text[..^1]))] + ")";
+			statSelector.CostLabel.Text = "(" + Math.Round(_towerToCreatePreview.GetFinalTowerStats()[(TowerStat)Enum.Parse(typeof(TowerStat), Utils.RemoveWhitespaces(statSelector.StatLabel.Text[..^1]))], 2) + ")";
 
 		// Updates the point usage label and gives a warning if exceeding it
 		if (_totalTowerCostLabel != null)

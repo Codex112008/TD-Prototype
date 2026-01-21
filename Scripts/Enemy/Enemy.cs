@@ -119,6 +119,7 @@ public partial class Enemy : PathfindingEntity
 
 			_currentHealth -= damageDealt;
 			_currentHealth = Mathf.Clamp(_currentHealth, 0, CurrentEnemyStats[EnemyStat.MaxHealth]);
+			_currentHealth = (float)Math.Round(_currentHealth, 2);
 
 			InstantiateDamageNumber(damageDealt, damageType);
 
@@ -267,4 +268,10 @@ public partial class Enemy : PathfindingEntity
 	{
 		Modulate = Colors.White;
 	}
+
+    protected override void ReachedPathEnd()
+    {
+        if (BuildingManager.instance != null && BuildingManager.instance.IsInsideTree())
+			BuildingManager.instance.TakeDamage(Mathf.FloorToInt(CurrentEnemyStats[EnemyStat.Damage]));
+    }
 }

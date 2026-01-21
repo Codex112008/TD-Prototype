@@ -27,9 +27,9 @@ public partial class ReanimatorTower : Tower
         EnemyManager.instance.Connect(EnemyManager.SignalName.EnemyDied, Callable.From((Enemy enemy) => OnEnemyDeath(enemy)));
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
-        base._Process(delta);
+        base._PhysicsProcess(delta);
 
         if (Projectile != null && Projectile.Effects.Count > 0 && !IsBuildingPreview)
         {

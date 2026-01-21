@@ -40,17 +40,17 @@ public partial class BuildingManager : Node2D, IManager
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		if (IsInstanceValid(TowerPreview))
 		{
 			Vector2I mousePos = PathfindingManager.instance.GetMouseTilemapPos();
 			Dictionary<Vector2I, bool> tilemapBuildableData = PathfindingManager.instance.TilemapBuildableData;
 
-			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(PathfindingManager.instance.GetMouseGlobalTilemapPos(), 30f * (float)delta);
+			TowerPreview.GlobalPosition = TowerPreview.Position.Lerp(PathfindingManager.instance.GetMouseGlobalTilemapPos(), 30f * (float)(delta / Engine.TimeScale));
 			TileData targetTile = PathfindingManager.instance.LevelTilemap.GetCellTileData(mousePos);
 			if (targetTile == null || (tilemapBuildableData[mousePos] == false && (int)targetTile.GetCustomData("MovementCost") > 10))
-				TowerPreview.Modulate = TowerPreview.Modulate.Lerp(Colors.Transparent, 20f * (float)delta);
+				TowerPreview.Modulate = TowerPreview.Modulate.Lerp(Colors.Transparent, 20f * (float)(delta / Engine.TimeScale));
             else
             {
 				if (!_validTowerPlacement)
@@ -288,7 +288,7 @@ public partial class BuildingManager : Node2D, IManager
 		if (PlayerHealth <= 0)
 		{
 			NewRunButton.DeleteExistingSave();
-			GetTree().ChangeSceneToFile("res://Scenes/MainScenes/MainMenu.tscn");
+			PauseMenu.ReturnToMainMenu(this);
 		}
 	}
 }

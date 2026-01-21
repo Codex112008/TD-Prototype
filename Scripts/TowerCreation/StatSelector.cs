@@ -14,9 +14,4 @@ public partial class StatSelector : HBoxContainer
 	{
 		StatSpinBox.Connect(Godot.Range.SignalName.ValueChanged, Callable.From((int value) => TowerCreatorController.instance.UpdateTowerPreview()));
 	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
 }

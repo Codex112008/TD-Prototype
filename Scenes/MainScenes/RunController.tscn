@@ -143,7 +143,7 @@ _managerParent = NodePath("Managers")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="PauseMenu" type="PanelContainer" parent="UI"]
+[node name="PauseMenu" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_mainMenuButton")]
 custom_minimum_size = Vector2(400, 500)
 anchors_preset = 8
 anchor_left = 0.5
@@ -153,6 +153,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_45n42")
+_mainMenuButton = NodePath("VBoxContainer/MainMenu")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/PauseMenu"]
 layout_mode = 2
@@ -226,5 +227,3 @@ z_index = 2
 position = Vector2(-9, 188)
 rotation = -1.5708
 texture = ExtResource("10_gf1ev")
-
-[connection signal="pressed" from="UI/PauseMenu/VBoxContainer/MainMenu" to="UI/PauseMenu" method="ReturnToMainMenu"]

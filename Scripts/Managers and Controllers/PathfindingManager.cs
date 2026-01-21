@@ -23,23 +23,12 @@ public partial class PathfindingManager : Node2D, IManager
 
 	private AStarGrid2D _aStarGrid = new();
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
 	public void Init()
 	{
 		LevelTilemap = (TileMapLayer)GetTree().GetFirstNodeInGroup("Tilemap");
 		TileSize = LevelTilemap.TileSet.TileSize.X;
 
-		if (IsInstanceValid(BuildingManager.instance))
+		if (IsInstanceValid(BuildingManager.instance) && IsInstanceValid(BuildingManager.instance.TowerParent))
 		{
 			TilemapBuildableData.Clear();
 			Array<Vector2I> towerPositions = [..BuildingManager.instance.TowerParent.GetChildren().Where(child => child is Tower).Select(tower => (Vector2I)((tower as Tower).GlobalPosition / TileSize))];

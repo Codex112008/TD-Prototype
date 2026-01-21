@@ -3,11 +3,15 @@ using System;
 
 public partial class PauseMenu : PanelContainer
 {
+	[Export] private Button _mainMenuButton;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		Engine.TimeScale = 1f;
 		Visible = false;
+
+		_mainMenuButton.Connect(BaseButton.SignalName.Pressed, Callable.From(() => ReturnToMainMenu(this)));
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
@@ -36,12 +40,12 @@ public partial class PauseMenu : PanelContainer
 		Visible = false;
 	}
 
-	public void ReturnToMainMenu()
+	public static void ReturnToMainMenu(Node node)
 	{
 		Engine.TimeScale = 1f;
-		if (GetTree().GetNodesInGroup("Enemy").Count == 0 && EnemyManager.instance.CurrentWave > 0)
+		if (node.GetTree().GetNodesInGroup("Enemy").Count == 0 && EnemyManager.instance.CurrentWave > 0)
 			RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();
-		GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainScenes/MainMenu.tscn"));
+		node.GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainScenes/MainMenu.tscn"));
 	}
 }

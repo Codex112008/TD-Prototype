@@ -27,7 +27,7 @@ public partial class AOEEffectBehaviour : Area2D
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		if (!applied && GetOverlappingBodies().Count > 0)
 		{

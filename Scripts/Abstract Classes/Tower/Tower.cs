@@ -110,7 +110,7 @@ public abstract partial class Tower : Sprite2D
         }
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (_inDisrepair)
             Modulate = new Color("#393f47");
@@ -256,6 +256,8 @@ public abstract partial class Tower : Sprite2D
                 if (stat == TowerStat.Range && _inDisrepair)
                     finalTowerStats[stat] *= 0f;
             }
+
+            finalTowerStats[stat] = (float)Math.Round(finalTowerStats[stat], 2);
         }
         return finalTowerStats;
     }

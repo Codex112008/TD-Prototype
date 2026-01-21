@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bigicen3r4de2"]
+[gd_scene load_steps=12 format=3 uid="uid://bigicen3r4de2"]
 
 [ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_tg5rf"]
 [ext_resource type="Script" uid="uid://476fij86s3r3" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.cs" id="2_58vfe"]
@@ -7,7 +7,6 @@
 [ext_resource type="Resource" uid="uid://08kipvbksfmg" path="res://Custom Resources/TowerEffects/Burn/BurnEffectResource.tres" id="6_24nfe"]
 [ext_resource type="Resource" uid="uid://dunae7lk31h0u" path="res://Custom Resources/TowerEffects/Chill/ChillEffectResource.tres" id="6_kv1mi"]
 [ext_resource type="Texture2D" uid="uid://durc20cchhsel" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileIcon.png" id="8_v0g5c"]
-[ext_resource type="Script" uid="uid://dgvyf41h20a5b" path="res://Scripts/Abstract Classes/Tower/Projectile.cs" id="9_sw4se"]
 [ext_resource type="PackedScene" uid="uid://ctho7p1gaayew" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectileScene.tscn" id="10_6626v"]
 [ext_resource type="Script" uid="uid://cc81vthf4phhl" path="res://Custom Resources/Projectiles/Sword/Katana/KatanaProjectile.cs" id="11_5qd17"]
 [ext_resource type="Texture2D" uid="uid://buuugov1sggdw" path="res://Custom Resources/BaseTowers/BasicTower/BasicTower.png" id="12_1keol"]
@@ -20,7 +19,7 @@ WaveInitialSpeed = 100.0
 Pierce = 3
 ProjectileScene = ExtResource("10_6626v")
 Effects = [ExtResource("6_kv1mi"), ExtResource("6_24nfe")]
-NextTierProjectiles = Array[ExtResource("9_sw4se")]([])
+NextTierProjectiles = []
 RequireEnemy = true
 ProjectileSpeed = 150.0
 Tooltip = "Fires sword waves that pierce but weaken

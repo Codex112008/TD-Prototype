@@ -24,11 +24,11 @@ public partial class TowerUpgradeDisplay : PanelContainer
         };
 
 		// Fills in the stats display of upgrade display
-		foreach (KeyValuePair<TowerStat, int> stat in TowerToDisplayUpgrade.BaseTowerStats)
+		foreach (KeyValuePair<TowerStat, float> stat in TowerToDisplayUpgrade.GetFinalTowerStats())
         {
             RichTextLabel statLabel = new()
             {
-                Text = stat.Key.ToString() + ": " + stat.Value,
+                Text = stat.Key.ToString() + ": " + Math.Round(stat.Value, 2),
 				FitContent = true,
 				AutowrapMode = TextServer.AutowrapMode.Off,
 				MouseFilter = MouseFilterEnum.Ignore
@@ -55,11 +55,6 @@ public partial class TowerUpgradeDisplay : PanelContainer
 			_effectsContainer.AddChild(towerEffectDisplay);
         }
     }
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
 
     public override void _GuiInput(InputEvent @event)
     {
