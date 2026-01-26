@@ -107,7 +107,7 @@ public partial class TowerCreatorController : Node2D
 			HBoxContainer statPicker = InstantiateStatSelector(Enum.GetName(typeof(TowerStat), stat));
 			SpinBox statPickerSpinBox = statPicker.GetChild<SpinBox>(1);
 
-			statPickerSpinBox.MinValue = 0;
+			statPickerSpinBox.MinValue = 1;
 
 			switch (stat)
 			{
@@ -120,6 +120,7 @@ public partial class TowerCreatorController : Node2D
 					break;
 				case TowerStat.Range:
 					statPickerSpinBox.Step = 5;
+					statPickerSpinBox.MinValue = 5;
 					break;
 				case TowerStat.FireRate:
 					statPickerSpinBox.Suffix = "/s";

@@ -21,30 +21,29 @@ public partial class PauseMenu : PanelContainer
 		{
 			if (eventKey.Pressed && eventKey.Keycode == Key.Escape && !IsInstanceValid(BuildingManager.instance.TowerPreview))
 			{
-				if (Engine.TimeScale > 0)
-					Pause();
-				else
+				if (GetTree().Paused)
 					UnPause();
+				else
+					Pause();
 			}
 		}
 	}
 
 	private void Pause()
 	{
-		_timescaleBeforePause = Engine.TimeScale;
-		Engine.TimeScale = 0f;
+		GetTree().Paused = true;
 		Visible = true;
 	}
 
 	private void UnPause()
 	{
-		Engine.TimeScale = _timescaleBeforePause;
+		GetTree().Paused = false;
 		Visible = false;
 	}
 
 	public static void ReturnToMainMenu(Node node)
 	{
-		Engine.TimeScale = 1f;
+		node.GetTree().Paused = false;
 		if (node.GetTree().GetNodesInGroup("Enemy").Count == 0 && EnemyManager.instance.CurrentWave > 0)
 			RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();

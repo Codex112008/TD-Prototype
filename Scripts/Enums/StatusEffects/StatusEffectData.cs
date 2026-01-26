@@ -136,7 +136,7 @@ public static class StatusEffectsData
 		},
 		{StatusEffect.Bleed, Callable.From((Enemy enemy) => 
 			{ // Does more damage based on the speed of enemy
-				enemy.TakeDamage(((2.8f * (float)Math.Log10(enemy.CurrentEnemyStats[EnemyStat.Speed] + 12.1f)) - 3.031799f) * (enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Bleed) * 0.5f), DamageType.Physical, false);
+				enemy.TakeDamage(enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Bleed) * 0.1f, DamageType.Physical, false);
 				enemy.AddStatusEffectStacks(StatusEffect.Bleed, (100f / enemy.CurrentEnemyStats[EnemyStat.Speed]) + 1);
 			})
 		},

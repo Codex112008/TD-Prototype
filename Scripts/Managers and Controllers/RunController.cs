@@ -203,7 +203,7 @@ public partial class RunController : Node2D
 		Dictionary<string, Variant> gameData = new() {
 			{ "CurrentWave", EnemyManager.instance.CurrentWave },
 			{ "CurrentPlayerCurrency", BuildingManager.instance.PlayerCurrency },
-			{ "CurrentPlayerHealth" , BuildingManager.instance.PlayerHealth }
+			{ "CurrentPlayerHealth" , BuildingManager.instance.PlayerHealth },
 		};
 		if (EnemyManager.instance.EnemyParent.GetChildren().Any(child => child is Enemy enemy && enemy.SpawnedWave > 0))
 			gameData["CurrentWave"] = EnemyManager.instance.EnemyParent.GetChildren().Where(child => child is Enemy enemy && enemy.SpawnedWave > 0).Cast<Enemy>().OrderBy(child => child.SpawnedWave).ElementAt(0).SpawnedWave - 1;
