@@ -19,6 +19,8 @@ public partial class EnemyManager : Node, IManager
 		instance = this;
 	}
 
+	[Export] private int _waveScalingWaveCap = 34;
+	[Export] private float _waveScaling = 0.10216667f;
 	[Export] private float _chanceForPartnerWave = 0.75f;
 	[Export] private int _waveForSegmentScaling = 10;
 	[Export] private Timer _spawnTimer;
@@ -72,11 +74,7 @@ public partial class EnemyManager : Node, IManager
 		else if (InTowerCreator && _spawnTimer.IsStopped())
 		{
 			RandomNumberGenerator rand = new();
-			Enemy spawnedEnemy = SelectedTestingEnemy.EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.TargetPos = BaseLocations[rand.RandiRange(0, BaseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = SpawnPoints[rand.RandiRange(0, SpawnPoints.Count - 1)];
-
-			EnemyParent.AddChild(spawnedEnemy);
+			SpawnEnemy(SelectedTestingEnemy, SpawnPoints[rand.RandiRange(0, SpawnPoints.Count - 1)], BaseLocations[rand.RandiRange(0, BaseLocations.Count - 1)]);
 
 			_spawnTimer.Start();
 		}
@@ -108,7 +106,7 @@ public partial class EnemyManager : Node, IManager
 		}
 
 		foreach (Node child in EnemyParent.GetChildren())
-			child.QueueFree();
+			child.QueueFree(); // Change to move to pool
 
 		if (IsInstanceValid(RunController.instance))
 		{
@@ -176,18 +174,13 @@ public partial class EnemyManager : Node, IManager
 		}
 		_spawnTimer.WaitTime = enemyToSpawn.Item1.BaseSpawnDelay * (enemyToSpawn.Item2 ? 0.75f : 1f);
 
-		Enemy spawnedEnemy = enemyToSpawn.Item1.EnemyScene.Instantiate<Enemy>();
-		spawnedEnemy.TargetPos = BaseLocations[_tempRand.RandiRange(0, BaseLocations.Count - 1)];
-		spawnedEnemy.GlobalPosition = SpawnPoints[_tempRand.RandiRange(0, SpawnPoints.Count - 1)];
-		spawnedEnemy.SpawnedWave = CurrentWave;
+		Enemy spawnedEnemy = SpawnEnemy(enemyToSpawn.Item1, SpawnPoints[_tempRand.RandiRange(0, SpawnPoints.Count - 1)], BaseLocations[_tempRand.RandiRange(0, BaseLocations.Count - 1)]);
 
 		// Adds effect to give cash on death
 		if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
 			spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath] = onDeathEffects + [new RewardEffect()];
 		else
 			spawnedEnemy.Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
-
-		EnemyParent.AddChild(spawnedEnemy);
 
 		_spawnTimer.Start();
 	}
@@ -218,7 +211,7 @@ public partial class EnemyManager : Node, IManager
 				enemyCount = Mathf.Lerp(selectedEnemy.QtyMean, selectedEnemy.QtyLow, -triangular);
 
 			// Scales enemy count based on wave number
-			float waveScaling = 1.25f + 0.00416667f * (Mathf.Min(CurrentWave - selectedEnemy.MinWave, 240f) - 120);
+			float waveScaling = 2.5f + _waveScaling * (Mathf.Min(CurrentWave - selectedEnemy.MinWave, _waveScalingWaveCap) - (_waveScalingWaveCap / 2f));
 			enemyCount *= waveScaling;
 
 			// Apply segment scaling (divided by segment count)
@@ -286,5 +279,22 @@ public partial class EnemyManager : Node, IManager
 	public void Deload()
 	{
 		instance = null;
+	}
+
+	public Enemy SpawnEnemy(EnemySpawnData spawnData, Vector2 spawnPosition, Vector2 targetPos, int spawnWave = -1)
+	{
+        if (!PoolManager.instance.TryPopEnemyFromPool(spawnData.EnemyScene.ResourcePath[(spawnData.EnemyScene.ResourcePath.LastIndexOf('/') + 1)..spawnData.EnemyScene.ResourcePath.LastIndexOf('.')], out Enemy spawnedEnemy))
+		{
+			spawnedEnemy = spawnData.EnemyScene.Instantiate<Enemy>();
+			GD.Print("Instanciated " + spawnData.EnemyScene.ResourcePath[(spawnData.EnemyScene.ResourcePath.LastIndexOf('/') + 1)..spawnData.EnemyScene.ResourcePath.LastIndexOf('.')] + "!");
+		}
+		
+        spawnedEnemy.TargetPos = targetPos;
+		spawnedEnemy.GlobalPosition = spawnPosition;
+		spawnedEnemy.SpawnedWave = (spawnWave == -1 && !InTowerCreator) ? CurrentWave : spawnWave;
+
+		EnemyParent.CallDeferred(Node.MethodName.AddChild, spawnedEnemy);
+
+		return spawnedEnemy;
 	}
 }

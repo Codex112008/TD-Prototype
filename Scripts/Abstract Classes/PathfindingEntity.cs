@@ -4,7 +4,7 @@ using System;
 
 public abstract partial class PathfindingEntity : CharacterBody2D
 {
-	[Export] public Sprite2D Sprite;
+	[Export] public Sprite2D Sprite = null;
 	[Export] protected float _acceleration = 5f;
 	[Export] private float _deceleration = 10f;
 	[Export] private float _offsetMargin = 0.4f;
@@ -43,7 +43,6 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 			if (GlobalPosition.DistanceTo(PathArray[0]) <= 0.5f)
 			{
 				ReachedPathEnd();
-				QueueFree();
 			}
 		}
 		else
@@ -65,6 +64,6 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 
 	protected virtual void ReachedPathEnd()
 	{
-		return;
+		QueueFree();
 	}
 }

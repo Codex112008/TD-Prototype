@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class DamageNumber : Node2D
 {
@@ -16,13 +15,15 @@ public partial class DamageNumber : Node2D
 	{
 		RandomNumberGenerator rand = new();
 		_offset = rand.RandfRange(-35f, 35f);
+		_numberLabel.Position = Vector2.Zero;
 		_numberLabel.Position -= _numberLabel.Size / 2;
 		_numberLabel.Text = DamageValue.ToString();
 
 		Color color = DamageTypeData.GetDamageTypeColor(DamageTypeDealt);
 		_numberLabel.Set("theme_override_colors/default_color", color);
 
-		_tween ??= CreateTween();
+		_tween?.Kill();
+		_tween = CreateTween();
 		_tween.TweenMethod(
 			Callable.From((float progress) =>
 			{
@@ -36,6 +37,14 @@ public partial class DamageNumber : Node2D
 		if (Scale != Vector2.One * 0.25f)
 			_tween.TweenProperty(this, "scale", Vector2.One * 0.25f, 1f);
 		_tween.TweenProperty(this, "modulate", Colors.Transparent, 0.25f).SetDelay(0.1f);
-		_tween.TweenCallback(Callable.From(QueueFree)).SetDelay(0.5f);
+		_tween.TweenCallback(Callable.From(RemoveDamageNumber)).SetDelay(0.5f);
+	}
+
+	private void RemoveDamageNumber()
+	{
+		if (PoolManager.instance != null && IsInsideTree())
+			PoolManager.instance.AddDamageNumberToPool(this);
+		else
+			QueueFree();
 	}
 }

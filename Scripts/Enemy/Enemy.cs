@@ -36,7 +36,26 @@ public partial class Enemy : PathfindingEntity
 		{
 			GetChild<RichTextLabel>(2).Visible = true;
 			GetChild<RichTextLabel>(2).Text = _baseEnemyStats[EnemyStat.MaxHealth].ToString() + '/' + _baseEnemyStats[EnemyStat.MaxHealth];
-		}		
+		}
+
+		Sprite ??= GetChild<Sprite2D>(0);
+
+		// Initialises timers for effects
+		if (Effects.TryGetValue(EnemyEffectTrigger.OnTimer, out Array<EnemyEffect> onTimerEffects) && onTimerEffects.Count > 0)
+		{
+			foreach (EnemyEffect effect in onTimerEffects)
+			{
+                Timer timer = new()
+                {
+                    WaitTime = effect.EffectInterval,
+                };
+                timer.Timeout += () => effect.ApplyEffect(this);
+				TimerEffectTimers.Add(timer);
+				AddChild(timer);
+			}
+		}
+
+		Init();
 
 		// Initialises status efects dictionary
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
@@ -68,30 +87,33 @@ public partial class Enemy : PathfindingEntity
 			}
 		}
 
-		Sprite = GetChild<Sprite2D>(0);
+		TreeEntered += Init;
+	}
 
+	public void Init()
+	{
+		// If grabbing from pool need to reset this so the enemy can take damage and die
+		_isDead = false;
+
+		// Reset enemy stats to base enemy stats
 		foreach ((EnemyStat stat, int value) in _baseEnemyStats)
 			CurrentEnemyStats[stat] = value;
 		_currentHealth = CurrentEnemyStats[EnemyStat.MaxHealth];
 
+		if (_showMaxHp)
+		{
+			GetChild<RichTextLabel>(2).Visible = true;
+			GetChild<RichTextLabel>(2).Text = CurrentEnemyStats[EnemyStat.MaxHealth].ToString() + '/' + _baseEnemyStats[EnemyStat.MaxHealth];
+		}
+
+		// Trigger effects that happen when spawning
 		TriggerEffects(EnemyEffectTrigger.OnSpawn);
 		TriggerEffects(EnemyEffectTrigger.OnTimer);
 
-		if (Effects.TryGetValue(EnemyEffectTrigger.OnTimer, out Array<EnemyEffect> onTimerEffects) && onTimerEffects.Count > 0)
-		{
-			foreach (EnemyEffect effect in onTimerEffects)
-			{
-                Timer timer = new()
-                {
-                    WaitTime = effect.EffectInterval,
-					Autostart = true
-                };
-                timer.Timeout += () => effect.ApplyEffect(this);
-				TimerEffectTimers.Add(timer);
-				AddChild(timer);
-			}
-		}
-
+		// Start timers for timer effects
+		foreach (Timer timer in TimerEffectTimers)
+			timer.Start();
+		
 		base._Ready();
 	}
 
@@ -164,7 +186,8 @@ public partial class Enemy : PathfindingEntity
 
 	public void SetStatusEffectValue(StatusEffect status, float amount)
 	{
-		_currentStatusEffects[status] = amount;
+		if (_currentStatusEffects.ContainsKey(status))
+			_currentStatusEffects[status] = amount;
 	}
 
 	public void TickStatusEffect(StatusEffect status)
@@ -197,7 +220,10 @@ public partial class Enemy : PathfindingEntity
 		if (RegisterDeathSignal)
 			EnemyManager.instance.EmitSignal(EnemyManager.SignalName.EnemyDied, this);
 
-		QueueFree();
+		if (PoolManager.instance != null)
+			PoolManager.instance.AddEnemyToPool(this);
+		else
+			QueueFree();
 	}
 
 	protected virtual void UpdateStats()
@@ -249,7 +275,12 @@ public partial class Enemy : PathfindingEntity
 
 	protected void InstantiateDamageNumber(float damageDealt, DamageType damageType)
 	{
-		DamageNumber damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
+        DamageNumber damageNumber;
+        if (PoolManager.instance != null && PoolManager.instance.TryPopDamageNumberFromPool(out DamageNumber poolDamageNumber))
+			damageNumber = poolDamageNumber;
+		else
+			damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
+		
 		damageNumber.DamageValue = Mathf.Round(damageDealt * 100) / 100;
 		damageNumber.DamageTypeDealt = damageType;
 		damageNumber.GlobalPosition = GlobalPosition + new Vector2(_rand.RandfRange(-5f, 5f), _rand.RandfRange(-1f, 1f));
@@ -273,5 +304,10 @@ public partial class Enemy : PathfindingEntity
     {
         if (BuildingManager.instance != null && BuildingManager.instance.IsInsideTree())
 			BuildingManager.instance.TakeDamage(Mathf.FloorToInt(CurrentEnemyStats[EnemyStat.Damage]));
+
+		if (PoolManager.instance != null)
+			PoolManager.instance.AddEnemyToPool(this);
+		else
+			QueueFree();
     }
 }

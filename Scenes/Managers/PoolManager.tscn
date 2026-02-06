@@ -1,0 +1,14 @@
+[gd_scene load_steps=5 format=3 uid="uid://c18opigcfreke"]
+
+[ext_resource type="Script" uid="uid://bfl6bjlacy30q" path="res://Scripts/Managers and Controllers/PoolManager.cs" id="1_vdrkx"]
+[ext_resource type="Resource" uid="uid://bo3sktptr4qre" path="res://Custom Resources/Enemies/EarlyGame/SplitterEnemy/SplitterEnemySpawnData.tres" id="2_5atjc"]
+[ext_resource type="Resource" uid="uid://cl76w4sekrrvt" path="res://Custom Resources/Enemies/EarlyGame/SplitterlingEnemy/SplitterlingEnemySpawnData.tres" id="3_bnupe"]
+[ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/EarlyGame/BasicEnemy/BasicEnemySpawnData.tres" id="4_p6yhu"]
+
+[node name="PoolManager" type="Node2D"]
+script = ExtResource("1_vdrkx")
+_enemiesToPreload = Dictionary[Object, int]({
+ExtResource("2_5atjc"): 100,
+ExtResource("3_bnupe"): 1000,
+ExtResource("4_p6yhu"): 10
+})

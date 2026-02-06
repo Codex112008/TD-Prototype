@@ -35,9 +35,6 @@ public partial class SummonAlliesEffect : EnemyEffect
         RandomNumberGenerator rand = new();
         for (int i = 0; i < _enemiesToSpawnCount; i++)
         {
-            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false).EnemyScene.Instantiate<Enemy>();
-            spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
-
             Vector2 centeredTileGlobalPos = PathfindingManager.instance.GlobalToCenteredGlobalTilePos(enemy.GlobalPosition);
             Vector2 centeredTileTargetPos = PathfindingManager.instance.GlobalToCenteredGlobalTilePos(-enemy.Transform.Y.Normalized() * 8f);
             if (enemy.PathArray.Count > 0)
@@ -47,12 +44,9 @@ public partial class SummonAlliesEffect : EnemyEffect
             Vector2 directionToTargetTile = centeredTileGlobalPos.DirectionTo(centeredTileTargetPos).Normalized();
             Vector2 offsetVector = new Vector2(-directionToTargetTile.Y, directionToTargetTile.X).Normalized() * rand.RandfRange(-(PathfindingManager.instance.TileSize * 0.75f) / 2, PathfindingManager.instance.TileSize * 0.75f / 2);
 
-            spawnedEnemy.GlobalPosition = centeredTileGlobalPos + (directionToTargetTile * randomDistance) + offsetVector;
+            Enemy spawnedEnemy = EnemyManager.instance.SpawnEnemy(EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false), centeredTileGlobalPos + (directionToTargetTile * randomDistance) + offsetVector, EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)], enemy.SpawnedWave);
             spawnedEnemy.GetChild<Sprite2D>(0).Rotation = directionToTargetTile.Angle();
-            spawnedEnemy.SpawnedWave = enemy.SpawnedWave;
-
-            EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
-            
+                        
             if (i == _enemiesToSpawnCount - 1)
                 timer.WaitTime = 1f;
 

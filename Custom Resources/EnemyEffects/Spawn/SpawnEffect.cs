@@ -20,12 +20,7 @@ public partial class SpawnEffect : EnemyEffect
         RandomNumberGenerator rand = new();
         for (int i = 0; i < _enemiesToSpawnCount; i++)
         {
-            Enemy spawnedEnemy = EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false).EnemyScene.Instantiate<Enemy>();
-            spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
-            spawnedEnemy.GlobalPosition = enemy.GlobalPosition;
-            spawnedEnemy.SpawnedWave = enemy.SpawnedWave;
-
-            EnemyManager.instance.EnemyParent.CallDeferred(Node.MethodName.AddChild, spawnedEnemy);
+            EnemyManager.instance.SpawnEnemy(EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false), enemy.GlobalPosition, EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)], enemy.SpawnedWave);
         }
     }
 }
