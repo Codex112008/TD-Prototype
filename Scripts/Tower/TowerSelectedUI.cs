@@ -22,6 +22,7 @@ public partial class TowerSelectedUI : VBoxContainer
 
 	public void UpdateUpgradeUIVisibility(bool visibility)
 	{
+		SellButton.Text = "Sell! +$" + (_tower.TotalMoneySpent * _tower.SellPercentage);
 		_totalSpentLabel.Text = "Spent: $" + _tower.TotalMoneySpent.ToString();
 		if (_upgradeUI.Visible != visibility)
 			_upgradeUI.Visible = visibility;

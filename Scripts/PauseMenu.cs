@@ -44,6 +44,7 @@ public partial class PauseMenu : PanelContainer
 	public static void ReturnToMainMenu(Node node)
 	{
 		node.GetTree().Paused = false;
+		Engine.TimeScale = 1f;
 		if (node.GetTree().GetNodesInGroup("Enemy").Count == 0 && EnemyManager.instance.CurrentWave > 0)
 			RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();
