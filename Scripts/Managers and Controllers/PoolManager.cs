@@ -84,11 +84,11 @@ public partial class PoolManager : Node2D, IManager
 
 	public void AddEnemyToPool(Enemy enemy)
 	{
-		enemy.GetParent()?.RemoveChild(enemy);
-
 		// Reset status effects of enemy
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
 			enemy.SetStatusEffectValue(status, 0f);
+
+		enemy.GetParent()?.RemoveChild(enemy);
 
 		foreach (Timer timer in enemy.TimerEffectTimers)
 			timer.Stop();
@@ -147,7 +147,7 @@ public partial class PoolManager : Node2D, IManager
 			damageNumber.QueueFree();
 	}
 
-	public bool TryPopDamageNumberFromPool(out DamageNumber poppedDamageNumber)
+	public DamageNumber PopDamageNumberFromPoolOrInstantiate()
 	{
 		if (_damageNumberPool.Count > 0)
 		{
@@ -156,15 +156,10 @@ public partial class PoolManager : Node2D, IManager
 			foundDamageNumber.Visible = true;
 			foundDamageNumber.ProcessMode = ProcessModeEnum.Inherit;
 			foundDamageNumber.RequestReady();
-			poppedDamageNumber = foundDamageNumber;
-			
-			return true;
+			return foundDamageNumber;
 		}
 		else
-		{
-			poppedDamageNumber = null;
-			return false;
-		}
+			return _damageNumberScene.Instantiate<DamageNumber>();
 	}
 
     public void Init()

@@ -140,7 +140,7 @@ public partial class Enemy : PathfindingEntity
 		if (amount < 0)
 			damageType = DamageType.Heal;
 
-		if (!_isDead)
+		if (!_isDead && IsInsideTree())
 		{
 			float damageDealt = amount;
 			if (!defenceBreak)
@@ -300,8 +300,8 @@ public partial class Enemy : PathfindingEntity
 	protected void InstantiateDamageNumber(float damageDealt, DamageType damageType)
 	{
         DamageNumber damageNumber;
-        if (PoolManager.instance != null && PoolManager.instance.TryPopDamageNumberFromPool(out DamageNumber poolDamageNumber))
-			damageNumber = poolDamageNumber;
+        if (PoolManager.instance != null)
+			damageNumber = PoolManager.instance.PopDamageNumberFromPoolOrInstantiate();
 		else
 			damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
 		
