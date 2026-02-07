@@ -13,7 +13,7 @@ script = ExtResource("1_m0peo")
 _baseEnemyStats = Dictionary[int, int]({
 0: 34,
 1: 3000,
-2: 14,
+2: 15,
 3: 2,
 4: 18
 })

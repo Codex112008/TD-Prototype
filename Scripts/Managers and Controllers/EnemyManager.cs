@@ -133,15 +133,15 @@ public partial class EnemyManager : Node, IManager
 
 	private void StartWave()
 	{
+		if (_tempRand != null)
+			RNGManager.instance.RandInstances[this] = _tempRand;
+
 		RunController.instance.SaveLevel();
 		
 		CurrentWave++;
 
 		if (TowerSlotUnlockWave.Any(wave => CurrentWave == wave))
 			BuildingManager.instance.UpdateTowerSelectionButtons();
-
-		if (_tempRand != null)
-				RNGManager.instance.RandInstances[this] = _tempRand;
 
 		_tempRand = new()
 		{
@@ -271,6 +271,8 @@ public partial class EnemyManager : Node, IManager
 		{
 			_tempRand.Seed = rand.Seed;
 			_tempRand.State = rand.State;
+
+			RNGManager.instance.RandInstances[this] = _tempRand;
 		}
 
 		return null;

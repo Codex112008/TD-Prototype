@@ -215,8 +215,8 @@ ExtResource("17_uhp20"): 50,
 ExtResource("16_6wwl3"): 10,
 ExtResource("15_gow73"): 100,
 ExtResource("14_8sad6"): 1000,
-ExtResource("13_gf1ev"): 20000,
-ExtResource("12_1phdm"): 10000
+ExtResource("13_gf1ev"): 5000,
+ExtResource("12_1phdm"): 3000
 })
 _damageNumberScene = ExtResource("29_y8o3q")
 

@@ -120,7 +120,7 @@ public partial class TowerCreatorController : Node2D
 					break;
 				case TowerStat.Range:
 					statPickerSpinBox.Step = 5;
-					statPickerSpinBox.MinValue = 5;
+					statPickerSpinBox.MinValue = 0;
 					break;
 				case TowerStat.FireRate:
 					statPickerSpinBox.Suffix = "/s";

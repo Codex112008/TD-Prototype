@@ -24,7 +24,7 @@ public partial class Enemy : PathfindingEntity
 
 	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	protected Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
-	protected bool _isDead = false;
+	protected bool _isDead = true;
 	
 	private Dictionary<StatusEffect, Timer> _currentStatusEffectTickTimers = [];
 	private float _currentHealth;
@@ -55,9 +55,8 @@ public partial class Enemy : PathfindingEntity
 			}
 		}
 
-		Init();
-
 		// Initialises status efects dictionary
+		_currentStatusEffects = [];
 		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
 		{
 			_currentStatusEffects.Add(status, 0f);
@@ -87,17 +86,17 @@ public partial class Enemy : PathfindingEntity
 			}
 		}
 
+		Init();
+
 		TreeEntered += Init;
 	}
 
-	public void Init()
+	private void Init()
 	{
-		// If grabbing from pool need to reset this so the enemy can take damage and die
-		_isDead = false;
-
 		// Reset enemy stats to base enemy stats
+		CurrentEnemyStats = [];
 		foreach ((EnemyStat stat, int value) in _baseEnemyStats)
-			CurrentEnemyStats[stat] = value;
+			CurrentEnemyStats.Add(stat, value);
 		_currentHealth = CurrentEnemyStats[EnemyStat.MaxHealth];
 
 		if (_showMaxHp)
@@ -112,9 +111,17 @@ public partial class Enemy : PathfindingEntity
 
 		// Start timers for timer effects
 		foreach (Timer timer in TimerEffectTimers)
-			timer.Start();
+		{
+			if (IsInsideTree())
+				timer.Start();
+			else
+				timer.Autostart = true;
+		}
 		
 		base._Ready();
+
+		// If grabbing from pool need to reset this so the enemy can take damage and die
+		_isDead = false;
 	}
 
     public override void _PhysicsProcess(double delta)
@@ -163,19 +170,34 @@ public partial class Enemy : PathfindingEntity
 	public virtual void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
 	{
 		// If status effect applied start decay timer of it if timer exists
-		if (!decay && statusStacks > 0f && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer))
-            decayTimer.Start();
+		if (!decay && statusStacks > 0f && _currentStatusEffectDecayTimers.TryGetValue(status, out Timer decayTimer) && IsInsideTree())
+		{
+			if (IsInsideTree())
+				decayTimer.Start();
+			else
+				decayTimer.Autostart = true;
+		}
 
 		// Apply status effects stacks
 		_currentStatusEffects[status] = Mathf.Max(_currentStatusEffects[status] + statusStacks, 0);
 
 		// If decayed but stacks sill above 0 then restart timer until it reaches 0
 		if (decay && _currentStatusEffects[status] > 0)
-			_currentStatusEffectDecayTimers[status].Start();
+		{
+			if (IsInsideTree())
+				_currentStatusEffectDecayTimers[status].Start();
+			else
+				_currentStatusEffectDecayTimers[status].Autostart = true;
+		}
 
 		// If status is a ticking status and the timer isnt already started then start ticking timer
-		if (_currentStatusEffectTickTimers.TryGetValue(status, out Timer tickTimer) && tickTimer.IsStopped() && _currentStatusEffects[status] > 0)
-			tickTimer.Start();
+		if (_currentStatusEffectTickTimers.TryGetValue(status, out Timer tickTimer) && tickTimer.IsStopped() && _currentStatusEffects[status] > 0 && IsInsideTree())
+		{
+			if (IsInsideTree())
+				tickTimer.Start();
+			else
+				tickTimer.Autostart = true;
+		}
 
 		// Special effects if status effects reach certain requirements
 		if (StatusEffectsData.DoesStatusEffectHaveThreshold(status))
@@ -188,6 +210,8 @@ public partial class Enemy : PathfindingEntity
 	{
 		if (_currentStatusEffects.ContainsKey(status))
 			_currentStatusEffects[status] = amount;
+		else
+			_currentStatusEffects.Add(status, amount);
 	}
 
 	public void TickStatusEffect(StatusEffect status)

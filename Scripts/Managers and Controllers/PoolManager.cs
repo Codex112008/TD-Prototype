@@ -16,6 +16,7 @@ public partial class PoolManager : Node2D, IManager
 		instance = this;
 	}
 
+	[Export] private int _maxObjectsInPool = 5000;
 	[Export] private Dictionary<EnemySpawnData, int> _enemiesToPreload;
 	[Export] private PackedScene _damageNumberScene;
 	[Export] private int _damageNumbersToPreInstanciate = 1000;
@@ -53,7 +54,8 @@ public partial class PoolManager : Node2D, IManager
 					else
 						break;
 				}
-				GD.Print(string.Concat("Added ", counter, " ", enemyToInstanciate.EnemyScene.ResourcePath[(enemyToInstanciate.EnemyScene.ResourcePath.LastIndexOf('/') + 1)..enemyToInstanciate.EnemyScene.ResourcePath.LastIndexOf('.')], " to pool!"));
+				if (counter > 0)
+					GD.Print(string.Concat("Added ", counter, " ", enemyToInstanciate.EnemyScene.ResourcePath[(enemyToInstanciate.EnemyScene.ResourcePath.LastIndexOf('/') + 1)..enemyToInstanciate.EnemyScene.ResourcePath.LastIndexOf('.')], " to pool!"));
 			}
 			else if (_damageNumbersToPreInstanciate > 0)
 			{
@@ -67,7 +69,8 @@ public partial class PoolManager : Node2D, IManager
 					if (_damageNumbersToPreInstanciate <= 0)
 						break;
 				}
-				GD.Print("Added " + counter + " damage number scenes too pool");
+				if (counter > 0)
+					GD.Print("Added " + counter + " damage number scenes too pool");
 			}
 			else
 				_startPreinstanciation = false;
@@ -95,7 +98,10 @@ public partial class PoolManager : Node2D, IManager
 		enemy.ProcessMode = ProcessModeEnum.Disabled;
 		if (_enemyPool.TryGetValue(enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], out Array<Enemy> enemiesInPool))
 		{
-			enemiesInPool.Add(enemy);
+			if (enemiesInPool.Count < _maxObjectsInPool)
+				enemiesInPool.Add(enemy);
+			else
+				enemy.QueueFree();
 		}
 		else
 			_enemyPool.Add(enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], [enemy]);
@@ -127,13 +133,18 @@ public partial class PoolManager : Node2D, IManager
 
 	public void AddDamageNumberToPool(DamageNumber damageNumber)
 	{
-		damageNumber.GetParent()?.RemoveChild(damageNumber);
-		damageNumber.Visible = false;
-		damageNumber.Modulate = Colors.White;
-		damageNumber.GlobalPosition = Vector2.Zero;
-    	damageNumber.Scale = Vector2.One * 0.25f;
-		damageNumber.ProcessMode = ProcessModeEnum.Disabled;
-		_damageNumberPool.Add(damageNumber);
+		if (_damageNumberPool.Count < _maxObjectsInPool)
+		{
+			damageNumber.GetParent()?.RemoveChild(damageNumber);
+			damageNumber.Visible = false;
+			damageNumber.Modulate = Colors.White;
+			damageNumber.GlobalPosition = Vector2.Zero;
+			damageNumber.Scale = Vector2.One * 0.25f;
+			damageNumber.ProcessMode = ProcessModeEnum.Disabled;
+			_damageNumberPool.Add(damageNumber);
+		}
+		else
+			damageNumber.QueueFree();
 	}
 
 	public bool TryPopDamageNumberFromPool(out DamageNumber poppedDamageNumber)
