@@ -63,8 +63,10 @@ public partial class EnemyManager : Node, IManager
 	{
 		if (InLevel)
 		{
-			if (_enemySpawnQueue.Count > 0 && StartWaveButton.Disabled == false)
+			if (_enemySpawnQueue.Count > 0 && !StartWaveButton.Disabled)
 				StartWaveButton.Disabled = true;
+			else if (StartWaveButton.Disabled && EnemyParent.GetChildren().Count == 0)
+				StartWaveButton.Disabled = false;
 
 			if (_enemySpawnQueue.Count > 0 && _spawnTimer.IsStopped())
 				SpawnQueuedEnemy();
@@ -74,7 +76,7 @@ public partial class EnemyManager : Node, IManager
 		else if (InTowerCreator && _spawnTimer.IsStopped())
 		{
 			RandomNumberGenerator rand = new();
-			SpawnEnemy(SelectedTestingEnemy, SpawnPoints[rand.RandiRange(0, SpawnPoints.Count - 1)], BaseLocations[rand.RandiRange(0, BaseLocations.Count - 1)]);
+			SpawnEnemy(SelectedTestingEnemy, SpawnPoints[rand.RandiRange(0, SpawnPoints.Count - 1)], BaseLocations[rand.RandiRange(0, BaseLocations.Count - 1)], -1, false);
 
 			_spawnTimer.Start();
 		}
@@ -133,15 +135,16 @@ public partial class EnemyManager : Node, IManager
 
 	private void StartWave()
 	{
-		if (_tempRand != null)
-			RNGManager.instance.RandInstances[this] = _tempRand;
+		if (!EnemyParent.GetChildren().Where(child => child is Enemy enemy && enemy.SpawnedWave > 0).Cast<Enemy>().OrderBy(child => child.SpawnedWave).Any())
+			RunController.instance.SaveLevel();
 
-		RunController.instance.SaveLevel();
-		
 		CurrentWave++;
 
 		if (TowerSlotUnlockWave.Any(wave => CurrentWave == wave))
 			BuildingManager.instance.UpdateTowerSelectionButtons();
+
+		if (_tempRand != null)
+			RNGManager.instance.RandInstances[this] = _tempRand;
 
 		_tempRand = new()
 		{
@@ -164,11 +167,7 @@ public partial class EnemyManager : Node, IManager
 
 		// Remove the enemyToSpawn obtained from wave and if the wave is fully spawned start timer for next wave
 		_enemySpawnQueue.RemoveAt(0);
-		if (_enemySpawnQueue.Count == 0)
-		{
-			StartWaveButton.Disabled = false;
-		}
-		else if (_enemySpawnQueue[0].Item1.EnemyScene.ResourcePath != enemyToSpawn.Item1.EnemyScene.ResourcePath)
+		if (_enemySpawnQueue.Count > 0 && _enemySpawnQueue[0].Item1.EnemyScene.ResourcePath != enemyToSpawn.Item1.EnemyScene.ResourcePath)
 		{
 			_spawnTimer.WaitTime += enemyToSpawn.Item1.BaseSpawnDelay;
 		}
@@ -176,17 +175,13 @@ public partial class EnemyManager : Node, IManager
 
 		Enemy spawnedEnemy = SpawnEnemy(enemyToSpawn.Item1, SpawnPoints[_tempRand.RandiRange(0, SpawnPoints.Count - 1)], BaseLocations[_tempRand.RandiRange(0, BaseLocations.Count - 1)]);
 
-		// Adds effect to give cash on death
-		if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
-			spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath] = onDeathEffects + [new RewardEffect()];
-		else
-			spawnedEnemy.Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
-
 		_spawnTimer.Start();
 	}
 
 	public List<Tuple<EnemySpawnData, bool>> GenerateDynamicWave(Array<EnemySpawnData> enemyPoolDatas)
 	{
+        Queue<EnemySpawnData> forcedEnemies = new(enemyPoolDatas.Where(spawndata => spawndata.ForcedOnIntroductionWave && spawndata.MinWave == CurrentWave));
+
 		List<Tuple<EnemySpawnData, bool>> generatedWave = [];
 
 		// Calculates the amount of enemy segments (each segment rolls a different enemy type, more segments for more types of enemies)
@@ -200,7 +195,7 @@ public partial class EnemyManager : Node, IManager
 			bool condensedWave = _tempRand.Randf() > 0.5f;
 
 			// Select random enemy based on weights
-			EnemySpawnData selectedEnemy = WeightedEnemyChoice(enemyPoolDatas);
+			EnemySpawnData selectedEnemy = (forcedEnemies.Count > 0) ? forcedEnemies.Dequeue() : WeightedEnemyChoice(enemyPoolDatas);
 			if (selectedEnemy == null)
 				return [];
 
@@ -271,8 +266,6 @@ public partial class EnemyManager : Node, IManager
 		{
 			_tempRand.Seed = rand.Seed;
 			_tempRand.State = rand.State;
-
-			RNGManager.instance.RandInstances[this] = _tempRand;
 		}
 
 		return null;
@@ -283,19 +276,54 @@ public partial class EnemyManager : Node, IManager
 		instance = null;
 	}
 
-	public Enemy SpawnEnemy(EnemySpawnData spawnData, Vector2 spawnPosition, Vector2 targetPos, int spawnWave = -1)
+	public Enemy SpawnEnemy(EnemySpawnData spawnData, Vector2 spawnPosition, Vector2 targetPos, int spawnWave = -1, bool givesReward = true)
 	{
         if (!PoolManager.instance.TryPopEnemyFromPool(spawnData.EnemyScene.ResourcePath[(spawnData.EnemyScene.ResourcePath.LastIndexOf('/') + 1)..spawnData.EnemyScene.ResourcePath.LastIndexOf('.')], out Enemy spawnedEnemy))
 		{
 			spawnedEnemy = spawnData.EnemyScene.Instantiate<Enemy>();
 			GD.Print("Instanciated " + spawnData.EnemyScene.ResourcePath[(spawnData.EnemyScene.ResourcePath.LastIndexOf('/') + 1)..spawnData.EnemyScene.ResourcePath.LastIndexOf('.')] + "!");
 		}
-		
-        spawnedEnemy.TargetPos = targetPos;
+
+		if (givesReward)
+		{
+			// Adds reward effect to give cash on death
+			if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects))
+			{
+				int rewardEffecCount = onDeathEffects.Count(effect => effect is RewardEffect);
+				if (rewardEffecCount == 0)
+					spawnedEnemy.Effects[EnemyEffectTrigger.OnDeath] = onDeathEffects + [new RewardEffect()];
+				else if (rewardEffecCount > 1) // If more than 1 reward effect remove all extra copies
+				{
+					bool found = false;
+					foreach (EnemyEffect effect in onDeathEffects)
+					{
+						if (effect is RewardEffect)
+						{
+							if (!found)
+								found = true;
+							else
+								onDeathEffects.Remove(effect);
+						}
+					}
+				}
+			}
+			else // If there are no on death effects just add it on
+				spawnedEnemy.Effects.Add(EnemyEffectTrigger.OnDeath, [new RewardEffect()]);
+		}
+		else if (spawnedEnemy.Effects.TryGetValue(EnemyEffectTrigger.OnDeath, out Array<EnemyEffect> onDeathEffects) && onDeathEffects.Any(effect => effect is RewardEffect))
+		{ // If enemy shouldnt give reward remove every instance of reward effect
+			foreach (EnemyEffect effect in onDeathEffects)
+			{
+				if (effect is RewardEffect)
+					onDeathEffects.Remove(effect);
+			}
+		}
+			
+		spawnedEnemy.TargetPos = targetPos;
 		spawnedEnemy.GlobalPosition = spawnPosition;
 		spawnedEnemy.SpawnedWave = (spawnWave == -1 && !InTowerCreator) ? CurrentWave : spawnWave;
 
-		EnemyParent.CallDeferred(Node.MethodName.AddChild, spawnedEnemy);
+		EnemyParent.AddChild(spawnedEnemy);
 
 		return spawnedEnemy;
 	}

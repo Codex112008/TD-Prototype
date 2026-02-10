@@ -23,6 +23,7 @@
 
 [node name="PoolManager" type="Node2D"]
 script = ExtResource("1_vdrkx")
+_maxObjectsInPool = 1000
 _enemiesToPreload = Dictionary[Object, int]({
 ExtResource("4_p6yhu"): 40,
 ExtResource("18_rw6hb"): 50,
@@ -37,10 +38,10 @@ ExtResource("10_d4c6y"): 150,
 ExtResource("9_wenob"): 100,
 ExtResource("8_ghor5"): 20,
 ExtResource("7_400ea"): 50,
-ExtResource("6_ngu8i"): 10,
+ExtResource("6_ngu8i"): 500,
 ExtResource("5_f7fkf"): 100,
 ExtResource("4_4mpbf"): 1000,
-ExtResource("3_bnupe"): 5000,
-ExtResource("2_5atjc"): 3000
+ExtResource("3_bnupe"): 1000,
+ExtResource("2_5atjc"): 1000
 })
 _damageNumberScene = ExtResource("5_bnupe")

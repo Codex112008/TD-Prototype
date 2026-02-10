@@ -16,7 +16,7 @@ public partial class DroneProjectile : Projectile
             drone.GlobalPosition = firePoint.GlobalPosition;
             drone.Rotation = firePoint.GlobalRotation;
             drone.Stats = tower.GetFinalTowerStats();
-            drone.TargetPos = targetGlobalPos;
+            drone.LandingPos = targetGlobalPos;
             drone.DroneData = this;
 
             drone.Modulate = DamageTypeData.GetMultipleDamageTypeColor([.. Effects.Select(effect => effect.DamageType)]);

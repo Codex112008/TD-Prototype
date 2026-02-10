@@ -13,7 +13,7 @@ public static class TowerTargetingData
 				{
 					if (node is Enemy enemy)
 					{
-						if ((firstEnemy == null || enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && tower.VectorInRange(enemy.GlobalPosition))
+						if ((firstEnemy == null || enemy.PathArray != null && enemy.PathArray.Count < firstEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= firstEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && tower.VectorInRange(enemy.GlobalPosition))
 						{
 							firstEnemy = enemy;
 						}
@@ -29,7 +29,7 @@ public static class TowerTargetingData
 				{
 					if (node is Enemy enemy)
 					{
-						if (((lastEnemy == null) || enemy.PathArray.Count > lastEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= lastEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && tower.VectorInRange(enemy.GlobalPosition))
+						if (((lastEnemy == null) || enemy.PathArray != null && enemy.PathArray.Count > lastEnemy.PathArray.Count && enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro) >= lastEnemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Aggro)) && tower.VectorInRange(enemy.GlobalPosition))
 						{
 							lastEnemy = enemy;
 						}
@@ -112,7 +112,7 @@ public static class TowerTargetingData
 
             CharacterBody2D dummyBody = new();
             tower.AddChild(dummyBody);
-            dummyBody.AddChild(new Sprite2D(){Texture = tower.Projectile.Icon});
+            //dummyBody.AddChild(new Sprite2D(){Texture = tower.Projectile.Icon});
             dummyBody.GlobalPosition = randomPos;
             return dummyBody;
         }

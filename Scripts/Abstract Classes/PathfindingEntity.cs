@@ -10,7 +10,7 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 	[Export] private float _offsetMargin = 0.4f;
 
 	public Vector2 TargetPos;
-	public Array<Vector2> PathArray = [];
+	public Array<Vector2> PathArray = null;
 
 	protected RandomNumberGenerator _rand = new();
 	protected float _speed;
@@ -18,11 +18,7 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
-		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
-		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f), _rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f));
-		for (int i = 1; i < PathArray.Count - 1; i++)
-			PathArray[i] += offset;
+		GeneratePath();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -60,6 +56,15 @@ public abstract partial class PathfindingEntity : CharacterBody2D
 
 		Velocity = Velocity.Lerp(dir.Normalized() * _speed * speedMult, _acceleration * delta);
 		Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, dir.Angle(), _acceleration * delta);
+	}
+
+	protected void GeneratePath()
+	{
+		PathArray = PathfindingManager.instance.GetValidPath((Vector2I)(GlobalPosition / PathfindingManager.instance.TileSize), (Vector2I)(TargetPos / PathfindingManager.instance.TileSize));
+		float offsetMargin = PathfindingManager.instance.TileSize * 0.75f;
+		Vector2 offset = new(_rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f), _rand.RandfRange(-offsetMargin / 2f, offsetMargin / 2f));
+		for (int i = 1; i < PathArray.Count - 1; i++)
+			PathArray[i] += offset;
 	}
 
 	protected virtual void ReachedPathEnd()

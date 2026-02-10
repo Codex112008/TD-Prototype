@@ -14,6 +14,8 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 	private float _currentHealth;
 	private float _targetRot;
 	private bool _showMaxHp = true;
+	private bool _isDead = false;
+	private bool _reachedPos = false;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -39,6 +41,9 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		if (GlobalPosition.DistanceTo(TargetPos) < 8f)
+			_reachedPos = true;
+
+		if (_reachedPos && !PathfindingManager.instance.IsTileAtGlobalPosSolid(GlobalPosition))
 			Velocity = Velocity.Lerp(Vector2.Zero, _friction * (float)delta);
 		else
 			Velocity = -Transform.Y.Normalized() * SpikeData.ProjectileSpeed;
@@ -51,7 +56,7 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 
 	public void OnBodyEntered(Node2D body)
 	{
-		if (body.IsInGroup("Enemy"))
+		if (!_isDead && body.IsInGroup("Enemy"))
 		{
 			Enemy enemy = (Enemy)body;
 			Dictionary<TowerStat, float> statsToUse = new(Stats);
@@ -59,15 +64,15 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 
 			// If enemy has les hp than spike then weaken effect to do just enough to enemy
 			float enemyHealth = enemy.GetCurrentHealth();
-			if (enemyHealth < _currentHealth)
+			if (enemy.DamageBeforeArmorPierce(enemyHealth) < _currentHealth)
 			{
-				statMultiplier = enemyHealth / Stats[TowerStat.Damage];
+				statMultiplier = enemy.DamageBeforeArmorPierce(enemyHealth) / Stats[TowerStat.Damage];
 			}
 
 			foreach (TowerStat stat in statsToUse.Keys)
 				statsToUse[stat] *= statMultiplier;
 
-			_currentHealth = Mathf.Max(_currentHealth - enemy.GetCurrentHealth(), 0);
+			_currentHealth = Mathf.Max(_currentHealth - enemy.DamageBeforeArmorPierce(enemyHealth), 0);
 
 			GetChild<RichTextLabel>(3).Text = _currentHealth.ToString() + '/' + Stats[TowerStat.Damage];
 
@@ -75,7 +80,10 @@ public partial class SpikeProjectileBehaviour : CharacterBody2D
 				effect.ApplyEffect(statsToUse, enemy);
 			
 			if (_currentHealth <= 0f)
+			{
+				_isDead = true;
 				QueueFree();
+			}
 		}
 	}
 

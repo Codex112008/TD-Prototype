@@ -16,4 +16,5 @@ public partial class EnemySpawnData : Resource
 	[Export] public int QtyMax = int.MaxValue;
 	[Export] public float BaseSpawnDelay;
 	[Export] public Array<EnemySpawnData> PairingChoices = [];
+	[Export] public bool ForcedOnIntroductionWave = true;
 }

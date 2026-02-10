@@ -11,11 +11,11 @@ size = Vector2(10, 10)
 collision_mask = 0
 script = ExtResource("1_vgexm")
 _baseEnemyStats = Dictionary[int, int]({
-0: 20,
-1: 300,
+0: 15,
+1: 600,
 2: 35,
 3: 1,
-4: 19
+4: 21
 })
 _damageNumberScene = ExtResource("2_8b2ek")
 _offsetMargin = 0.55

@@ -21,6 +21,7 @@ public partial class Enemy : PathfindingEntity
 	public Array<Timer> TimerEffectTimers = [];
 	public int SpawnedWave = -1;
 	public bool RegisterDeathSignal = true;
+	public CollisionShape2D Collider = null;
 
 	protected Dictionary<StatusEffect, float> _currentStatusEffects = [];
 	protected Dictionary<StatusEffect, Timer> _currentStatusEffectDecayTimers = [];
@@ -86,12 +87,12 @@ public partial class Enemy : PathfindingEntity
 			}
 		}
 
-		Init();
+		CallDeferred(MethodName.Init);
 
-		TreeEntered += Init;
+		Connect(Node.SignalName.TreeEntered, Callable.From(() => CallDeferred(MethodName.Init)));
 	}
 
-	private void Init()
+	public void Init()
 	{
 		// Reset enemy stats to base enemy stats
 		CurrentEnemyStats = [];
@@ -107,25 +108,34 @@ public partial class Enemy : PathfindingEntity
 
 		// Trigger effects that happen when spawning
 		TriggerEffects(EnemyEffectTrigger.OnSpawn);
-		TriggerEffects(EnemyEffectTrigger.OnTimer);
 
 		// Start timers for timer effects
 		foreach (Timer timer in TimerEffectTimers)
 		{
-			if (IsInsideTree())
+			GetTree().CreateTimer(timer.WaitTime / 3f).Connect(Timer.SignalName.Timeout, Callable.From(() =>
+			{
+				timer.EmitSignal(Timer.SignalName.Timeout);
 				timer.Start();
-			else
-				timer.Autostart = true;
+			}));
 		}
 		
 		base._Ready();
 
 		// If grabbing from pool need to reset this so the enemy can take damage and die
 		_isDead = false;
+		
+		Collider ??= (CollisionShape2D)GetChildren().First(child => child is CollisionShape2D);
+		ProcessMode = ProcessModeEnum.Inherit;
 	}
 
     public override void _PhysicsProcess(double delta)
     {
+		if (Collider.Disabled && Visible)
+			Collider.Disabled = false;
+
+		if (!Visible)
+			Visible = true;
+
 		_speed = CurrentEnemyStats[EnemyStat.Speed];
 
         base._PhysicsProcess(delta);
@@ -134,13 +144,16 @@ public partial class Enemy : PathfindingEntity
 	// Returns Damage Dealt
 	public virtual float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
 	{
+		if (float.IsInfinity(amount) || float.IsNaN(amount) || !IsInsideTree() || _isDead)
+            return 0f;
+
 		if (Mathf.RoundToInt(amount * 100) == 0)
 			return amount;
 		
 		if (amount < 0)
 			damageType = DamageType.Heal;
 
-		if (!_isDead && IsInsideTree())
+		if (!_isDead)
 		{
 			float damageDealt = amount;
 			if (!defenceBreak)
@@ -152,7 +165,7 @@ public partial class Enemy : PathfindingEntity
 
 			InstantiateDamageNumber(damageDealt, damageType);
 
-			TriggerEffects(EnemyEffectTrigger.OnThreshold);
+			TriggerEffects(EnemyEffectTrigger.OnDamage);
 			
 			// Debug thing
 			if (_showMaxHp)
@@ -287,12 +300,7 @@ public partial class Enemy : PathfindingEntity
 		{
 			foreach (EnemyEffect effect in effects)
 			{
-				if (triggerEvent == EnemyEffectTrigger.OnThreshold && _currentHealth / CurrentEnemyStats[EnemyStat.MaxHealth] < effect.HealthPercentageThreshold)
-				{
-					effect.ApplyEffect(this);
-				}
-				else if (triggerEvent != EnemyEffectTrigger.OnThreshold)
-					effect.ApplyEffect(this);
+				effect.ApplyEffect(this);
 			}
 		}
 	}
@@ -300,7 +308,7 @@ public partial class Enemy : PathfindingEntity
 	protected void InstantiateDamageNumber(float damageDealt, DamageType damageType)
 	{
         DamageNumber damageNumber;
-        if (PoolManager.instance != null)
+        if (IsInstanceValid(PoolManager.instance))
 			damageNumber = PoolManager.instance.PopDamageNumberFromPoolOrInstantiate();
 		else
 			damageNumber = _damageNumberScene.Instantiate<DamageNumber>();
@@ -317,6 +325,14 @@ public partial class Enemy : PathfindingEntity
 			return originalDamage * Mathf.Pow(0.975f, defence - 1);
 		else
 			return originalDamage;
+	}
+
+	public float DamageBeforeArmorPierce(float damageAfterAP)
+	{
+		if (CurrentEnemyStats.TryGetValue(EnemyStat.Defence, out float defence))
+			return damageAfterAP / Mathf.Pow(0.975f, defence - 1);
+		else
+			return damageAfterAP;
 	}
 
 	public void RestoreOriginalColor()

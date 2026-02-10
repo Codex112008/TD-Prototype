@@ -11,13 +11,14 @@ _aoeScene = ExtResource("2_knh5n")
 DamageType = 0
 Tooltip = "Big boom
 You get a larger aoe from range
-Range 0.6x
-Firerate 0.9x"
+Damage 0.5x
+Range 0.75x
+Firerate 0.75x"
 Icon = ExtResource("1_6aes2")
 StatMultipliers = Dictionary[int, float]({
 0: 1.0,
-1: 1.0,
-2: 0.6,
-3: 0.9
+1: 0.5,
+2: 0.75,
+3: 0.75
 })
-PointCost = 75
+PointCost = 100

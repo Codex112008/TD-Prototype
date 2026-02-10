@@ -40,7 +40,7 @@ public partial class DomainTower : Tower
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
-                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
+                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition) && _target.IsInsideTree())
                 {
                     if (_fireTimer.IsStopped())
                     {
@@ -62,14 +62,11 @@ public partial class DomainTower : Tower
 
     protected override void Fire()
     {
-        for (int i = 0; i < TowerLevel + 1; i++)
-        {
-            Vector2 predictedTargetPos = _target.GlobalPosition + _target.Velocity * (_projectileSpawnRadius / Projectile.ProjectileSpeed);
-            float randomAngle = _rand.RandfRange(0f, Mathf.Tau);
-            _firePoint.GlobalPosition = predictedTargetPos + Vector2.One.Rotated(randomAngle).Normalized() * _projectileSpawnRadius;
-            _firePoint.Rotation = _firePoint.GlobalPosition.DirectionTo(predictedTargetPos).Angle() + Mathf.Pi / 2f;
-            Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition);
-        }
+        Vector2 predictedTargetPos = _target.GlobalPosition + _target.Velocity * (_projectileSpawnRadius / Projectile.ProjectileSpeed);
+        float randomAngle = _rand.RandfRange(0f, Mathf.Tau);
+        _firePoint.GlobalPosition = predictedTargetPos + Vector2.One.Rotated(randomAngle).Normalized() * _projectileSpawnRadius;
+        _firePoint.Rotation = _firePoint.GlobalPosition.DirectionTo(predictedTargetPos).Angle() + Mathf.Pi / 2f;
+        Projectile.InstantiateProjectile(this, _firePoint, predictedTargetPos);
     }
 
     protected override int GetPointCostFromDamage()

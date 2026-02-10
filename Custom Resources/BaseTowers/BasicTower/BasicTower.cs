@@ -35,7 +35,7 @@ public partial class BasicTower : Tower
 
             if (GetTree().GetNodeCountInGroup("Enemy") > 0 || !Projectile.RequireEnemy)
             {
-                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
+                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition) && _target.IsInsideTree())
                 {
                     Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
                     float targetAngle = dir.Angle() + Mathf.Pi / 2f;
@@ -62,6 +62,6 @@ public partial class BasicTower : Tower
 
     protected override void Fire()
     {
-        Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition);
+        Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
     }
 }

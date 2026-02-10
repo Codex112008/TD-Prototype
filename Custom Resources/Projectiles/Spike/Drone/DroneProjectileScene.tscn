@@ -9,12 +9,12 @@ size = Vector2(2, 2)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7mya"]
 size = Vector2(12, 12)
 
-[node name="DroneProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("_sprite")]
+[node name="DroneProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("Sprite")]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_pndt4")
-_sprite = NodePath("Sprite2D")
 _friction = 25.0
+Sprite = NodePath("Sprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_rb7fd")

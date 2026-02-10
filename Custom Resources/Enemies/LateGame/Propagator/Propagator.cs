@@ -6,8 +6,11 @@ public partial class Propagator : Enemy
 	[Export] private EnemySpawnData _broodmotherSpawnData;
 	[Export] private EnemySpawnData _carrierSpawnData;
 	[Export] private float _broodmotherDamageThreshold = 400;
+	[Export] private float _regenStacksToAdd = 5f;
 	private Timer _spawnTimer;
 	private float _damageCounter = 0f;
+	private bool _spawning = false;
+	private bool _appliedRegen = false;
 
     public override void _Ready()
     {
@@ -20,9 +23,6 @@ public partial class Propagator : Enemy
 			OneShot = true
 		};
 		AddChild(_spawnTimer);
-
-		_currentStatusEffectDecayTimers[StatusEffect.Regen].QueueFree();
-		_currentStatusEffectDecayTimers.Remove(StatusEffect.Regen);
     }
 
     public override float TakeDamage(float amount, DamageType damageType, bool defenceBreak = false)
@@ -32,8 +32,14 @@ public partial class Propagator : Enemy
 			_damageCounter += damage;
 
 		// Spawns carriers and broodmothers based on hp loss
-		if (_spawnTimer.TimeLeft <= 0f && _damageCounter > 0)
+		if (!_spawning && _spawnTimer.TimeLeft <= 0f && _damageCounter > 0)
 			SpawnSummons();
+
+		if (GetCurrentHealth() < (CurrentEnemyStats[EnemyStat.MaxHealth] * 0.4f) && !_appliedRegen)
+		{
+			AddStatusEffectStacks(StatusEffect.Regen, _regenStacksToAdd);
+			_appliedRegen = true;
+		}
 
         return damage;
     }
@@ -46,63 +52,52 @@ public partial class Propagator : Enemy
 			CurrentEnemyStats[EnemyStat.Speed] *= 0.6f;
     }
 
-    public override void AddStatusEffectStacks(StatusEffect status, float statusStacks, bool decay = false)
-    {
-        base.AddStatusEffectStacks(status, statusStacks, decay);
-
-		if (status == StatusEffect.Regen)
-			_currentStatusEffects[status] = Mathf.Min(2.67f, _currentStatusEffects[status]);
-    }
-
 	private async void SpawnSummons()
 	{
+		_spawning = true;
+
 		int broodmotherCount = Mathf.FloorToInt(_damageCounter / _broodmotherDamageThreshold);
 		_damageCounter -= broodmotherCount * _broodmotherDamageThreshold;
 		int carrierCount = Mathf.FloorToInt(_damageCounter / 25f);
 		_damageCounter = 0;
 
-		AddStatusEffectStacks(StatusEffect.Stun, (0.5f + (broodmotherCount * 0.1f) + (carrierCount * 0.05f)) * 10f);
-
-		Timer timer = new()
+		if (broodmotherCount > 0 || carrierCount > 0)
 		{
-			WaitTime = 0.5f,
-			Autostart = true,
-			OneShot = true
-		};
-        AddChild(timer);
+			// AddStatusEffectStacks(StatusEffect.Stun, (0.5f + (broodmotherCount * 0.1f) + (carrierCount * 0.05f)) * 10f);
 
-		await ToSignal(timer, Timer.SignalName.Timeout);
+			Timer timer = new()
+			{
+				WaitTime = 0.15f,
+				Autostart = true,
+				OneShot = true
+			};
+			AddChild(timer);
 
-		RandomNumberGenerator rand = new();
-		for (int i = 0; i < broodmotherCount; i++)
-		{
-			Enemy spawnedEnemy = _broodmotherSpawnData.EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = GlobalPosition;
-			spawnedEnemy.SpawnedWave = SpawnedWave;
-
-			EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
-
-			timer.Start();
 			await ToSignal(timer, Timer.SignalName.Timeout);
+
+			RandomNumberGenerator rand = new();
+			for (int i = 0; i < broodmotherCount; i++)
+			{
+				EnemyManager.instance.SpawnEnemy(_broodmotherSpawnData, GlobalPosition, EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)], SpawnedWave, false);
+
+				timer.Start();
+				await ToSignal(timer, Timer.SignalName.Timeout);
+			}
+
+			timer.WaitTime = 0.1f;
+
+			for (int i = 0; i < carrierCount; i++)
+			{
+				EnemyManager.instance.SpawnEnemy(_carrierSpawnData, GlobalPosition, EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)], SpawnedWave, false);
+
+				timer.Start();
+				await ToSignal(timer, Timer.SignalName.Timeout);
+			}
+
+			timer.QueueFree();
+			_spawnTimer.Start();
 		}
 
-		timer.WaitTime = 0.05f;
-
-		for (int i = 0; i < carrierCount; i++)
-		{
-			Enemy spawnedEnemy = _carrierSpawnData.EnemyScene.Instantiate<Enemy>();
-			spawnedEnemy.TargetPos = EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)];
-			spawnedEnemy.GlobalPosition = GlobalPosition;
-			spawnedEnemy.SpawnedWave = SpawnedWave;
-
-			EnemyManager.instance.EnemyParent.AddChild(spawnedEnemy);
-
-			timer.Start();
-			await ToSignal(timer, Timer.SignalName.Timeout);
-		}
-
-		timer.QueueFree();
-		_spawnTimer.Start();
+		_spawning = false;
 	}
 }

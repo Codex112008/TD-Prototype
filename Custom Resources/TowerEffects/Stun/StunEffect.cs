@@ -12,7 +12,7 @@ public partial class StunEffect : TowerEffect
         if (target.PathArray.Count > 0)
         {
             Vector2 dir = target.GlobalPosition.DirectionTo(target.PathArray[0]).Normalized();
-            target.Velocity -= dir * _finalStats[TowerStat.Damage] * 7.5f;
+            target.Velocity -= dir * _finalStats[TowerStat.Damage] * 7.5f * Mathf.Pow(0.975f, target.CurrentEnemyStats[EnemyStat.Defence]);
         }
     }
 }

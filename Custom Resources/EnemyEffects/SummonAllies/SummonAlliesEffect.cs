@@ -44,7 +44,7 @@ public partial class SummonAlliesEffect : EnemyEffect
             Vector2 directionToTargetTile = centeredTileGlobalPos.DirectionTo(centeredTileTargetPos).Normalized();
             Vector2 offsetVector = new Vector2(-directionToTargetTile.Y, directionToTargetTile.X).Normalized() * rand.RandfRange(-(PathfindingManager.instance.TileSize * 0.75f) / 2, PathfindingManager.instance.TileSize * 0.75f / 2);
 
-            Enemy spawnedEnemy = EnemyManager.instance.SpawnEnemy(EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false), centeredTileGlobalPos + (directionToTargetTile * randomDistance) + offsetVector, EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)], enemy.SpawnedWave);
+            Enemy spawnedEnemy = EnemyManager.instance.SpawnEnemy(EnemyManager.instance.WeightedEnemyChoice(_enemiesToSpawn, false), centeredTileGlobalPos + (directionToTargetTile * randomDistance) + offsetVector, EnemyManager.instance.BaseLocations[rand.RandiRange(0, EnemyManager.instance.BaseLocations.Count - 1)], enemy.SpawnedWave, false);
             spawnedEnemy.GetChild<Sprite2D>(0).Rotation = directionToTargetTile.Angle();
                         
             if (i == _enemiesToSpawnCount - 1)

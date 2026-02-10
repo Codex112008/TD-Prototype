@@ -8,7 +8,7 @@ public partial class SpikeProjectile : Projectile
 
     public override SpikeProjectileBehaviour InstantiateProjectile(Tower tower, Marker2D firePoint, Vector2 targetGlobalPos)
     {
-        if (IsInstanceValid(tower.InstancedProjectiles) && tower.InstancedProjectiles.GetChildCount() < MaxSpawns)
+        if (IsInstanceValid(tower.InstancedProjectiles) && (tower.InstancedProjectiles.GetChildCount() < MaxSpawns || tower.GetTree().GetNodeCountInGroup("Enemy") > 0))
         {
             SpikeProjectileBehaviour spike = ProjectileScene.Instantiate<SpikeProjectileBehaviour>();
             spike.GlobalPosition = firePoint.GlobalPosition;

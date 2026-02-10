@@ -1,6 +1,6 @@
 using Godot;
-using Godot.Collections;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public partial class PoolManager : Node2D, IManager
@@ -17,13 +17,13 @@ public partial class PoolManager : Node2D, IManager
 	}
 
 	[Export] private int _maxObjectsInPool = 5000;
-	[Export] private Dictionary<EnemySpawnData, int> _enemiesToPreload;
+	[Export] private Godot.Collections.Dictionary<EnemySpawnData, int> _enemiesToPreload;
 	[Export] private PackedScene _damageNumberScene;
 	[Export] private int _damageNumbersToPreInstanciate = 1000;
 
 	private int _preinstanciationPerFrame = 100;
-	private Dictionary<string, Array<Enemy>> _enemyPool = [];
-	private Array<DamageNumber> _damageNumberPool = [];
+	private Dictionary<string, Queue<Enemy>> _enemyPool = [];
+	private Queue<DamageNumber> _damageNumberPool = [];
 	private bool _startPreinstanciation = false;
 
 	// Called when the node enters the scene tree for the first time.
@@ -84,27 +84,35 @@ public partial class PoolManager : Node2D, IManager
 
 	public void AddEnemyToPool(Enemy enemy)
 	{
-		// Reset status effects of enemy
-		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
-			enemy.SetStatusEffectValue(status, 0f);
-
-		enemy.GetParent()?.RemoveChild(enemy);
-
 		foreach (Timer timer in enemy.TimerEffectTimers)
 			timer.Stop();
 		
 		// Disable enemy visibility and processing just in case
 		enemy.Visible = false;
 		enemy.ProcessMode = ProcessModeEnum.Disabled;
-		if (_enemyPool.TryGetValue(enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], out Array<Enemy> enemiesInPool))
+		enemy.PathArray = null;
+		enemy.Collider ??= (CollisionShape2D)enemy.GetChildren().First(child => child is CollisionShape2D);
+		enemy.Collider.Disabled = true;
+
+        enemy.GetParent()?.RemoveChild(enemy);
+
+		// Reset status effects of enemy
+		foreach (StatusEffect status in Enum.GetValues(typeof(StatusEffect)).Cast<StatusEffect>())
+			enemy.SetStatusEffectValue(status, 0f);
+		
+		if (_enemyPool.TryGetValue(enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], out Queue<Enemy> enemiesInPool))
 		{
 			if (enemiesInPool.Count < _maxObjectsInPool)
-				enemiesInPool.Add(enemy);
+				enemiesInPool.Enqueue(enemy);
 			else
+			{
 				enemy.QueueFree();
+				GD.Print("Pool full, freed " + enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')] + "!");
+				return;
+			}
 		}
 		else
-			_enemyPool.Add(enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], [enemy]);
+			_enemyPool.Add(enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], new([enemy]));
 
 		if (!_startPreinstanciation)
 			GD.Print(string.Concat("Added ", enemy.SceneFilePath[(enemy.SceneFilePath.LastIndexOf('/') + 1)..enemy.SceneFilePath.LastIndexOf('.')], " to pool!"));
@@ -112,12 +120,11 @@ public partial class PoolManager : Node2D, IManager
 
 	public bool TryPopEnemyFromPool(string enemyToGetName, out Enemy poppedEnemy)
 	{
-		if (_enemyPool.TryGetValue(enemyToGetName, out Array<Enemy> enemiesInPool) && enemiesInPool.Count > 0)
+		if (_enemyPool.TryGetValue(enemyToGetName, out Queue<Enemy> enemiesInPool) && enemiesInPool.Count > 0)
 		{
-			Enemy foundEnemy = enemiesInPool.Last();
-			enemiesInPool.RemoveAt(enemiesInPool.Count - 1);
-			foundEnemy.Visible = true;
-			foundEnemy.ProcessMode = ProcessModeEnum.Inherit;
+			Enemy foundEnemy = enemiesInPool.Dequeue();
+			foundEnemy.Velocity = Vector2.Zero;
+
 			poppedEnemy = foundEnemy;
 
 			GD.Print("Popped " + enemyToGetName + "!");
@@ -141,7 +148,7 @@ public partial class PoolManager : Node2D, IManager
 			damageNumber.GlobalPosition = Vector2.Zero;
 			damageNumber.Scale = Vector2.One * 0.25f;
 			damageNumber.ProcessMode = ProcessModeEnum.Disabled;
-			_damageNumberPool.Add(damageNumber);
+			_damageNumberPool.Enqueue(damageNumber);
 		}
 		else
 			damageNumber.QueueFree();
@@ -151,8 +158,7 @@ public partial class PoolManager : Node2D, IManager
 	{
 		if (_damageNumberPool.Count > 0)
 		{
-			DamageNumber foundDamageNumber = _damageNumberPool.Last();
-			_damageNumberPool.RemoveAt(_damageNumberPool.Count - 1);
+			DamageNumber foundDamageNumber = _damageNumberPool.Dequeue();
 			foundDamageNumber.Visible = true;
 			foundDamageNumber.ProcessMode = ProcessModeEnum.Inherit;
 			foundDamageNumber.RequestReady();
@@ -160,6 +166,18 @@ public partial class PoolManager : Node2D, IManager
 		}
 		else
 			return _damageNumberScene.Instantiate<DamageNumber>();
+	}
+
+	public void ClearAllPools()
+	{
+		foreach (Queue<Enemy> enemyQueue in _enemyPool.Values)
+		{
+			while (enemyQueue.Count > 0)
+				enemyQueue.Dequeue().Free();
+		}
+
+		foreach (DamageNumber damageNumber in _damageNumberPool)
+			damageNumber.Free();
 	}
 
     public void Init()

@@ -7,7 +7,7 @@
 size = Vector2(2, 2)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7mya"]
-size = Vector2(10, 10)
+size = Vector2(14, 14)
 
 [node name="PinProjectileScene" type="CharacterBody2D" node_paths=PackedStringArray("_sprite")]
 collision_layer = 2

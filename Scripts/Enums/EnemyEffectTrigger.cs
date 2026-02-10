@@ -2,6 +2,6 @@ public enum EnemyEffectTrigger
 {
     OnSpawn,
     OnDeath,
-    OnThreshold,
+    OnDamage,
     OnTimer,
 }

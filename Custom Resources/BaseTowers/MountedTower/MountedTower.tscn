@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcscpx7p5hw7p"]
+[gd_scene load_steps=3 format=3 uid="uid://dcscpx7p5hw7p"]
 
 [ext_resource type="Texture2D" uid="uid://ctaypwnuli1gp" path="res://Sprites/Towers/MiscTowerAssets/TowerBase.png" id="1_eeteq"]
+[ext_resource type="Script" uid="uid://6dw4doho8j41" path="res://Custom Resources/BaseTowers/MountedTower/MountedTower.cs" id="2_g1e8u"]
 
 [node name="MountedTower" type="Sprite2D" groups=["Persist"]]
 z_index = 1
 texture = ExtResource("1_eeteq")
 centered = false
+script = ExtResource("2_g1e8u")

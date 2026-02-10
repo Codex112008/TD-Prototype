@@ -10,6 +10,5 @@ script = ExtResource("4_v4e02")
 _enemiesToSpawn = Array[Object]([ExtResource("1_i8s3n"), ExtResource("2_5w0s7"), ExtResource("3_qq1vl")])
 _enemiesToSpawnCount = 5
 _spawnDelay = 0.2
-EffectInterval = 7.0
-HealthPercentageThreshold = 0.0
+EffectInterval = 5.0
 metadata/_custom_type_script = "uid://bteaehp6g8775"

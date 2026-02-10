@@ -42,7 +42,7 @@ public partial class ReanimatorTower : Tower
             {
                 _target = _graveParent.GetChildren().FirstOrDefault(child => child is Node2D node && VectorInRange(node.GlobalPosition) && node.IsInGroup("Enemy")) as CharacterBody2D;
 
-                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition))
+                if (IsInstanceValid(_target) && VectorInRange(_target.GlobalPosition) && _target.IsInsideTree())
                 {
                     if (_fireTimer.IsStopped())
                     {
@@ -61,7 +61,7 @@ public partial class ReanimatorTower : Tower
     {
         Vector2 dir = GetCenteredGlobalPosition().DirectionTo(_target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
         _firePoint.Rotation = dir.Angle() + (Mathf.Pi / 2f);
-        Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition);
+        Projectile.InstantiateProjectile(this, _firePoint, _target.GlobalPosition + _target.Velocity * (GetCenteredGlobalPosition().DistanceTo(_target.GlobalPosition) / Projectile.ProjectileSpeed));
     }
 
     private void OnEnemyDeath(Enemy enemy)

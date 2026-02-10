@@ -52,7 +52,7 @@ public static class StatusEffectsData
 			new()
 			{
 				{StatusEffect.Surge, Callable.From((Enemy enemy) => (float)Math.Log2((enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Reinforcement) + 15f) / 15f) + 1)},
-				{StatusEffect.Poison, Callable.From((Enemy enemy) => Mathf.Max(0f, 1f - (Mathf.Max(0f, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison) - 140f) * 0.02f)))},
+				{StatusEffect.Poison, Callable.From((Enemy enemy) => Mathf.Max(0.1f, 1f - (Mathf.Max(0f, enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison) - 140f) * 0.02f)))},
 			}
 		},
 	};
@@ -111,7 +111,7 @@ public static class StatusEffectsData
 	{
 		{StatusEffect.Poison, Callable.From((Enemy enemy) =>
 			{
-				enemy.TakeDamage(enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.0025f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison), 0.1f), DamageType.Poison, true);
+				enemy.TakeDamage(enemy.CurrentEnemyStats[EnemyStat.MaxHealth] * Mathf.Min(0.001f * enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Poison), 0.05f), DamageType.Poison, true);
 			})
 		},
 		{StatusEffect.Burn, Callable.From((Enemy enemy) =>
@@ -135,9 +135,8 @@ public static class StatusEffectsData
 			})
 		},
 		{StatusEffect.Bleed, Callable.From((Enemy enemy) => 
-			{ // Does more damage based on the speed of enemy
+			{
 				enemy.TakeDamage(enemy.GetCurrentEnemyStatusEffectStacks(StatusEffect.Bleed) * 0.1f, DamageType.Physical, false);
-				enemy.AddStatusEffectStacks(StatusEffect.Bleed, (100f / enemy.CurrentEnemyStats[EnemyStat.Speed]) + 1);
 			})
 		},
 	};

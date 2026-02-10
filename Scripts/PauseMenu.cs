@@ -3,6 +3,7 @@ using System;
 
 public partial class PauseMenu : PanelContainer
 {
+	[Export] private WorldEnvironment _worldEnv;
 	[Export] private Button _mainMenuButton;
 	private double _timescaleBeforePause = 1;
 
@@ -49,5 +50,10 @@ public partial class PauseMenu : PanelContainer
 			RunController.instance.SaveLevel();
 		RunController.instance.DeloadRun();
 		node.GetTree().ChangeSceneToFile(ProjectSettings.GlobalizePath("res://Scenes/MainScenes/MainMenu.tscn"));
+	}
+
+	public void OnGlowButtonToggled(bool toggledOn)
+	{
+		_worldEnv.Environment.GlowEnabled = toggledOn;
 	}
 }

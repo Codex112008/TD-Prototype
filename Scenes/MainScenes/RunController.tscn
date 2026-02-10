@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://dgthljd51vhi"]
+[gd_scene load_steps=21 format=3 uid="uid://dgthljd51vhi"]
 
 [ext_resource type="Script" uid="uid://do0euj58tudiv" path="res://Scripts/Managers and Controllers/RunController.cs" id="1_r5dbq"]
 [ext_resource type="PackedScene" uid="uid://dy2jvm1mvslvb" path="res://Scenes/MainScenes/PrototypeLevel.tscn" id="2_ud3b5"]
@@ -11,25 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cmgbeg3m83gjq" path="res://Scenes/Managers/RNGManager.tscn" id="9_1phdm"]
 [ext_resource type="Texture2D" uid="uid://buy2sc8pcjfcx" path="res://Sprites/Tilemap/New Piskel.png" id="10_gf1ev"]
 [ext_resource type="PackedScene" uid="uid://c18opigcfreke" path="res://Scenes/Managers/PoolManager.tscn" id="10_ud3b5"]
-[ext_resource type="Resource" uid="uid://bv51a5tiokyfy" path="res://Custom Resources/Enemies/EarlyGame/BasicEnemy/BasicEnemySpawnData.tres" id="11_mnqak"]
-[ext_resource type="Resource" uid="uid://bo3sktptr4qre" path="res://Custom Resources/Enemies/EarlyGame/SplitterEnemy/SplitterEnemySpawnData.tres" id="12_1phdm"]
-[ext_resource type="Resource" uid="uid://cl76w4sekrrvt" path="res://Custom Resources/Enemies/EarlyGame/SplitterlingEnemy/SplitterlingEnemySpawnData.tres" id="13_gf1ev"]
-[ext_resource type="Resource" uid="uid://danojg6cxpy12" path="res://Custom Resources/Enemies/MidGame/CarrierEnemy/CarrierEnemySpawnData.tres" id="14_8sad6"]
-[ext_resource type="Resource" uid="uid://l8jrdmb3kmj1" path="res://Custom Resources/Enemies/LateGame/BroodmotherEnemy/BroodmotherEnemySpawnData.tres" id="15_gow73"]
-[ext_resource type="Resource" uid="uid://chfmebru8fuxk" path="res://Custom Resources/Enemies/LateGame/Hiveling/HivelingEnemySpawnData.tres" id="16_6wwl3"]
-[ext_resource type="Resource" uid="uid://toj6ra8p0mv0" path="res://Custom Resources/Enemies/EarlyGame/FastEnemy/FastEnemySpawnData.tres" id="17_uhp20"]
-[ext_resource type="Resource" uid="uid://dwm2npydja82i" path="res://Custom Resources/Enemies/EarlyGame/StrongEnemy/StrongEnemySpawnData.tres" id="18_y8o3q"]
-[ext_resource type="Resource" uid="uid://dvxpythycidpt" path="res://Custom Resources/Enemies/MidGame/BoltEnemy/BoltEnemySpawnData.tres" id="19_io0ie"]
-[ext_resource type="Resource" uid="uid://dm7l6abt6p1km" path="res://Custom Resources/Enemies/MidGame/Mutated/MutatedEnemySpawnData.tres" id="20_3uwyl"]
-[ext_resource type="Resource" uid="uid://ch7qtvavkb5sh" path="res://Custom Resources/Enemies/MidGame/TankerEnemy/TankerEnemySpawnData.tres" id="21_h5yxu"]
-[ext_resource type="Resource" uid="uid://blqu7x4mgxsms" path="res://Custom Resources/Enemies/MidGame/Shelled/ShelledEnemySpawnData.tres" id="22_go6cj"]
-[ext_resource type="Resource" uid="uid://cdec5svn28g5x" path="res://Custom Resources/Enemies/MidGame/Bastion/BastionEnemySpawnData.tres" id="23_1ac8m"]
-[ext_resource type="Resource" uid="uid://bcju45pu5y0nu" path="res://Custom Resources/Enemies/LateGame/Propagator/PropagatorEnemySpawnData.tres" id="24_xsy0q"]
-[ext_resource type="Resource" uid="uid://bbm0gqxiafeqv" path="res://Custom Resources/Enemies/LateGame/Hive/HiveEnemySpawnData.tres" id="25_dsima"]
-[ext_resource type="Resource" uid="uid://bxrh0xtb4xjl" path="res://Custom Resources/Enemies/LateGame/Healer/HealerEnemySpawnData.tres" id="26_5cy2t"]
-[ext_resource type="Resource" uid="uid://b7mbkk5jbweab" path="res://Custom Resources/Enemies/LateGame/Charger/ChargerSpawnData.tres" id="27_qhqnk"]
-[ext_resource type="Resource" uid="uid://dmcve5qk1do3k" path="res://Custom Resources/Enemies/LateGame/Bulwark/BulwarkEnemySpawnData.tres" id="28_u8776"]
-[ext_resource type="PackedScene" uid="uid://bplgfrlcgxtnn" path="res://Scenes/Enemy/DamageNumber.tscn" id="29_y8o3q"]
+[ext_resource type="Environment" uid="uid://b1ljot84mlnbf" path="res://MainEnvironment.tres" id="12_tfoyi"]
 
 [sub_resource type="Animation" id="Animation_8fpap"]
 length = 0.001
@@ -163,7 +145,7 @@ _managerParent = NodePath("Managers")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="PauseMenu" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_mainMenuButton")]
+[node name="PauseMenu" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_worldEnv", "_mainMenuButton")]
 process_mode = 3
 custom_minimum_size = Vector2(400, 500)
 anchors_preset = 8
@@ -174,6 +156,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_45n42")
+_worldEnv = NodePath("../../WorldEnvironment")
 _mainMenuButton = NodePath("VBoxContainer/MainMenu")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/PauseMenu"]
@@ -183,6 +166,11 @@ layout_mode = 2
 [node name="MainMenu" type="Button" parent="UI/PauseMenu/VBoxContainer"]
 layout_mode = 2
 text = "Main Menu"
+
+[node name="GlowToggleButton" type="CheckButton" parent="UI/PauseMenu/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Glow:"
 
 [node name="Managers" type="Node" parent="."]
 
@@ -198,27 +186,6 @@ EnemyParent = NodePath("../../Enemies")
 [node name="RngManager" parent="Managers" instance=ExtResource("9_1phdm")]
 
 [node name="PoolManager" parent="Managers" instance=ExtResource("10_ud3b5")]
-_enemiesToPreload = Dictionary[Object, int]({
-ExtResource("11_mnqak"): 40,
-ExtResource("28_u8776"): 50,
-ExtResource("27_qhqnk"): 50,
-ExtResource("26_5cy2t"): 15,
-ExtResource("25_dsima"): 15,
-ExtResource("24_xsy0q"): 15,
-ExtResource("23_1ac8m"): 15,
-ExtResource("22_go6cj"): 10,
-ExtResource("21_h5yxu"): 100,
-ExtResource("20_3uwyl"): 150,
-ExtResource("19_io0ie"): 100,
-ExtResource("18_y8o3q"): 20,
-ExtResource("17_uhp20"): 50,
-ExtResource("16_6wwl3"): 10,
-ExtResource("15_gow73"): 100,
-ExtResource("14_8sad6"): 1000,
-ExtResource("13_gf1ev"): 5000,
-ExtResource("12_1phdm"): 3000
-})
-_damageNumberScene = ExtResource("29_y8o3q")
 
 [node name="Towers" type="Node2D" parent="."]
 
@@ -272,3 +239,8 @@ z_index = 2
 position = Vector2(-9, 188)
 rotation = -1.5708
 texture = ExtResource("10_gf1ev")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("12_tfoyi")
+
+[connection signal="toggled" from="UI/PauseMenu/VBoxContainer/GlowToggleButton" to="UI/PauseMenu" method="OnGlowButtonToggled"]

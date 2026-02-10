@@ -29,7 +29,7 @@ public partial class TowerUpgradeTree : Node2D
 		string currentDir = dirAccess.GetCurrentDir();
 
 		// Each level of tower is saved with a corresponding icon file, halving amount of files in folders gives amount of upgrades
-		_maximumLevel = dirAccess.GetFiles().Length / 2;
+		_maximumLevel = dirAccess.GetFiles().Length / 3;
 		for (int i = 0; i < _maximumLevel; i++)
         {
 			string towerSceneFileName = _towerName + i + ".tscn";
